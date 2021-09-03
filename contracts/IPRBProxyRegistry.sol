@@ -8,7 +8,7 @@ import "./PRBProxyFactory.sol";
 /// @author Paul Razvan Berg
 /// @notice Deploys new proxy instances via the proxy factory and keeps a registry of owners to proxies.
 interface IPRBProxyRegistry {
-    /// CONSTANT FUNCTIONS ///
+    /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @notice Mapping of owner accounts to proxies.
     function proxies(address owner) external view returns (PRBProxy);
@@ -20,11 +20,13 @@ interface IPRBProxyRegistry {
 
     /// @notice Deploys a new proxy instance via the proxy factory.
     /// @dev Sets msg.sender as the owner of the proxy.
+    /// @param salt Random data used as an additional input to CREATE2.
     /// @return proxy The address of the newly deployed proxy contract.
-    function deploy() external returns (address payable proxy);
+    function deploy(bytes32 salt) external returns (address payable proxy);
 
     /// @notice Deploys a new proxy instance via the proxy factory.
     /// @param owner The custom owner of the proxy.
+    /// @param salt Random data used as an additional input to CREATE2.
     /// @return proxy The address of the newly deployed proxy contract.
-    function deployFor(address owner) external returns (address payable proxy);
+    function deployFor(address owner, bytes32 salt) external returns (address payable proxy);
 }

@@ -16,15 +16,19 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyFactory
-    function deploy() external override returns (address payable proxy) {
-        proxy = deployFor(msg.sender);
+    function deploy(bytes32 salt) external override returns (address payable proxy) {
+        proxy = deployFor(msg.sender, salt);
     }
 
     /// @inheritdoc IPRBProxyFactory
-    function deployFor(address owner) public override returns (address payable proxy) {
-        // Deploy the proxy contract with CREATE2.
+    function deployFor(address owner, bytes32 salt) public override returns (address payable proxy) {
+        // Load the proxy bytecode.
         bytes memory bytecode = type(PRBProxy).creationCode;
-        bytes32 salt = keccak256(abi.encode(owner));
+
+        // Prevent front running the salt by hashing the concatenation of msg.sender and the user-provided salt.
+        salt = keccak256(abi.encode(tx.origin, salt));
+
+        // Deploy the proxy with CREATE2.
         assembly {
             let endowment := 0
             let bytecodeStart := add(bytecode, 0x20)

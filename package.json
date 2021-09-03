@@ -6,6 +6,9 @@
     "name": "Paul Razvan Berg",
     "url": "https://paulrberg.com"
   },
+  "dependencies": {
+    "@paulrberg/contracts": "^3.4.0"
+  },
   "devDependencies": {
     "@codechecks/client": "^0.1.11",
     "@commitlint/cli": "^13.1.0",
@@ -15,6 +18,7 @@
     "@ethersproject/address": "^5.4.0",
     "@ethersproject/bignumber": "^5.4.1",
     "@ethersproject/bytes": "^5.4.0",
+    "@ethersproject/contracts": "^5.4.1",
     "@ethersproject/keccak256": "^5.4.0",
     "@ethersproject/providers": "^5.4.5",
     "@ethersproject/solidity": "^5.4.0",
@@ -25,9 +29,9 @@
     "@types/chai": "^4.2.21",
     "@types/fs-extra": "^9.0.12",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.7.5",
-    "@typescript-eslint/eslint-plugin": "^4.29.3",
-    "@typescript-eslint/parser": "^4.29.3",
+    "@types/node": "^16.7.10",
+    "@typescript-eslint/eslint-plugin": "^4.30.0",
+    "@typescript-eslint/parser": "^4.30.0",
     "chai": "^4.3.4",
     "commitizen": "^4.2.4",
     "cross-env": "^7.0.3",
@@ -38,7 +42,7 @@
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.6",
     "fs-extra": "^10.0.0",
-    "hardhat": "^2.6.1",
+    "hardhat": "^2.6.2",
     "hardhat-gas-reporter": "^1.0.4",
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
@@ -67,7 +71,6 @@
   "private": true,
   "scripts": {
     "clean": "hardhat clean",
-    "commit": "git-cz",
     "compile": "hardhat compile",
     "coverage": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
     "deploy": "hardhat deploy:Greeter",
@@ -78,9 +81,8 @@
     "prettier": "prettier --config ./.prettierrc.yaml --write \"**/*.{js,json,md,sol,ts}\"",
     "prettier:check": "prettier --check --config ./.prettierrc.yaml \"**/*.{js,json,md,sol,ts}\"",
     "test": "hardhat test",
+    "test:integration": "hardhat test ./test/integration --network hardhat",
+    "test:unit": "hardhat test ./test/unit --network hardhat",
     "typechain": "hardhat typechain"
-  },
-  "dependencies": {
-    "@paulrberg/contracts": "^3.4.0"
   }
 }

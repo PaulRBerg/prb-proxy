@@ -17,11 +17,13 @@ interface IPRBProxyFactory {
 
     /// @notice Deploys a new proxy instance with CREATE2.
     /// @dev Sets msg.sender as the owner of the proxy.
+    /// @param salt Random data used as an additional input to CREATE2.
     /// @return proxy The address of the newly deployed proxy contract.
-    function deploy() external returns (address payable proxy);
+    function deploy(bytes32 salt) external returns (address payable proxy);
 
     /// @notice Deploys a new proxy instance with CREATE2.
     /// @param owner The custom owner of the proxy.
+    /// @param salt Random data used as an additional input to CREATE2.
     /// @return proxy The address of the newly deployed proxy contract.
-    function deployFor(address owner) external returns (address payable proxy);
+    function deployFor(address owner, bytes32 salt) external returns (address payable proxy);
 }

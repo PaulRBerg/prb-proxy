@@ -3,6 +3,7 @@
   "plugins": ["prettier"],
   "rules": {
     "avoid-low-level-calls": "off",
+    "avoid-tx-origin": "off",
     "code-complexity": ["error", 8],
     "compiler-version": ["error", ">=0.8.4"],
     "const-name-snakecase": "off",

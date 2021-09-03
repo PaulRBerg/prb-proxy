@@ -10,7 +10,7 @@ error PRBProxyRegistry__ProxyAlreadyDeployed(address owner);
 
 /// @title PRBProxyRegistry
 /// @author Paul Razvan Berg
-contract ProxyRegistry is IPRBProxyRegistry {
+contract PRBProxyRegistry is IPRBProxyRegistry {
     /// @inheritdoc IPRBProxyRegistry
     mapping(address => PRBProxy) public override proxies;
 
@@ -26,19 +26,19 @@ contract ProxyRegistry is IPRBProxyRegistry {
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyRegistry
-    function deploy() external override returns (address payable proxy) {
-        proxy = deployFor(msg.sender);
+    function deploy(bytes32 salt) external override returns (address payable proxy) {
+        proxy = deployFor(msg.sender, salt);
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner) public override returns (address payable proxy) {
+    function deployFor(address owner, bytes32 salt) public override returns (address payable proxy) {
         // Do not deploy if the proxy already exists and the owner is the same.
         if (address(proxies[owner]) != address(0) && proxies[owner].owner() == owner) {
             revert PRBProxyRegistry__ProxyAlreadyDeployed(owner);
         }
 
         // Deploy the proxy via the factory.
-        proxy = factory.deployFor(owner);
+        proxy = factory.deployFor(owner, salt);
 
         // Set the proxy in the mapping.
         proxies[owner] = PRBProxy(proxy);
