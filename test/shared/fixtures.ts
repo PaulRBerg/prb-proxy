@@ -2,6 +2,7 @@ import { Signer } from "@ethersproject/abstract-signer";
 import { artifacts, waffle } from "hardhat";
 import { Artifact } from "hardhat/types";
 
+import { PRBProxy } from "../../typechain/PRBProxy";
 import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
 import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
 
@@ -32,6 +33,19 @@ export async function integrationFixturePrbProxyRegistry(
   );
 
   return { artifacts: { prbProxy }, contracts: { prbProxyFactory, prbProxyRegistry } };
+}
+
+type UnitFixturePrbProxyReturnType = {
+  contracts: {
+    prbProxy: PRBProxy;
+  };
+};
+
+export async function unitFixturePrbProxy(signers: Signer[]): Promise<UnitFixturePrbProxyReturnType> {
+  const deployer: Signer = signers[0];
+  const prbProxyArtifact: Artifact = await artifacts.readArtifact("PRBProxy");
+  const prbProxy: PRBProxy = <PRBProxy>await deployContract(deployer, prbProxyArtifact, []);
+  return { contracts: { prbProxy } };
 }
 
 type UnitFixturePrbProxyFactoryReturnType = {

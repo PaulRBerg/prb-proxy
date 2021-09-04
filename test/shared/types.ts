@@ -3,6 +3,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-wit
 import { Fixture } from "ethereum-waffle";
 import { Artifact } from "hardhat/types";
 
+import { PRBProxy } from "../../typechain";
 import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
 import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
 
@@ -19,6 +20,7 @@ export interface Artifacts {
   prbProxy: Artifact;
 }
 export interface Contracts {
+  prbProxy: PRBProxy;
   prbProxyFactory: PRBProxyFactory;
   prbProxyRegistry: PRBProxyRegistry;
 }

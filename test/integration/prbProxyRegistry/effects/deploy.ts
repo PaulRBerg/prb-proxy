@@ -9,7 +9,7 @@ export default function shouldBehaveLikeDeploy(): void {
   let deployer: SignerWithAddress;
   let proxyAddress: string;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     deployer = this.signers.alice;
     proxyAddress = getProxyAddress.call(this, deployer.address, salt);
   });

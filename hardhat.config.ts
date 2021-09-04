@@ -1,6 +1,5 @@
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
-import "hardhat-gas-reporter";
 import "solidity-coverage";
 
 import "./tasks/accounts";
@@ -15,7 +14,6 @@ import { NetworkUserConfig } from "hardhat/types";
 dotenvConfig({ path: resolve(__dirname, "./.env") });
 
 const chainIds = {
-  ganache: 1337,
   goerli: 5,
   hardhat: 31337,
   kovan: 42,
@@ -50,20 +48,12 @@ function getChainConfig(network: keyof typeof chainIds): NetworkUserConfig {
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
-  gasReporter: {
-    currency: "USD",
-    enabled: process.env.REPORT_GAS ? true : false,
-    excludeContracts: [],
-    src: "./contracts",
-  },
   networks: {
     hardhat: {
       accounts: {
         mnemonic,
       },
       chainId: chainIds.hardhat,
-      // See https://github.com/sc-forks/solidity-coverage/issues/652
-      hardfork: process.env.CODE_COVERAGE ? "berlin" : "london",
     },
     goerli: getChainConfig("goerli"),
     kovan: getChainConfig("kovan"),

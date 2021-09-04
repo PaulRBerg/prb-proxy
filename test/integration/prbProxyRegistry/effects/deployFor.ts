@@ -15,7 +15,7 @@ export default function shouldBehaveLikeDeployFor(): void {
   let owner: SignerWithAddress;
   let proxyAddress: string;
 
-  beforeEach(async function () {
+  beforeEach(function () {
     deployer = this.signers.alice;
     owner = this.signers.bob;
     proxyAddress = getProxyAddress.call(this, deployer.address, salt);
@@ -65,7 +65,7 @@ export default function shouldBehaveLikeDeployFor(): void {
       });
 
       context("when the owner did not transfer ownership", function () {
-        context("when deploying for oneself", function () {
+        context("when the deployer is the same as the owner", function () {
           it("deploys the proxy", async function () {
             await this.contracts.prbProxyRegistry.connect(deployer).deployFor(deployer.address, salt);
             const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
@@ -73,7 +73,7 @@ export default function shouldBehaveLikeDeployFor(): void {
           });
         });
 
-        context("when deploying for someone else", function () {
+        context("when the deployer is not the same as the owner", function () {
           it("deploys the proxy", async function () {
             await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
             const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);

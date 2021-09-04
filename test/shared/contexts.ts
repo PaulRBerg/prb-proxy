@@ -1,4 +1,3 @@
-// eslint-disable @typescript-eslint/no-explicit-any
 import { Signer } from "@ethersproject/abstract-signer";
 import { Wallet } from "@ethersproject/wallet";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
