@@ -160,12 +160,12 @@ export default function shouldBehaveLikeExecute(): void {
 
             context("when ether is sent", function () {
               it("returns the ether amount back", async function () {
-                const amount: BigNumber = parseEther("3.14");
+                const sentAmount: BigNumber = parseEther("3.14");
                 const data: string = this.contracts.targetEcho.interface.encodeFunctionData("echoMsgValue");
                 const response: string = await this.contracts.prbProxy
                   .connect(owner)
-                  .callStatic.execute(target, data, { value: amount });
-                expect(amount).to.equal(bn(response));
+                  .callStatic.execute(target, data, { value: sentAmount });
+                expect(sentAmount).to.equal(bn(response));
               });
             });
 
