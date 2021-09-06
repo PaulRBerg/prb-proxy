@@ -5,6 +5,9 @@ import { Artifact } from "hardhat/types";
 import { PRBProxy } from "../../typechain/PRBProxy";
 import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
 import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
+import { TargetEcho } from "../../typechain/TargetEcho";
+import { TargetPanic } from "../../typechain/TargetPanic";
+import { TargetRevert } from "../../typechain/TargetRevert";
 
 const { deployContract } = waffle;
 
@@ -38,6 +41,9 @@ export async function integrationFixturePrbProxyRegistry(
 type UnitFixturePrbProxyReturnType = {
   contracts: {
     prbProxy: PRBProxy;
+    targetEcho: TargetEcho;
+    targetPanic: TargetPanic;
+    targetRevert: TargetRevert;
   };
 };
 
@@ -45,7 +51,17 @@ export async function unitFixturePrbProxy(signers: Signer[]): Promise<UnitFixtur
   const deployer: Signer = signers[0];
   const prbProxyArtifact: Artifact = await artifacts.readArtifact("PRBProxy");
   const prbProxy: PRBProxy = <PRBProxy>await deployContract(deployer, prbProxyArtifact, []);
-  return { contracts: { prbProxy } };
+
+  const targetEchoArtifact: Artifact = await artifacts.readArtifact("TargetEcho");
+  const targetEcho: TargetEcho = <TargetEcho>await deployContract(deployer, targetEchoArtifact, []);
+
+  const targetPanicArtifact: Artifact = await artifacts.readArtifact("TargetPanic");
+  const targetPanic: TargetPanic = <TargetPanic>await deployContract(deployer, targetPanicArtifact, []);
+
+  const targetRevertArtifact: Artifact = await artifacts.readArtifact("TargetRevert");
+  const targetRevert: TargetRevert = <TargetRevert>await deployContract(deployer, targetRevertArtifact, []);
+
+  return { contracts: { prbProxy, targetEcho, targetPanic, targetRevert } };
 }
 
 type UnitFixturePrbProxyFactoryReturnType = {
