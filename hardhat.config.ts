@@ -1,8 +1,8 @@
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
+import "hardhat-gas-reporter";
 import "solidity-coverage";
 
-import "./tasks/accounts";
 import "./tasks/clean";
 
 import { resolve } from "path";
@@ -48,6 +48,13 @@ function getChainConfig(network: keyof typeof chainIds): NetworkUserConfig {
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
+  gasReporter: {
+    currency: "USD",
+    enabled: process.env.REPORT_GAS ? true : false,
+    excludeContracts: [],
+    outputFile: "gas-report.txt",
+    src: "./contracts",
+  },
   networks: {
     hardhat: {
       accounts: {
@@ -70,12 +77,8 @@ const config: HardhatUserConfig = {
     version: "0.8.7",
     settings: {
       metadata: {
-        // Not including the metadata hash
-        // https://github.com/paulrberg/solidity-template/issues/31
         bytecodeHash: "none",
       },
-      // Disable the optimizer when debugging
-      // https://hardhat.org/hardhat-network/#solidity-optimizer-support
       optimizer: {
         enabled: true,
         runs: 800,

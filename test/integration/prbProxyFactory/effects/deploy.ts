@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 import { getProxyAddress, getRandomSalt } from "../../../shared/create2";
+import { getCloneDeployedBytecode } from "../../../shared/eip1167";
 
 export default function shouldBehaveLikeDeploy(): void {
   const salt: string = getRandomSalt();
@@ -17,7 +18,8 @@ export default function shouldBehaveLikeDeploy(): void {
   it("deploys the proxy", async function () {
     await this.contracts.prbProxyFactory.connect(deployer).deploy(salt);
     const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
-    expect(deployedBytecode).to.equal(this.artifacts.prbProxy.deployedBytecode);
+    const expectedBytecode: string = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
+    expect(deployedBytecode).to.equal(expectedBytecode);
   });
 
   it("updates the mapping", async function () {

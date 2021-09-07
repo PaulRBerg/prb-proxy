@@ -22,7 +22,7 @@ export default function shouldBehaveLikeExecute(): void {
       raider = this.signers.bob;
     });
 
-    it.skip("reverts", async function () {
+    it("reverts", async function () {
       const data: string = "0x";
       await expect(this.contracts.prbProxy.connect(raider).execute(AddressZero, data)).to.be.revertedWith(
         OwnableErrors.NotOwner,
@@ -42,7 +42,7 @@ export default function shouldBehaveLikeExecute(): void {
 
     context("when the target is not the zero address", function () {
       context("when the target is not a contract", function () {
-        it.skip("reverts", async function () {
+        it("reverts", async function () {
           const target: string = "0x0000000000000000000000000000000000000001";
           const data: string = "0x";
           await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(

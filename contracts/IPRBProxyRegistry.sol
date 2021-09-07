@@ -24,8 +24,8 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy contract.
     function deploy(bytes32 salt) external returns (address payable proxy);
 
-    /// @notice Deploys a new proxy instance via the proxy factory.
-    /// @param owner The custom owner of the proxy.
+    /// @notice Deploys a new proxy instance via the proxy factory, for a specific owner.
+    /// @param owner The owner of the proxy.
     /// @param salt Random data used as an additional input to CREATE2.
     /// @return proxy The address of the newly deployed proxy contract.
     function deployFor(address owner, bytes32 salt) external returns (address payable proxy);

@@ -1,13 +1,12 @@
-import { expect } from "chai";
 import { AddressZero } from "@ethersproject/constants";
-import { ethers } from "hardhat";
 import { Contract } from "@ethersproject/contracts";
-
-import { PRBProxy } from "../../../../typechain/PRBProxy";
-import { OwnableErrors, PRBProxyRegistryErrors } from "../../../shared/errors";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { expect } from "chai";
+import { ethers } from "hardhat";
 
 import { getProxyAddress, getRandomSalt } from "../../../shared/create2";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { getCloneDeployedBytecode } from "../../../shared/eip1167";
+import { OwnableErrors, PRBProxyRegistryErrors } from "../../../shared/errors";
 
 export default function shouldBehaveLikeDeployFor(): void {
   const salt: string = getRandomSalt();
@@ -50,8 +49,8 @@ export default function shouldBehaveLikeDeployFor(): void {
           thirdParty = this.signers.carol;
 
           await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
-          const proxy: PRBProxy = <PRBProxy>new Contract(proxyAddress, this.artifacts.prbProxy.abi, owner);
-          await proxy.connect(owner)._transferOwnership(thirdParty.address);
+          const proxy: Contract = new Contract(proxyAddress, this.contracts.prbProxyImplementation.interface, owner);
+          await proxy.connect(owner).transferOwnership(thirdParty.address);
         });
 
         it("deploys the proxy", async function () {
@@ -60,7 +59,8 @@ export default function shouldBehaveLikeDeployFor(): void {
 
           const newProxyAddress: string = getProxyAddress.call(this, deployer.address, newSalt);
           const deployedBytecode: string = await ethers.provider.getCode(newProxyAddress);
-          expect(deployedBytecode).to.equal(this.artifacts.prbProxy.deployedBytecode);
+          const expectedBytecode: string = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
+          expect(deployedBytecode).to.equal(expectedBytecode);
         });
       });
 
@@ -69,7 +69,8 @@ export default function shouldBehaveLikeDeployFor(): void {
           it("deploys the proxy", async function () {
             await this.contracts.prbProxyRegistry.connect(deployer).deployFor(deployer.address, salt);
             const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
-            expect(deployedBytecode).to.equal(this.artifacts.prbProxy.deployedBytecode);
+            const expectedBytecode: string = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
+            expect(deployedBytecode).to.equal(expectedBytecode);
           });
         });
 
@@ -77,7 +78,8 @@ export default function shouldBehaveLikeDeployFor(): void {
           it("deploys the proxy", async function () {
             await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
             const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
-            expect(deployedBytecode).to.equal(this.artifacts.prbProxy.deployedBytecode);
+            const expectedBytecode: string = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
+            expect(deployedBytecode).to.equal(expectedBytecode);
           });
 
           it("updates the mapping", async function () {

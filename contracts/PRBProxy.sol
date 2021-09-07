@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: WTFPL
 pragma solidity >=0.8.4;
 
-import "@paulrberg/contracts/access/Ownable.sol";
-
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "./IPRBProxy.sol";
+import "./access/Ownable.sol";
+
+/// @notice Emitted when attempting to initialize the contract again.
+error PRBProxy__AlreadyInitialized();
 
 /// @notice Emitted when execution reverted with no reason.
 error PRBProxy__ExecutionReverted();
 
-/// @notice Emitted when passing an EOA or a not-yet-deployed contract as the target.
+/// @notice Emitted when passing an EOA or an undeployed contract as the target.
 error PRBProxy__TargetInvalid(address target);
 
 /// @notice Emitted when passing the zero address as the target.
@@ -20,13 +23,23 @@ contract PRBProxy is
     IPRBProxy, // One dependency
     Ownable // One dependency
 {
+    /// PUBLIC STORAGE ///
+
     /// @inheritdoc IPRBProxy
     uint256 public override minGasReserve;
 
+    /// INTERNAL STORAGE ///
+
+    /// @dev Indicates that the contract has been initialized.
+    bool internal initialized;
+
     /// CONSTRUCTOR ///
 
-    constructor() Ownable() {
-        minGasReserve = 5000;
+    /// @dev Initialises the master contract. The owner is set to the zero address so that no function
+    /// can be called post deployment. This eliminates the risk of an accidental self destruct.
+    constructor() {
+        initialized = true;
+        owner = address(0);
     }
 
     /// FALLBACK FUNCTION ///
@@ -37,6 +50,19 @@ contract PRBProxy is
     }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
+
+    /// @inheritdoc IPRBProxy
+    function initialize(address owner_) external override {
+        // Checks
+        if (initialized) {
+            revert PRBProxy__AlreadyInitialized();
+        }
+
+        // Effects
+        initialized = true;
+        minGasReserve = 5000;
+        setOwner(owner_);
+    }
 
     /// @inheritdoc IPRBProxy
     function execute(address target, bytes memory data)
