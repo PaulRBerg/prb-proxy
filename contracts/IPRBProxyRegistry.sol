@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: WTFPL
 pragma solidity >=0.8.4;
 
-import "./PRBProxy.sol";
-import "./PRBProxyFactory.sol";
+import "./IPRBProxy.sol";
+import "./IPRBProxyFactory.sol";
 
 /// @title IPRBProxyRegistry
 /// @author Paul Razvan Berg
@@ -11,10 +11,10 @@ interface IPRBProxyRegistry {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @notice Mapping of owner accounts to proxies.
-    function proxies(address owner) external view returns (PRBProxy);
+    function proxies(address owner) external view returns (IPRBProxy);
 
     /// @notice Proxy factory contract.
-    function factory() external view returns (PRBProxyFactory);
+    function factory() external view returns (IPRBProxyFactory);
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 

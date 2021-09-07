@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: WTFPL
 pragma solidity >=0.8.4;
 
+import "./IPRBProxy.sol";
+import "./IPRBProxyFactory.sol";
 import "./IPRBProxyRegistry.sol";
-import "./PRBProxy.sol";
-import "./PRBProxyFactory.sol";
 
 /// @notice Emitted when a proxy has already been deployed.
 error PRBProxyRegistry__ProxyAlreadyDeployed(address owner);
@@ -12,14 +12,14 @@ error PRBProxyRegistry__ProxyAlreadyDeployed(address owner);
 /// @author Paul Razvan Berg
 contract PRBProxyRegistry is IPRBProxyRegistry {
     /// @inheritdoc IPRBProxyRegistry
-    mapping(address => PRBProxy) public override proxies;
+    mapping(address => IPRBProxy) public override proxies;
 
     /// @inheritdoc IPRBProxyRegistry
-    PRBProxyFactory public override factory;
+    IPRBProxyFactory public override factory;
 
     /// CONSTRUCTOR ///
 
-    constructor(PRBProxyFactory factory_) {
+    constructor(IPRBProxyFactory factory_) {
         factory = factory_;
     }
 
@@ -41,6 +41,6 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         proxy = factory.deployFor(owner, salt);
 
         // Set the proxy in the mapping.
-        proxies[owner] = PRBProxy(proxy);
+        proxies[owner] = IPRBProxy(proxy);
     }
 }

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: WTFPL
 pragma solidity >=0.8.4;
 
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "./IPRBProxy.sol";
 import "./access/Ownable.sol";
 
