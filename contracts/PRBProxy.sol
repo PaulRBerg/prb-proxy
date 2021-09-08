@@ -34,7 +34,7 @@ contract PRBProxy is
 
     /// CONSTRUCTOR ///
 
-    /// @dev Initialises the master contract. The owner is set to the zero address so that no function
+    /// @dev Initializes the implementation contract. The owner is set to the zero address so that no function
     /// can be called post deployment. This eliminates the risk of an accidental self destruct.
     constructor() {
         initialized = true;
@@ -43,7 +43,7 @@ contract PRBProxy is
 
     /// FALLBACK FUNCTION ///
 
-    /// @dev This is called whenever the call data is empty.
+    /// @dev Called when Ether is sent and the call data is empty.
     receive() external payable {
         // solhint-disable-previous-line no-empty-blocks
     }

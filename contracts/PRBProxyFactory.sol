@@ -3,7 +3,9 @@ pragma solidity >=0.8.4;
 
 import "./IPRBProxy.sol";
 import "./IPRBProxyFactory.sol";
-import "./PRBProxy.sol";
+
+/// @notice Emitted when the deployment of an EIP-1167 clone with CREATE2 fails.
+error PRBProxyFactory__CloneFailed(bytes32 salt);
 
 /// @title PRBProxyFactory
 /// @author Paul Razvan Berg
@@ -50,7 +52,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// INTERNAL NON-CONSTANT FUNCTIONS ///
 
     /// @dev Deploys an EIP-1167 clone that mimics the behavior of `implementation`.
-    function clone(bytes32 salt) public returns (address payable proxy) {
+    function clone(bytes32 salt) internal returns (address payable proxy) {
         bytes20 impl = bytes20(address(implementation));
         assembly {
             let bytecode := mload(0x40)
@@ -58,6 +60,9 @@ contract PRBProxyFactory is IPRBProxyFactory {
             mstore(add(bytecode, 0x14), impl)
             mstore(add(bytecode, 0x28), 0x5af43d82803e903d91602b57fd5bf30000000000000000000000000000000000)
             proxy := create2(0, bytecode, 0x37, salt)
+        }
+        if (proxy == address(0)) {
+            revert PRBProxyFactory__CloneFailed(salt);
         }
     }
 }

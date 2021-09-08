@@ -1,9 +1,10 @@
 import { AddressZero } from "@ethersproject/constants";
-import { Contract } from "@ethersproject/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
+import { PRBProxy__factory } from "../../../../typechain/factories/PRBProxy__factory";
+import { PRBProxy } from "../../../../typechain/PRBProxy";
 import { getProxyAddress, getRandomSalt } from "../../../shared/create2";
 import { getCloneDeployedBytecode } from "../../../shared/eip1167";
 import { OwnableErrors, PRBProxyRegistryErrors } from "../../../shared/errors";
@@ -49,8 +50,8 @@ export default function shouldBehaveLikeDeployFor(): void {
           thirdParty = this.signers.carol;
 
           await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
-          const proxy: Contract = new Contract(proxyAddress, this.contracts.prbProxyImplementation.interface, owner);
-          await proxy.connect(owner).transferOwnership(thirdParty.address);
+          const prbProxy: PRBProxy = PRBProxy__factory.connect(proxyAddress, owner);
+          await prbProxy.connect(owner).transferOwnership(thirdParty.address);
         });
 
         it("deploys the proxy", async function () {
@@ -84,8 +85,8 @@ export default function shouldBehaveLikeDeployFor(): void {
 
           it("updates the mapping", async function () {
             await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
-            const mappingProxyAddress: string = await this.contracts.prbProxyRegistry.proxies(owner.address);
-            expect(proxyAddress).to.equal(mappingProxyAddress);
+            const newProxyAddress: string = await this.contracts.prbProxyRegistry.proxies(owner.address);
+            expect(proxyAddress).to.equal(newProxyAddress);
           });
         });
       });

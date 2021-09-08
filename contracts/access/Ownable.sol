@@ -36,7 +36,7 @@ contract Ownable is IOwnable {
     }
 
     /// @inheritdoc IOwnable
-    function transferOwnership(address newOwner) public virtual override onlyOwner {
+    function transferOwnership(address newOwner) external virtual override onlyOwner {
         setOwner(newOwner);
     }
 

@@ -8,6 +8,7 @@
     "compiler-version": ["error", ">=0.8.4"],
     "const-name-snakecase": "off",
     "constructor-syntax": "error",
+    "func-name-mixedcase": "off",
     "func-visibility": ["error", { "ignoreConstructors": true }],
     "max-line-length": ["error", 120],
     "no-inline-assembly": "off",

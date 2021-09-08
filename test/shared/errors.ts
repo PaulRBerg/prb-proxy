@@ -10,9 +10,14 @@ export enum PanicCodes {
 }
 
 export enum PRBProxyErrors {
+  AlreadyInitialized = "PRBProxy__AlreadyInitialized",
   ExecutionReverted = "PRBProxy__ExecutionReverted",
   TargetInvalid = "PRBProxy__TargetInvalid",
   TargetZeroAddress = "PRBProxy__TargetZeroAddress",
+}
+
+export enum PRBProxyFactoryErrors {
+  CloneFailed = "PRBProxyFactory__CloneFailed",
 }
 
 export enum PRBProxyRegistryErrors {

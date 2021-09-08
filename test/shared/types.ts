@@ -1,12 +1,13 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import { Fixture } from "ethereum-waffle";
 
+import { GodModePRBProxyFactory } from "../../typechain/GodModePRBProxyFactory";
 import { PRBProxy } from "../../typechain/PRBProxy";
-import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
 import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
 import { TargetEcho } from "../../typechain/TargetEcho";
 import { TargetPanic } from "../../typechain/TargetPanic";
 import { TargetRevert } from "../../typechain/TargetRevert";
+import { TargetSelfDestruct } from "../../typechain/TargetSelfDestruct";
 
 declare module "mocha" {
   export interface Context {
@@ -18,12 +19,13 @@ declare module "mocha" {
 
 export interface Contracts {
   prbProxy: PRBProxy;
-  prbProxyFactory: PRBProxyFactory;
+  prbProxyFactory: GodModePRBProxyFactory;
   prbProxyImplementation: PRBProxy;
   prbProxyRegistry: PRBProxyRegistry;
   targetEcho: TargetEcho;
   targetPanic: TargetPanic;
   targetRevert: TargetRevert;
+  targetSelfDestruct: TargetSelfDestruct;
 }
 
 export interface Signers {

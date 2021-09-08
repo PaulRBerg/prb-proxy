@@ -37,5 +37,7 @@ interface IPRBProxy is IOwnable {
     function initialize(address owner_) external;
 
     /// @notice Sets a new value for the `minGasReserve` storage variable.
+    /// @dev Requirements:
+    /// - The caller must be the owner.
     function setMinGasReserve(uint256 newMinGasReserve) external;
 }
