@@ -20,8 +20,8 @@ contract PRBProxyFactory is IPRBProxyFactory {
 
     /// CONSTRUCTOR ///
 
-    constructor(IPRBProxy implementaton_) {
-        implementation = implementaton_;
+    constructor(IPRBProxy implementation_) {
+        implementation = implementation_;
     }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
