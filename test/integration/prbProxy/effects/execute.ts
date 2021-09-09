@@ -323,6 +323,19 @@ export default function shouldBehaveLikeExecute(): void {
                         .callStatic.execute(target, data);
                       expect(input).to.equal(bn(response));
                     });
+
+                    it("emits an Execute event", async function () {
+                      const input: BigNumber = MaxUint256;
+                      const data: string = this.contracts.targetEcho.interface.encodeFunctionData("echoUint256", [
+                        input,
+                      ]);
+                      const response: string = await this.contracts.prbProxy
+                        .connect(owner)
+                        .callStatic.execute(target, data);
+                      await expect(this.contracts.prbProxy.connect(owner).execute(target, data))
+                        .to.emit(this.contracts.prbProxy, "Execute")
+                        .withArgs(target, data, response);
+                    });
                   });
                 });
               });

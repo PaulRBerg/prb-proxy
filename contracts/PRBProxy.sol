@@ -89,15 +89,19 @@ contract PRBProxy is
         uint256 stipend = gasleft() - minGasReserve;
 
         // Delegate call to the target contract.
-        (bool success, bytes memory returndata) = target.delegatecall{ gas: stipend }(data);
-        if (success) {
-            return returndata;
-        } else {
+        bool success;
+        (success, response) = target.delegatecall{ gas: stipend }(data);
+
+        // Log the execution.
+        emit Execute(target, data, response);
+
+        // Check if the call was successful or not.
+        if (!success) {
             // If there is return data, the call reverted with a reason or a custom error.
-            if (returndata.length > 0) {
+            if (response.length > 0) {
                 assembly {
-                    let returndata_size := mload(returndata)
-                    revert(add(32, returndata), returndata_size)
+                    let returndata_size := mload(response)
+                    revert(add(32, response), returndata_size)
                 }
             } else {
                 revert PRBProxy__ExecutionReverted();

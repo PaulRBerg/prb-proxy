@@ -7,6 +7,10 @@ import "./access/IOwnable.sol";
 /// @author Paul Razvan Berg
 /// @notice Proxy contract to compose transactions on owner's behalf.
 interface IPRBProxy is IOwnable {
+    /// EVENTS ///
+
+    event Execute(address indexed target, bytes data, bytes response);
+
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @notice How much gas should remain for executing the remainder of the assembly code.
