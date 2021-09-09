@@ -1,8 +1,10 @@
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
+import "hardhat-packager";
 import "solidity-coverage";
 
+import "./tasks/deploy";
 import "./tasks/clean";
 
 import { resolve } from "path";
@@ -52,7 +54,6 @@ const config: HardhatUserConfig = {
     currency: "USD",
     enabled: process.env.REPORT_GAS ? true : false,
     excludeContracts: [],
-    outputFile: "gas-report.txt",
     src: "./contracts",
   },
   networks: {
@@ -66,6 +67,19 @@ const config: HardhatUserConfig = {
     kovan: getChainConfig("kovan"),
     rinkeby: getChainConfig("rinkeby"),
     ropsten: getChainConfig("ropsten"),
+  },
+  packager: {
+    contracts: [
+      "IPRBProxy",
+      "IPRBProxyFactory",
+      "IPRBProxyRegistry",
+      "IOwnable",
+      "Ownable",
+      "PRBProxy",
+      "PRBProxyFactory",
+      "PRBProxyRegistry",
+    ],
+    includeFactories: true,
   },
   paths: {
     artifacts: "./artifacts",
@@ -81,7 +95,7 @@ const config: HardhatUserConfig = {
       },
       optimizer: {
         enabled: true,
-        runs: 800,
+        runs: 999999,
       },
     },
   },

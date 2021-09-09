@@ -5,6 +5,7 @@ build/
 cache/
 coverage/
 dist/
+!dist/**/*.ts
 lib/
 node_modules/
 typechain/
