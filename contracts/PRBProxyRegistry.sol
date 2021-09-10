@@ -12,7 +12,7 @@ error PRBProxyRegistry__ProxyAlreadyDeployed(address owner);
 /// @author Paul Razvan Berg
 contract PRBProxyRegistry is IPRBProxyRegistry {
     /// @inheritdoc IPRBProxyRegistry
-    mapping(address => IPRBProxy) public override proxies;
+    mapping(address => mapping(bytes32 => IPRBProxy)) public override proxies;
 
     /// @inheritdoc IPRBProxyRegistry
     IPRBProxyFactory public override factory;
@@ -33,7 +33,8 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     /// @inheritdoc IPRBProxyRegistry
     function deployFor(address owner, bytes32 salt) public override returns (address payable proxy) {
         // Do not deploy if the proxy already exists and the owner is the same.
-        if (address(proxies[owner]) != address(0) && proxies[owner].owner() == owner) {
+        IPRBProxy storedProxy = proxies[owner][salt];
+        if (address(storedProxy) != address(0) && storedProxy.owner() == owner) {
             revert PRBProxyRegistry__ProxyAlreadyDeployed(owner);
         }
 
@@ -41,6 +42,6 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         proxy = factory.deployFor(owner, salt);
 
         // Set the proxy in the mapping.
-        proxies[owner] = IPRBProxy(proxy);
+        proxies[owner][salt] = IPRBProxy(proxy);
     }
 }

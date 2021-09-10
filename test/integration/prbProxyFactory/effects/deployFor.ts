@@ -10,11 +10,13 @@ import { OwnableErrors } from "../../../shared/errors";
 export default function shouldBehaveLikeDeployFor(): void {
   const salt: string = getRandomSalt();
   let deployer: SignerWithAddress;
+  let expectedBytecode: string;
   let owner: SignerWithAddress;
   let proxyAddress: string;
 
   beforeEach(function () {
     deployer = this.signers.alice;
+    expectedBytecode = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
     owner = this.signers.bob;
     proxyAddress = getProxyAddress.call(this, deployer.address, salt);
   });
@@ -32,7 +34,6 @@ export default function shouldBehaveLikeDeployFor(): void {
       it("deploys the proxy", async function () {
         await this.contracts.prbProxyFactory.connect(deployer).deployFor(deployer.address, salt);
         const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
-        const expectedBytecode: string = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
         expect(deployedBytecode).to.equal(expectedBytecode);
       });
     });
@@ -41,7 +42,6 @@ export default function shouldBehaveLikeDeployFor(): void {
       it("deploys the proxy", async function () {
         await this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address, salt);
         const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
-        const expectedBytecode: string = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
         expect(deployedBytecode).to.equal(expectedBytecode);
       });
 

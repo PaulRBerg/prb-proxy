@@ -12,11 +12,13 @@ import { OwnableErrors, PRBProxyRegistryErrors } from "../../../shared/errors";
 export default function shouldBehaveLikeDeployFor(): void {
   const salt: string = getRandomSalt();
   let deployer: SignerWithAddress;
+  let expectedBytecode: string;
   let owner: SignerWithAddress;
   let proxyAddress: string;
 
   beforeEach(function () {
     deployer = this.signers.alice;
+    expectedBytecode = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
     owner = this.signers.bob;
     proxyAddress = getProxyAddress.call(this, deployer.address, salt);
   });
@@ -60,7 +62,6 @@ export default function shouldBehaveLikeDeployFor(): void {
 
           const newProxyAddress: string = getProxyAddress.call(this, deployer.address, newSalt);
           const deployedBytecode: string = await ethers.provider.getCode(newProxyAddress);
-          const expectedBytecode: string = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
           expect(deployedBytecode).to.equal(expectedBytecode);
         });
       });
@@ -70,23 +71,58 @@ export default function shouldBehaveLikeDeployFor(): void {
           it("deploys the proxy", async function () {
             await this.contracts.prbProxyRegistry.connect(deployer).deployFor(deployer.address, salt);
             const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
-            const expectedBytecode: string = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
             expect(deployedBytecode).to.equal(expectedBytecode);
           });
         });
 
         context("when the deployer is not the same as the owner", function () {
-          it("deploys the proxy", async function () {
-            await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
-            const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
-            const expectedBytecode: string = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
-            expect(deployedBytecode).to.equal(expectedBytecode);
+          context("when the salt was used", function () {
+            beforeEach(async function () {
+              await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
+            });
+
+            it("reverts", async function () {
+              await expect(
+                this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt),
+              ).to.be.revertedWith(PRBProxyRegistryErrors.ProxyAlreadyDeployed);
+            });
           });
 
-          it("updates the mapping", async function () {
-            await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
-            const newProxyAddress: string = await this.contracts.prbProxyRegistry.proxies(owner.address);
-            expect(proxyAddress).to.equal(newProxyAddress);
+          context("when the salt was not used", function () {
+            context("when it is the first proxy of the user", function () {
+              it("deploys the proxy", async function () {
+                await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
+                const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
+                expect(deployedBytecode).to.equal(expectedBytecode);
+              });
+
+              it("updates the mapping", async function () {
+                await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, salt);
+                const newProxyAddress: string = await this.contracts.prbProxyRegistry.proxies(owner.address, salt);
+                expect(proxyAddress).to.equal(newProxyAddress);
+              });
+            });
+
+            context("when it is the second proxy of the user", function () {
+              const newSalt: string = getRandomSalt();
+              let proxyAddress: string;
+
+              beforeEach(function () {
+                proxyAddress = getProxyAddress.call(this, deployer.address, newSalt);
+              });
+
+              it("deploys the proxy", async function () {
+                await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, newSalt);
+                const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
+                expect(deployedBytecode).to.equal(expectedBytecode);
+              });
+
+              it("updates the mapping", async function () {
+                await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, newSalt);
+                const newProxyAddress: string = await this.contracts.prbProxyRegistry.proxies(owner.address, newSalt);
+                expect(proxyAddress).to.equal(newProxyAddress);
+              });
+            });
           });
         });
       });
