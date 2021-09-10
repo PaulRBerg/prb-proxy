@@ -74,10 +74,6 @@ export default function shouldBehaveLikeDeployFor(): void {
             const newProxyAddress: string = await this.contracts.prbProxyRegistry.proxies(owner.address, SALT_ZERO);
             expect(proxyAddress).to.equal(newProxyAddress);
           });
-
-          // it("updates the salts mapping", async function () {
-
-          // });
         });
 
         context("when it is the second proxy of the user", function () {

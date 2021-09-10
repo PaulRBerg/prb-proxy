@@ -27,7 +27,4 @@ export default function shouldBehaveLikeDeploy(): void {
     const newProxyAddress: string = await this.contracts.prbProxyRegistry.proxies(deployer.address, SALT_ZERO);
     expect(proxyAddress).to.equal(newProxyAddress);
   });
-
-  // it("updates the salts mapping", async function () {
-  // });
 }

@@ -1,3 +1,4 @@
+import { BigNumber } from "@ethersproject/bignumber";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
@@ -7,6 +8,7 @@ import { SALT_ZERO } from "../../../../helpers/constants";
 import { computeProxyAddress } from "../../../shared/create2";
 import { getCloneDeployedBytecode } from "../../../shared/eip1167";
 import { OwnableErrors } from "../../../shared/errors";
+import { bn } from "../../../shared/numbers";
 
 export default function shouldBehaveLikeDeployFor(): void {
   let deployer: SignerWithAddress;
@@ -51,8 +53,11 @@ export default function shouldBehaveLikeDeployFor(): void {
         expect(isProxy).to.equal(true);
       });
 
-      // it("updates the salts mapping", async function () {
-      // });
+      it("updates the salts mapping", async function () {
+        await this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address);
+        const salt: BigNumber = await this.contracts.prbProxyFactory.salts(deployer.address);
+        expect(salt).to.equal(bn("1"));
+      });
 
       it("emits a DeployProxy event", async function () {
         await expect(this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address))
