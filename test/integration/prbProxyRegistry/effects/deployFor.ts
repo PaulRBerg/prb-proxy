@@ -3,14 +3,15 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
+import { computeFinalSalt, generateRandomSalt } from "../../../../dist/salts";
 import { PRBProxy__factory } from "../../../../typechain/factories/PRBProxy__factory";
 import { PRBProxy } from "../../../../typechain/PRBProxy";
-import { getProxyAddress, getRandomSalt } from "../../../shared/create2";
+import { computeProxyAddress } from "../../../shared/create2";
 import { getCloneDeployedBytecode } from "../../../shared/eip1167";
 import { OwnableErrors, PRBProxyRegistryErrors } from "../../../shared/errors";
 
 export default function shouldBehaveLikeDeployFor(): void {
-  const salt: string = getRandomSalt();
+  const salt: string = generateRandomSalt();
   let deployer: SignerWithAddress;
   let expectedBytecode: string;
   let owner: SignerWithAddress;
@@ -20,7 +21,7 @@ export default function shouldBehaveLikeDeployFor(): void {
     deployer = this.signers.alice;
     expectedBytecode = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
     owner = this.signers.bob;
-    proxyAddress = getProxyAddress.call(this, deployer.address, salt);
+    proxyAddress = computeProxyAddress.call(this, deployer.address, salt);
   });
 
   context("when the owner is the zero address", function () {
@@ -57,10 +58,10 @@ export default function shouldBehaveLikeDeployFor(): void {
         });
 
         it("deploys the proxy", async function () {
-          const newSalt: string = getRandomSalt();
+          const newSalt: string = generateRandomSalt();
           await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address, newSalt);
 
-          const newProxyAddress: string = getProxyAddress.call(this, deployer.address, newSalt);
+          const newProxyAddress: string = computeProxyAddress.call(this, deployer.address, newSalt);
           const deployedBytecode: string = await ethers.provider.getCode(newProxyAddress);
           expect(deployedBytecode).to.equal(expectedBytecode);
         });
@@ -104,11 +105,11 @@ export default function shouldBehaveLikeDeployFor(): void {
             });
 
             context("when it is the second proxy of the user", function () {
-              const newSalt: string = getRandomSalt();
+              const newSalt: string = generateRandomSalt();
               let proxyAddress: string;
 
               beforeEach(function () {
-                proxyAddress = getProxyAddress.call(this, deployer.address, newSalt);
+                proxyAddress = computeProxyAddress.call(this, deployer.address, newSalt);
               });
 
               it("deploys the proxy", async function () {

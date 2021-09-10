@@ -81,14 +81,17 @@
     "delegatecall",
     "ethereum",
     "hardhat",
-    "prb",
     "prb-proxy",
     "proxy",
     "smart-contracts",
     "solidity"
   ],
   "license": "WTFPL",
+  "main": "./dist/index.js",
   "peerDependencies": {
+    "@ethersproject/abi": "^5.4.1",
+    "@ethersproject/address": "^5.4.0",
+    "@ethersproject/solidity": "^5.4.0",
     "ethers": "^5.4.4"
   },
   "publishConfig": {

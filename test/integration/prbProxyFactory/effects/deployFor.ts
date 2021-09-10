@@ -3,12 +3,13 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { getProxyAddress, getRandomSalt } from "../../../shared/create2";
+import { generateRandomSalt } from "../../../../dist/salts";
+import { computeProxyAddress } from "../../../shared/create2";
 import { getCloneDeployedBytecode } from "../../../shared/eip1167";
 import { OwnableErrors } from "../../../shared/errors";
 
 export default function shouldBehaveLikeDeployFor(): void {
-  const salt: string = getRandomSalt();
+  const salt: string = generateRandomSalt();
   let deployer: SignerWithAddress;
   let expectedBytecode: string;
   let owner: SignerWithAddress;
@@ -18,7 +19,7 @@ export default function shouldBehaveLikeDeployFor(): void {
     deployer = this.signers.alice;
     expectedBytecode = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
     owner = this.signers.bob;
-    proxyAddress = getProxyAddress.call(this, deployer.address, salt);
+    proxyAddress = computeProxyAddress.call(this, deployer.address, salt);
   });
 
   context("when the owner is the zero address", function () {

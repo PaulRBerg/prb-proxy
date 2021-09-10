@@ -1,7 +1,8 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { getFinalSalt, getProxyAddress, getRandomSalt } from "../../../shared/create2";
+import { computeFinalSalt, generateRandomSalt } from "../../../../dist/salts";
+import { computeProxyAddress } from "../../../shared/create2";
 import { getCloneDeployedBytecode } from "../../../shared/eip1167";
 import { PRBProxyFactoryErrors } from "../../../shared/errors";
 
@@ -10,9 +11,9 @@ export default function shouldBehaveLikeClone(): void {
   let finalSalt: string;
 
   beforeEach(async function () {
-    const salt: string = getRandomSalt();
-    finalSalt = getFinalSalt(this.signers.alice.address, salt);
-    proxyAddress = getProxyAddress.call(this, this.signers.alice.address, salt);
+    const salt: string = generateRandomSalt();
+    finalSalt = computeFinalSalt(this.signers.alice.address, salt);
+    proxyAddress = computeProxyAddress.call(this, this.signers.alice.address, salt);
   });
 
   context("when the salt was used", function () {

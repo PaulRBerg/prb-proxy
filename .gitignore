@@ -12,8 +12,8 @@ artifacts/
 build/
 cache/
 coverage/
-dist/
-!dist/**/*.ts
+dist/**/*.d.ts
+dist/**/*.js
 lib/
 node_modules/
 typechain/
