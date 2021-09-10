@@ -11,10 +11,10 @@ interface IPRBProxyRegistry {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @notice Mapping of owners to salts to proxies.
-    function proxies(address owner, bytes32 salt) external view returns (IPRBProxy);
+    function proxies(address owner, bytes32 salt) external view returns (IPRBProxy proxy);
 
     /// @notice Proxy factory contract.
-    function factory() external view returns (IPRBProxyFactory);
+    function factory() external view returns (IPRBProxyFactory proxyFactory);
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 

@@ -8,16 +8,27 @@ import "./IPRBProxyRegistry.sol";
 /// @title PRBProxyRegistry
 /// @author Paul Razvan Berg
 contract PRBProxyRegistry is IPRBProxyRegistry {
-    /// @inheritdoc IPRBProxyRegistry
-    mapping(address => mapping(bytes32 => IPRBProxy)) public override proxies;
+    /// PUBLIC STORAGE ///
 
     /// @inheritdoc IPRBProxyRegistry
     IPRBProxyFactory public override factory;
+
+    /// INTERNAL STORAGE ///
+
+    /// @notice Internal mapping of owners to salts to proxies.
+    mapping(address => mapping(bytes32 => IPRBProxy)) internal _proxies;
 
     /// CONSTRUCTOR ///
 
     constructor(IPRBProxyFactory factory_) {
         factory = factory_;
+    }
+
+    /// PUBLIC CONSTANT FUNCTIONS ///
+
+    /// @inheritdoc IPRBProxyRegistry
+    function proxies(address owner, bytes32 salt) external view override returns (IPRBProxy proxy) {
+        proxy = _proxies[owner][salt];
     }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
@@ -35,6 +46,6 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         proxy = factory.deployFor(owner);
 
         // Save the proxy in the mapping.
-        proxies[owner][salt] = IPRBProxy(proxy);
+        _proxies[owner][salt] = IPRBProxy(proxy);
     }
 }

@@ -15,16 +15,30 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// @inheritdoc IPRBProxyFactory
     IPRBProxy public immutable override implementation;
 
-    /// @inheritdoc IPRBProxyFactory
-    mapping(address => bool) public override isProxy;
+    /// INTERNAL STORAGE ///
 
-    /// @inheritdoc IPRBProxyFactory
-    mapping(address => uint256) public override salts;
+    /// @dev Internal mapping to track all deployed proxies.
+    mapping(address => bool) internal _isProxy;
+
+    /// @dev Internal mapping to track used salts per EOA.
+    mapping(address => uint256) internal _salts;
 
     /// CONSTRUCTOR ///
 
     constructor(IPRBProxy implementation_) {
         implementation = implementation_;
+    }
+
+    /// PUBLIC CONSTANT FUNCTIONS ///
+
+    /// @inheritdoc IPRBProxyFactory
+    function isProxy(address proxy) external view override returns (bool) {
+        return _isProxy[proxy];
+    }
+
+    /// @inheritdoc IPRBProxyFactory
+    function salts(address eoa) external view override returns (uint256) {
+        return _salts[eoa];
     }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
@@ -36,7 +50,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
 
     /// @inheritdoc IPRBProxyFactory
     function deployFor(address owner) public override returns (address payable proxy) {
-        bytes32 salt = bytes32(salts[tx.origin]);
+        bytes32 salt = bytes32(_salts[tx.origin]);
 
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided salt.
         salt = keccak256(abi.encode(tx.origin, salt));
@@ -48,11 +62,11 @@ contract PRBProxyFactory is IPRBProxyFactory {
         IPRBProxy(proxy).initialize(owner);
 
         // Mark the proxy as deployed.
-        isProxy[proxy] = true;
+        _isProxy[proxy] = true;
 
         // Increment the salt.
         unchecked {
-            salts[tx.origin] += 1;
+            _salts[tx.origin] += 1;
         }
 
         // Log the proxy via en event.
