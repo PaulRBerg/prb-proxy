@@ -18,6 +18,9 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// @inheritdoc IPRBProxyFactory
     mapping(address => bool) public override isProxy;
 
+    /// @inheritdoc IPRBProxyFactory
+    mapping(address => uint256) public override salts;
+
     /// CONSTRUCTOR ///
 
     constructor(IPRBProxy implementation_) {
@@ -27,13 +30,15 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyFactory
-    function deploy(bytes32 salt) external override returns (address payable proxy) {
-        proxy = deployFor(msg.sender, salt);
+    function deploy() external override returns (address payable proxy) {
+        proxy = deployFor(msg.sender);
     }
 
     /// @inheritdoc IPRBProxyFactory
-    function deployFor(address owner, bytes32 salt) public override returns (address payable proxy) {
-        // Prevent front-running the salt by hashing the concatenation of tx.origin and the user-provided salt.
+    function deployFor(address owner) public override returns (address payable proxy) {
+        bytes32 salt = bytes32(salts[tx.origin]);
+
+        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided salt.
         salt = keccak256(abi.encode(tx.origin, salt));
 
         // Deploy the proxy as an EIP-1167 clone, via CREATE2.
@@ -42,11 +47,16 @@ contract PRBProxyFactory is IPRBProxyFactory {
         // Initialize the proxy.
         IPRBProxy(proxy).initialize(owner);
 
-        // Mark the proxy as deployed in the mapping.
+        // Mark the proxy as deployed.
         isProxy[proxy] = true;
 
+        // Increment the salt.
+        unchecked {
+            salts[tx.origin] += 1;
+        }
+
         // Log the proxy via en event.
-        emit DeployProxy(msg.sender, owner, address(proxy));
+        emit DeployProxy(tx.origin, msg.sender, owner, address(proxy));
     }
 
     /// INTERNAL NON-CONSTANT FUNCTIONS ///

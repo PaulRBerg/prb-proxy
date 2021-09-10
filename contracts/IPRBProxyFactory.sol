@@ -9,27 +9,28 @@ import "./IPRBProxy.sol";
 interface IPRBProxyFactory {
     /// EVENTS ///
 
-    event DeployProxy(address indexed deployer, address indexed owner, address proxy);
+    event DeployProxy(address indexed origin, address indexed deployer, address indexed owner, address proxy);
 
     /// PUBLIC CONSTANT FUNCTIONS ///
 
-    /// @notice The address of the implementation of PRBProxy, deployed once per chain.
+    /// @notice The address of the implementation of PRBProxy.
     function implementation() external view returns (IPRBProxy);
 
     /// @notice Mapping to track all deployed proxies.
     function isProxy(address proxy) external view returns (bool);
 
+    /// @notice Mapping to track used salts per EOA.
+    function salts(address eoa) external view returns (uint256);
+
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @notice Deploys a new proxy as an EIP-1167 clone deployed via CREATE2.
-    /// @dev Sets msg.sender as the owner of the proxy.
-    /// @param salt Random data used as an additional input to CREATE2.
+    /// @dev Sets "msg.sender" as the owner of the proxy.
     /// @return proxy The address of the newly deployed proxy contract.
-    function deploy(bytes32 salt) external returns (address payable proxy);
+    function deploy() external returns (address payable proxy);
 
     /// @notice Deploys a new proxy as an EIP-1167 clone deployed via CREATE2, for a specific owner.
     /// @param owner The owner of the proxy.
-    /// @param salt Random data used as an additional input to CREATE2.
     /// @return proxy The address of the newly deployed proxy contract.
-    function deployFor(address owner, bytes32 salt) external returns (address payable proxy);
+    function deployFor(address owner) external returns (address payable proxy);
 }

@@ -9,8 +9,9 @@ import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
 import { TargetEcho } from "../../typechain/TargetEcho";
 import { TargetPanic } from "../../typechain/TargetPanic";
 import { TargetRevert } from "../../typechain/TargetRevert";
-import { computeFinalSalt, generateRandomSalt } from "../../dist/salts";
+import { computeFinalSalt } from "../../dist/salts";
 import { TargetSelfDestruct } from "../../typechain/TargetSelfDestruct";
+import { SALT_ZERO } from "../../helpers/constants";
 
 type IntegrationFixturePrbProxyReturnType = {
   prbProxy: PRBProxy;
@@ -33,7 +34,7 @@ export async function integrationFixturePrbProxy(signers: Signer[]): Promise<Int
   );
 
   const deployerAddress: string = await deployer.getAddress();
-  const finalSalt: string = computeFinalSalt(deployerAddress, generateRandomSalt());
+  const finalSalt: string = computeFinalSalt(deployerAddress, SALT_ZERO);
   const prbProxyAddress: string = await prbProxyFactory.connect(deployer).callStatic.__godMode_clone(finalSalt);
   await prbProxyFactory.connect(deployer).__godMode_clone(finalSalt);
   const prbProxy: PRBProxy = PRBProxy__factory.connect(prbProxyAddress, deployer);

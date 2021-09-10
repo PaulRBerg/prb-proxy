@@ -3,13 +3,12 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { generateRandomSalt } from "../../../../dist/salts";
+import { SALT_ZERO } from "../../../../helpers/constants";
 import { computeProxyAddress } from "../../../shared/create2";
 import { getCloneDeployedBytecode } from "../../../shared/eip1167";
 import { OwnableErrors } from "../../../shared/errors";
 
 export default function shouldBehaveLikeDeployFor(): void {
-  const salt: string = generateRandomSalt();
   let deployer: SignerWithAddress;
   let expectedBytecode: string;
   let owner: SignerWithAddress;
@@ -19,13 +18,13 @@ export default function shouldBehaveLikeDeployFor(): void {
     deployer = this.signers.alice;
     expectedBytecode = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
     owner = this.signers.bob;
-    proxyAddress = computeProxyAddress.call(this, deployer.address, salt);
+    proxyAddress = computeProxyAddress.call(this, deployer.address, SALT_ZERO);
   });
 
   context("when the owner is the zero address", function () {
     it("reverts", async function () {
       await expect(
-        this.contracts.prbProxyFactory.connect(this.signers.alice).deployFor(AddressZero, salt),
+        this.contracts.prbProxyFactory.connect(this.signers.alice).deployFor(AddressZero),
       ).to.be.revertedWith(OwnableErrors.OwnerZeroAddress);
     });
   });
@@ -33,7 +32,7 @@ export default function shouldBehaveLikeDeployFor(): void {
   context("when the owner is not the zero address", function () {
     context("when the deployer is the same as the owner", function () {
       it("deploys the proxy", async function () {
-        await this.contracts.prbProxyFactory.connect(deployer).deployFor(deployer.address, salt);
+        await this.contracts.prbProxyFactory.connect(deployer).deployFor(deployer.address);
         const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
         expect(deployedBytecode).to.equal(expectedBytecode);
       });
@@ -41,21 +40,24 @@ export default function shouldBehaveLikeDeployFor(): void {
 
     context("when the deployer is not the same as the owner", function () {
       it("deploys the proxy", async function () {
-        await this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address, salt);
+        await this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address);
         const deployedBytecode: string = await ethers.provider.getCode(proxyAddress);
         expect(deployedBytecode).to.equal(expectedBytecode);
       });
 
-      it("updates the mapping", async function () {
-        await this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address, salt);
+      it("updates the isProxy mapping", async function () {
+        await this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address);
         const isProxy: boolean = await this.contracts.prbProxyFactory.isProxy(proxyAddress);
         expect(isProxy).to.equal(true);
       });
 
+      // it("updates the salts mapping", async function () {
+      // });
+
       it("emits a DeployProxy event", async function () {
-        await expect(this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address, salt))
+        await expect(this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address))
           .to.emit(this.contracts.prbProxyFactory, "DeployProxy")
-          .withArgs(deployer.address, owner.address, proxyAddress);
+          .withArgs(deployer.address, deployer.address, owner.address, proxyAddress);
       });
     });
   });

@@ -5,7 +5,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { generateRandomSalt } from "../../../../dist/salts";
 import { OwnableErrors, PRBProxyErrors, PanicCodes } from "../../../shared/errors";
 import { bn } from "../../../shared/numbers";
 
@@ -252,7 +251,7 @@ export default function shouldBehaveLikeExecute(): void {
                     });
 
                     it("returns the response as bytes", async function () {
-                      const input: string = generateRandomSalt() + "cafe";
+                      const input: string = "0x602a423dfb9fc3767163c83caa68f6578d12c5f93e0157078c2382c59243d9e1";
                       const data: string = this.contracts.targetEcho.interface.encodeFunctionData("echoBytes", [input]);
                       const response: string = await this.contracts.prbProxy
                         .connect(owner)
@@ -264,7 +263,7 @@ export default function shouldBehaveLikeExecute(): void {
                     });
 
                     it("returns the response as bytes32", async function () {
-                      const input: string = generateRandomSalt();
+                      const input: string = "0xfc9dd41a581a55690af49d7b0943aa18aa5007089f11a3d738dfdcae43a2ef69";
                       const data: string = this.contracts.targetEcho.interface.encodeFunctionData("echoBytes32", [
                         input,
                       ]);

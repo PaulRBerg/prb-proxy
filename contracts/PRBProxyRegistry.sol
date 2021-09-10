@@ -5,9 +5,6 @@ import "./IPRBProxy.sol";
 import "./IPRBProxyFactory.sol";
 import "./IPRBProxyRegistry.sol";
 
-/// @notice Emitted when a proxy has already been deployed.
-error PRBProxyRegistry__ProxyAlreadyDeployed(address owner);
-
 /// @title PRBProxyRegistry
 /// @author Paul Razvan Berg
 contract PRBProxyRegistry is IPRBProxyRegistry {
@@ -26,22 +23,18 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyRegistry
-    function deploy(bytes32 salt) external override returns (address payable proxy) {
-        proxy = deployFor(msg.sender, salt);
+    function deploy() external override returns (address payable proxy) {
+        proxy = deployFor(msg.sender);
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner, bytes32 salt) public override returns (address payable proxy) {
-        // Do not deploy if the proxy already exists and the owner is the same.
-        IPRBProxy storedProxy = proxies[owner][salt];
-        if (address(storedProxy) != address(0) && storedProxy.owner() == owner) {
-            revert PRBProxyRegistry__ProxyAlreadyDeployed(owner);
-        }
+    function deployFor(address owner) public override returns (address payable proxy) {
+        bytes32 salt = bytes32(factory.salts(tx.origin));
 
         // Deploy the proxy via the factory.
-        proxy = factory.deployFor(owner, salt);
+        proxy = factory.deployFor(owner);
 
-        // Set the proxy in the mapping.
+        // Save the proxy in the mapping.
         proxies[owner][salt] = IPRBProxy(proxy);
     }
 }
