@@ -21,7 +21,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
     mapping(address => bool) internal _isProxy;
 
     /// @dev Internal mapping to track used salts per EOA.
-    mapping(address => uint256) internal _salts;
+    mapping(address => bytes32) internal _salts;
 
     /// CONSTRUCTOR ///
 
@@ -32,13 +32,13 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyFactory
-    function isProxy(address proxy) external view override returns (bool) {
-        return _isProxy[proxy];
+    function isProxy(address proxy) external view override returns (bool result) {
+        result = _isProxy[proxy];
     }
 
     /// @inheritdoc IPRBProxyFactory
-    function salts(address eoa) external view override returns (uint256) {
-        return _salts[eoa];
+    function salts(address eoa) external view override returns (bytes32 salt) {
+        salt = _salts[eoa];
     }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
@@ -50,13 +50,13 @@ contract PRBProxyFactory is IPRBProxyFactory {
 
     /// @inheritdoc IPRBProxyFactory
     function deployFor(address owner) public override returns (address payable proxy) {
-        bytes32 salt = bytes32(_salts[tx.origin]);
+        bytes32 salt = _salts[tx.origin];
 
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided salt.
-        salt = keccak256(abi.encode(tx.origin, salt));
+        bytes32 finalSalt = keccak256(abi.encode(tx.origin, salt));
 
         // Deploy the proxy as an EIP-1167 clone, via CREATE2.
-        proxy = clone(salt);
+        proxy = clone(finalSalt);
 
         // Initialize the proxy.
         IPRBProxy(proxy).initialize(owner);
@@ -66,7 +66,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
 
         // Increment the salt.
         unchecked {
-            _salts[tx.origin] += 1;
+            _salts[tx.origin] = bytes32(uint256(salt) + 1);
         }
 
         // Log the proxy via en event.

@@ -14,13 +14,13 @@ interface IPRBProxyFactory {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @notice The address of the implementation of PRBProxy.
-    function implementation() external view returns (IPRBProxy);
+    function implementation() external view returns (IPRBProxy proxy);
 
     /// @notice Mapping to track all deployed proxies.
-    function isProxy(address proxy) external view returns (bool);
+    function isProxy(address proxy) external view returns (bool result);
 
     /// @notice Mapping to track used salts per EOA.
-    function salts(address eoa) external view returns (uint256);
+    function salts(address eoa) external view returns (bytes32 salt);
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
