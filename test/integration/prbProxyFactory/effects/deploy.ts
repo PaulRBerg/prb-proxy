@@ -10,9 +10,9 @@ export default function shouldBehaveLikeDeploy(): void {
   let deployer: SignerWithAddress;
   let proxyAddress: string;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     deployer = this.signers.alice;
-    proxyAddress = computeProxyAddress.call(this, deployer.address, SALT_ZERO);
+    proxyAddress = await computeProxyAddress.call(this, deployer.address);
   });
 
   it("deploys the proxy", async function () {
@@ -22,16 +22,16 @@ export default function shouldBehaveLikeDeploy(): void {
     expect(deployedBytecode).to.equal(expectedBytecode);
   });
 
-  it("updates the isProxy mapping", async function () {
+  it("updates the nextSalts mapping", async function () {
+    await this.contracts.prbProxyFactory.connect(deployer).deploy();
+    const nextSalt: string = await this.contracts.prbProxyFactory.getNextSalt(deployer.address);
+    expect(nextSalt).to.equal(SALT_ONE);
+  });
+
+  it("updates the proxies mapping", async function () {
     await this.contracts.prbProxyFactory.connect(deployer).deploy();
     const isProxy: boolean = await this.contracts.prbProxyFactory.isProxy(proxyAddress);
     expect(isProxy).to.equal(true);
-  });
-
-  it("updates the salts mapping", async function () {
-    await this.contracts.prbProxyFactory.connect(deployer).deploy();
-    const salt: string = await this.contracts.prbProxyFactory.salts(deployer.address);
-    expect(salt).to.equal(SALT_ONE);
   });
 
   it("emits a DeployProxy event", async function () {

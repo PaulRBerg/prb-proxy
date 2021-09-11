@@ -12,10 +12,10 @@ export default function shouldBehaveLikeClone(): void {
   let proxyAddress: string;
   let finalSalt: string;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     const deployer: SignerWithAddress = this.signers.alice;
     finalSalt = computeFinalSalt(this.signers.alice.address, SALT_ZERO);
-    proxyAddress = computeProxyAddress.call(this, deployer.address, SALT_ZERO);
+    proxyAddress = await computeProxyAddress.call(this, deployer.address);
   });
 
   context("when the final salt was used", function () {

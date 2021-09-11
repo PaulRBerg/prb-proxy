@@ -10,9 +10,9 @@ export default function shouldBehaveLikeDeploy(): void {
   let deployer: SignerWithAddress;
   let proxyAddress: string;
 
-  beforeEach(function () {
+  beforeEach(async function () {
     deployer = this.signers.alice;
-    proxyAddress = computeProxyAddress.call(this, deployer.address, SALT_ZERO);
+    proxyAddress = await computeProxyAddress.call(this, deployer.address);
   });
 
   it("deploys the proxy", async function () {
@@ -24,7 +24,13 @@ export default function shouldBehaveLikeDeploy(): void {
 
   it("updates the proxies mapping", async function () {
     await this.contracts.prbProxyRegistry.connect(deployer).deploy();
-    const newProxyAddress: string = await this.contracts.prbProxyRegistry.proxies(deployer.address, SALT_ZERO);
-    expect(proxyAddress).to.equal(newProxyAddress);
+    const proxy: string = await this.contracts.prbProxyRegistry.getProxy(deployer.address, SALT_ZERO);
+    expect(proxyAddress).to.equal(proxy);
+  });
+
+  it("updates the lastSalts mapping", async function () {
+    await this.contracts.prbProxyRegistry.connect(deployer).deploy();
+    const lastSalt: string = await this.contracts.prbProxyRegistry.getLastSalt(deployer.address);
+    expect(lastSalt).to.equal(SALT_ZERO);
   });
 }

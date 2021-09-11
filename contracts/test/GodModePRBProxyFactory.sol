@@ -10,7 +10,7 @@ contract GodModePRBProxyFactory is PRBProxyFactory {
         // solhint-disable-previous-line no-empty-blocks
     }
 
-    function __godMode_clone(bytes32 salt) external returns (address payable proxy) {
-        proxy = clone(salt);
+    function __godMode_clone(bytes32 finalSalt) external returns (address payable proxy) {
+        proxy = clone(finalSalt);
     }
 }

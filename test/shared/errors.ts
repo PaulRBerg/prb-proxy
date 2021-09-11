@@ -19,3 +19,7 @@ export enum PRBProxyErrors {
 export enum PRBProxyFactoryErrors {
   CloneFailed = "PRBProxyFactory__CloneFailed",
 }
+
+export enum PRBProxyRegistryErrors {
+  ProxyAlreadyExists = "PRBProxyRegistry__ProxyAlreadyExists",
+}
