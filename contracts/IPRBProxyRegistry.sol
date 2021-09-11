@@ -18,16 +18,6 @@ interface IPRBProxyRegistry {
     /// @param owner The address of the owner of the current proxy.
     function getCurrentProxy(address owner) external view returns (IPRBProxy proxy);
 
-    /// @notice Gets the last salt that was used to deploy the proxy.
-    /// @dev This can grow by more than 1 between deployments, because users can call the factory directly.
-    /// @param owner The address of the owner of the proxies.
-    function getLastSalt(address owner) external view returns (bytes32 nextSalt);
-
-    /// @notice Gets the proxy for the given owner and salt.
-    /// @param owner The address of the owner of the proxy.
-    /// @param salt The data used as an additional input to CREATE2.
-    function getProxy(address owner, bytes32 salt) external view returns (IPRBProxy proxy);
-
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @notice Deploys a new proxy instance via the proxy factory.

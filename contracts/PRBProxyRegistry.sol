@@ -18,11 +18,8 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     /// INTERNAL STORAGE ///
 
-    /// @notice Internal mapping of owners to salts to proxies.
-    mapping(address => mapping(bytes32 => IPRBProxy)) internal proxies;
-
-    /// @dev Internal mapping to track the last used by an EOA.
-    mapping(address => bytes32) internal lastSalts;
+    /// @notice Internal mapping of owners to current proxies.
+    mapping(address => IPRBProxy) internal currentProxies;
 
     /// CONSTRUCTOR ///
 
@@ -34,18 +31,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     /// @inheritdoc IPRBProxyRegistry
     function getCurrentProxy(address owner) public view override returns (IPRBProxy proxy) {
-        bytes32 lastSalt = lastSalts[owner];
-        proxy = proxies[owner][lastSalt];
-    }
-
-    /// @inheritdoc IPRBProxyRegistry
-    function getLastSalt(address owner) external view override returns (bytes32 lastSalt) {
-        lastSalt = lastSalts[owner];
-    }
-
-    /// @inheritdoc IPRBProxyRegistry
-    function getProxy(address owner, bytes32 salt) external view override returns (IPRBProxy proxy) {
-        proxy = proxies[owner][salt];
+        proxy = currentProxies[owner];
     }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
@@ -63,15 +49,11 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {
             revert PRBProxyRegistry__ProxyAlreadyExists(owner);
         }
-        bytes32 salt = bytes32(factory.getNextSalt(tx.origin));
 
         // Deploy the proxy via the factory.
         proxy = factory.deployFor(owner);
 
-        // Save the proxy in the mapping.
-        proxies[owner][salt] = IPRBProxy(proxy);
-
-        // Save the last salt.
-        lastSalts[owner] = salt;
+        // Set or override the current proxy for the owner.
+        currentProxies[owner] = IPRBProxy(proxy);
     }
 }

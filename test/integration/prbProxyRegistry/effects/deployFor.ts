@@ -99,18 +99,8 @@ export default function shouldBehaveLikeDeployFor(): void {
               expect(deployedBytecode).to.equal(expectedBytecode);
             });
 
-            it("updates the proxies mapping", async function () {
+            it("updates the currentProxies mapping", async function () {
               await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address);
-              const proxy: string = await this.contracts.prbProxyRegistry.getProxy(owner.address, SALT_ONE);
-              expect(newProxyAddress).to.equal(proxy);
-            });
-
-            it("updates the lastSalts mapping", async function () {
-              await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address);
-
-              const lastSalt: string = await this.contracts.prbProxyRegistry.getLastSalt(owner.address);
-              expect(lastSalt).to.equal(SALT_ONE);
-
               const currentProxy: string = await this.contracts.prbProxyRegistry.getCurrentProxy(owner.address);
               expect(newProxyAddress).to.equal(currentProxy);
             });
@@ -130,18 +120,8 @@ export default function shouldBehaveLikeDeployFor(): void {
               expect(deployedBytecode).to.equal(expectedBytecode);
             });
 
-            it("updates the proxies mapping", async function () {
+            it("updates the currentProxies mapping", async function () {
               await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address);
-              const proxy: string = await this.contracts.prbProxyRegistry.getProxy(owner.address, SALT_TWO);
-              expect(newProxyAddress).to.equal(proxy);
-            });
-
-            it("updates the lastSalts mapping", async function () {
-              await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address);
-
-              const lastSalt: string = await this.contracts.prbProxyRegistry.getLastSalt(owner.address);
-              expect(lastSalt).to.equal(SALT_TWO);
-
               const currentProxy: string = await this.contracts.prbProxyRegistry.getCurrentProxy(owner.address);
               expect(newProxyAddress).to.equal(currentProxy);
             });
