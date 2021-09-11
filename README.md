@@ -63,17 +63,10 @@ $ yarn add prb-proxy
 
 ## Usage
 
-All scripts below are written in TypeScript and assume that they are run with [Hardhat](https://hardhat.org).
-In addition, familiarity with [Ethers](https://github.com/ethers-io/ethers.js) and
-[TypeChain](https://github.com/ethereum-ts/TypeChain/tree/master/packages/hardhat) is requisite.
-
-Check out my [solidity-template](https://github.com/paulrberg/solidity-template) for a boilerplate that combines
-Hardhat, Ethers and TypeChain.
-
 ### Contracts
 
-As an end user, you don't have to deploy the contracts in this project by yourself. As shown in a code snippet below, you can
-deploy your own proxy via the registry.
+As an end user, you don't have to deploy the contracts in this project by yourself. To deploy your own proxy, you can
+use the registry deployed at the address below (in fact, this is the recommended approach).
 
 | Contract         | Address                                    |
 | ---------------- | ------------------------------------------ |
@@ -81,9 +74,7 @@ deploy your own proxy via the registry.
 | PRBProxyFactory  | 0x479F1CD619a9efCeD0338a72C8CFc42Cd17B96F8 |
 | PRBProxyRegistry | 0x5E4cb493AF09B3e36AdF2aBBc9840E1297A9Bf1c |
 
-I deployed the contracts with the
-[deterministic-deployment-proxy](https://github.com/Zoltu/deterministic-deployment-proxy), so that they have the same addresses on
-all supported chains:
+### Supported Chains
 
 - [x] Ethereum Mainnet
 - [x] Ethereum Goerli Testnet
@@ -91,11 +82,18 @@ all supported chains:
 - [x] Ethereum Rinkeby Testnet
 - [x] Ethereum Ropsten Testnet
 - [x] Polygon Mainnet
-- [x] Polygon Mumbai Testnet
 - [x] Binance Smart Chain Mainnet
-- [x] Binance Smart Chain Testnet
 
-### Targets
+## Code Snippets
+
+All scripts below are written in TypeScript and assume that they are run with [Hardhat](https://hardhat.org).
+In addition, familiarity with [Ethers](https://github.com/ethers-io/ethers.js) and
+[TypeChain](https://github.com/ethereum-ts/TypeChain/tree/master/packages/hardhat) is requisite.
+
+Check out my [solidity-template](https://github.com/paulrberg/solidity-template) for a boilerplate that combines
+Hardhat, Ethers and TypeChain.
+
+### Target Contract
 
 You need a "target" contract to do anything meaningful with PRBProxy. This is basically a collection of stateless
 scripts. Below is an example for a target that performs a basic ERC-20 transfer.
