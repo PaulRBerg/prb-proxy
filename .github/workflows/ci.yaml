@@ -3,6 +3,7 @@ name: "Continuous Integration"
 env:
   COVERAGE_GIT_BRANCH: "main"
   COVERAGE_SERVICE_NAME: "github-actions-ci"
+  ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
   INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
   MNEMONIC: ${{ secrets.MNEMONIC }}
 
