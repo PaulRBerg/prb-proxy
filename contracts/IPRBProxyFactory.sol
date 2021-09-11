@@ -9,7 +9,14 @@ import "./IPRBProxy.sol";
 interface IPRBProxyFactory {
     /// EVENTS ///
 
-    event DeployProxy(address indexed origin, address indexed deployer, address indexed owner, address proxy);
+    event DeployProxy(
+        address indexed origin,
+        address indexed deployer,
+        address indexed owner,
+        bytes32 salt,
+        bytes32 finalSalt,
+        address proxy
+    );
 
     /// PUBLIC CONSTANT FUNCTIONS ///
 

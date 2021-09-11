@@ -3,7 +3,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { SALT_TWO, SALT_THREE, SALT_ZERO, SALT_ONE } from "../../../../helpers/constants";
 import { PRBProxy__factory } from "../../../../typechain/factories/PRBProxy__factory";
 import { PRBProxy } from "../../../../typechain/PRBProxy";
 import { computeProxyAddress } from "../../../shared/create2";

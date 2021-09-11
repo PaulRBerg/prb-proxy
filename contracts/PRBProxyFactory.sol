@@ -70,7 +70,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
         }
 
         // Log the proxy via en event.
-        emit DeployProxy(tx.origin, msg.sender, owner, address(proxy));
+        emit DeployProxy(tx.origin, msg.sender, owner, salt, finalSalt, address(proxy));
     }
 
     /// INTERNAL NON-CONSTANT FUNCTIONS ///

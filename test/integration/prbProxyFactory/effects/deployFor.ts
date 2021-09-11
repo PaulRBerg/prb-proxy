@@ -2,6 +2,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { computeFinalSalt } from "../../../../dist/salts";
 
 import { SALT_ONE, SALT_ZERO } from "../../../../helpers/constants";
 import { computeProxyAddress } from "../../../shared/create2";
@@ -60,7 +61,14 @@ export default function shouldBehaveLikeDeployFor(): void {
       it("emits a DeployProxy event", async function () {
         await expect(this.contracts.prbProxyFactory.connect(deployer).deployFor(owner.address))
           .to.emit(this.contracts.prbProxyFactory, "DeployProxy")
-          .withArgs(deployer.address, deployer.address, owner.address, proxyAddress);
+          .withArgs(
+            deployer.address,
+            deployer.address,
+            owner.address,
+            SALT_ZERO,
+            computeFinalSalt(deployer.address, SALT_ZERO),
+            proxyAddress,
+          );
       });
     });
   });

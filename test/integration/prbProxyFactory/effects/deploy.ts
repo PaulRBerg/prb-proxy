@@ -1,6 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { computeFinalSalt } from "../../../../dist/salts";
 
 import { SALT_ONE, SALT_ZERO } from "../../../../helpers/constants";
 import { computeProxyAddress } from "../../../shared/create2";
@@ -37,6 +38,13 @@ export default function shouldBehaveLikeDeploy(): void {
   it("emits a DeployProxy event", async function () {
     await expect(this.contracts.prbProxyFactory.connect(deployer).deploy())
       .to.emit(this.contracts.prbProxyFactory, "DeployProxy")
-      .withArgs(deployer.address, deployer.address, deployer.address, proxyAddress);
+      .withArgs(
+        deployer.address,
+        deployer.address,
+        deployer.address,
+        SALT_ZERO,
+        computeFinalSalt(deployer.address, SALT_ZERO),
+        proxyAddress,
+      );
   });
 }
