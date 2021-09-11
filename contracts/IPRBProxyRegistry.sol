@@ -14,13 +14,13 @@ interface IPRBProxyRegistry {
     /// @notice Proxy factory contract.
     function factory() external view returns (IPRBProxyFactory proxyFactory);
 
-    /// @notice Gets the last proxy that belongs to the given owner.
-    /// @param owner The address of the owner of the proxy.
-    function getLastProxy(address owner) external view returns (IPRBProxy proxy);
+    /// @notice Gets the current proxy that belongs to the given owner.
+    /// @param owner The address of the owner of the current proxy.
+    function getCurrentProxy(address owner) external view returns (IPRBProxy proxy);
 
     /// @notice Gets the last salt that was used to deploy the proxy.
-    /// @dev It is possible for this to grow by more than 1 between deployments. Users can call the factory directly.
-    /// @param owner The address of the owner of the proxy.
+    /// @dev This can grow by more than 1 between deployments, because users can call the factory directly.
+    /// @param owner The address of the owner of the proxies.
     function getLastSalt(address owner) external view returns (bytes32 nextSalt);
 
     /// @notice Gets the proxy for the given owner and salt.

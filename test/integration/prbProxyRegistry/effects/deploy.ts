@@ -30,7 +30,11 @@ export default function shouldBehaveLikeDeploy(): void {
 
   it("updates the lastSalts mapping", async function () {
     await this.contracts.prbProxyRegistry.connect(deployer).deploy();
+
     const lastSalt: string = await this.contracts.prbProxyRegistry.getLastSalt(deployer.address);
     expect(lastSalt).to.equal(SALT_ZERO);
+
+    const currentProxy: string = await this.contracts.prbProxyRegistry.getCurrentProxy(deployer.address);
+    expect(proxyAddress).to.equal(currentProxy);
   });
 }

@@ -9,7 +9,7 @@ const addresses = {
   PRBProxyRegistry: "0x12fC6456a49f549363ffFB67f18fc4E1f8f6AB62",
 };
 
-export function computeProxyAddress(this: Mocha.Context, deployer: string, salt: string): string {
+export function computeProxyAddress(deployer: string, salt: string): string {
   const cloneBytecode: string[] = ["3d602d80600a3d3981f3363d3d373d3d3d363d73", "5af43d82803e903d91602b57fd5bf3"];
   return getCreate2Address(
     addresses.PRBProxyFactory,

@@ -33,7 +33,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyRegistry
-    function getLastProxy(address owner) public view override returns (IPRBProxy proxy) {
+    function getCurrentProxy(address owner) public view override returns (IPRBProxy proxy) {
         bytes32 lastSalt = lastSalts[owner];
         proxy = proxies[owner][lastSalt];
     }
@@ -57,10 +57,10 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     /// @inheritdoc IPRBProxyRegistry
     function deployFor(address owner) public override returns (address payable proxy) {
-        IPRBProxy lastProxy = getLastProxy(owner);
+        IPRBProxy currentProxy = getCurrentProxy(owner);
 
         // Do not deploy if the proxy already exists and the owner is the same.
-        if (address(lastProxy) != address(0) && lastProxy.owner() == owner) {
+        if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {
             revert PRBProxyRegistry__ProxyAlreadyExists(owner);
         }
         bytes32 salt = bytes32(factory.getNextSalt(tx.origin));
