@@ -13,9 +13,6 @@ error PRBProxy__ExecutionReverted();
 /// @notice Emitted when passing an EOA or an undeployed contract as the target.
 error PRBProxy__TargetInvalid(address target);
 
-/// @notice Emitted when passing the zero address as the target.
-error PRBProxy__TargetZeroAddress();
-
 /// @title PRBProxy
 /// @author Paul Razvan Berg
 contract PRBProxy is
@@ -71,11 +68,6 @@ contract PRBProxy is
         onlyOwner
         returns (bytes memory response)
     {
-        // Check that the target is not the zero address.
-        if (target == address(0)) {
-            revert PRBProxy__TargetZeroAddress();
-        }
-
         // Check that the target is a valid contract.
         uint256 codeSize;
         assembly {
