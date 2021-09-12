@@ -7,7 +7,7 @@ import { PRBProxy__factory } from "../../../../typechain/factories/PRBProxy__fac
 import { PRBProxy } from "../../../../typechain/PRBProxy";
 import { computeProxyAddress } from "../../../shared/create2";
 import { getCloneDeployedBytecode } from "../../../shared/eip1167";
-import { PRBProxyRegistryErrors, OwnableErrors } from "../../../shared/errors";
+import { OwnableErrors, PRBProxyRegistryErrors } from "../../../shared/errors";
 
 export default function shouldBehaveLikeDeployFor(): void {
   let deployer: SignerWithAddress;
@@ -41,6 +41,20 @@ export default function shouldBehaveLikeDeployFor(): void {
           await expect(this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address)).to.be.revertedWith(
             PRBProxyRegistryErrors.ProxyAlreadyExists,
           );
+        });
+      });
+
+      context("when the owner renounced ownership", function () {
+        beforeEach(async function () {
+          const prbProxy: PRBProxy = PRBProxy__factory.connect(proxyAddress, owner);
+          await prbProxy.connect(owner).renounceOwnership();
+        });
+
+        it("deploys the proxy", async function () {
+          const newProxyAddress: string = await computeProxyAddress.call(this, deployer.address);
+          await this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address);
+          const deployedBytecode: string = await ethers.provider.getCode(newProxyAddress);
+          expect(deployedBytecode).to.equal(expectedBytecode);
         });
       });
 
