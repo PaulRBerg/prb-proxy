@@ -6,7 +6,7 @@ import "./IPRBProxyFactory.sol";
 
 /// @title IPRBProxyRegistry
 /// @author Paul Razvan Berg
-/// @notice Deploys new proxy instances via the proxy factory and keeps a registry of owners to proxies. Owners can only
+/// @notice Deploys new proxies via the factory and keeps a registry of owners to proxies. Owners can only
 /// have one proxy at a time.
 interface IPRBProxyRegistry {
     /// PUBLIC CONSTANT FUNCTIONS ///

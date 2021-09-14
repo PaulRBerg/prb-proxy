@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: WTFPL
 pragma solidity >=0.8.4;
 
-import "./IPRBProxy.sol";
-
 /// @title IPRBProxyFactory
 /// @author Paul Razvan Berg
 /// @notice Deploys new proxy instances with CREATE2.

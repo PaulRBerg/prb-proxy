@@ -5,9 +5,8 @@ import PRBProxyArtifact from "../artifacts/PRBProxy.json";
 import { computeFinalSalt } from "./salts";
 
 const addresses = {
-  PRBProxy: "0x427fA23EA53225AC1b7510194E51979510A68007",
-  PRBProxyFactory: "0x479F1CD619a9efCeD0338a72C8CFc42Cd17B96F8",
-  PRBProxyRegistry: "0x5E4cb493AF09B3e36AdF2aBBc9840E1297A9Bf1c",
+  PRBProxyFactory: "0x031233FDF1A3Fa4316aD0F197987fB975172450E",
+  PRBProxyRegistry: "0xB2D4c98DD0CB05C399e3f930Ba37D1f035d3C88A",
 };
 
 export function computeProxyAddress(deployer: string, salt: string): string {

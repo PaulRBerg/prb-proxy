@@ -5,8 +5,7 @@ that enables developers to execute multiple contract calls in one transaction. E
 have this feature; they are limited to interacting with only one contract per transaction.
 
 - Forwards calls with [DELEGATECALL][2]
-- Deploys new instances as [EIP-1167][3] clones, minimising deployments costs
-- Uses [CREATE2][1] to deploy the clones at deterministic addresses
+- Uses [CREATE2][1] to deploy the proxies at deterministic addresses
 - Reverts with custom errors instead of reason strings
 - Well-documented via NatSpec comments
 - Thoroughly tested with Hardhat and Waffle
@@ -23,28 +22,24 @@ The problem is that it got in years. The Ethereum development ecosystem is much 
 when DSProxy was originally developed. The Solidity compiler has [improved](https://docs.soliditylang.org/en/v0.8.7/080-breaking-changes.html) a lot,
 new OPCODES have been added to the EVM, and development environments like [Hardhat](https://hardhat.org/) make writing smart contracts a breeze.
 
-PRBProxy is a modern version of DSProxy. It still uses `DELEGATECALL` to forwards contract call, though it employs the
-[high-level instruction](https://ethereum.stackexchange.com/q/37601/24693) rather than assembly. There are however two
-major enhancements:
+PRBProxy is a modern version of DSProxy. It still uses `DELEGATECALL` to forwards contract calls, though it employs the
+[high-level instruction](https://ethereum.stackexchange.com/q/37601/24693) rather than assembly. There are two major improvements:
 
-1. PRBProxy is more lightweight. It takes [less gas](./README.md#gas-efficiency) to deploy, because it uses [EIP-1167][3]
-   and it contains only the strictly necessary features.
+1. PRBProxy is more lightweight. It takes [less gas](./README.md#gas-efficiency) to deploy, because it contains only the strictly necessary features.
 2. Unlike DSProxy, which uses
    [CREATE](https://ethereum.stackexchange.com/questions/760/how-is-the-address-of-an-ethereum-contract-computed),
    instances of PRBProxy are deployed via [CREATE2][1]. This enables clients to deterministically compute the address of the proxy contract ahead of time.
 
 Talking to the Maker team, I figured that the target contract [caching](https://github.com/dapphub/ds-proxy/blob/e17a2526ad5c9877ba925ff25c1119f519b7369b/src/proxy.sol#L130-L150)
-feature of DSProxy didn't really pick up steam. I have decided not to include it in PRBProxy, thus reducing the size
-of the bytecode.
+feature of DSProxy didn't really pick up steam. I have thus decided to not include it in PRBProxy, making the bytecode smaller.
 
-A noteworthy knock-on effect of using `CREATE2` is that it stamps out the risk of a [chain
-reorg](https://en.bitcoin.it/wiki/Chain_Reorganization). With DSProxy, one has to wait for a few blocks to be
-mined before one can be sure that the contract is safe to use. With PRBProxy, there is no need to do that. In fact, it
-is safe to send funds to the proxy _before_ it is even deployed.
+A noteworthy knock-on effect of using `CREATE2` is that it eliminates the risk of a [chain
+reorg](https://en.bitcoin.it/wiki/Chain_Reorganization) overriding the proxy. With DSProxy, one has to wait for a few blocks to be
+mined before one can assume the contract to be safe to use. With PRBProxy, there is no such risk. It is even safe to send funds to the proxy _before_ it is deployed.
 
 I covered a lot here, but I barely scratched the surface. Maker's developer guide [Working with
 DSProxy](https://github.com/makerdao/developerguides/blob/master/devtools/working-with-dsproxy/working-with-dsproxy.md)
-dives deep into how to compose proxy transactions. For the reasons here expounded the guide applies to PRBProxy as well;
+dives deep into how to compose contract calls. For the reasons mentioned herein, the guide applies to PRBProxy as well;
 just keep in mind the differences between the two.
 
 ## Install
@@ -65,14 +60,12 @@ $ yarn add prb-proxy
 
 ### Contracts
 
-As an end user, you don't have to deploy the contracts in this project by yourself. To deploy your own proxy, you can
-use the registry deployed at the address below (in fact, this is the recommended approach).
+As an end user, you don't have to deploy the contracts by yourself. To deploy your own proxy, you can use the registry at the address below. In fact, this is the recommended approach.
 
 | Contract         | Address                                    |
 | ---------------- | ------------------------------------------ |
-| PRBProxy         | 0x427fA23EA53225AC1b7510194E51979510A68007 |
-| PRBProxyFactory  | 0x479F1CD619a9efCeD0338a72C8CFc42Cd17B96F8 |
-| PRBProxyRegistry | 0x5E4cb493AF09B3e36AdF2aBBc9840E1297A9Bf1c |
+| PRBProxyFactory  | 0x031233FDF1A3Fa4316aD0F197987fB975172450E |
+| PRBProxyRegistry | 0xB2D4c98DD0CB05C399e3f930Ba37D1f035d3C88A |
 
 ### Supported Chains
 
@@ -86,9 +79,9 @@ use the registry deployed at the address below (in fact, this is the recommended
 
 ## Code Snippets
 
-All scripts below are written in TypeScript and assume that they are run with [Hardhat](https://hardhat.org).
-In addition, familiarity with [Ethers](https://github.com/ethers-io/ethers.js) and
-[TypeChain](https://github.com/ethereum-ts/TypeChain/tree/master/packages/hardhat) is requisite.
+All scripts below are written in TypeScript and assume that they are run in a [Hardhat](https://hardhat.org) project.
+Familiarity with [Ethers](https://github.com/ethers-io/ethers.js) and
+[TypeChain](https://github.com/ethereum-ts/TypeChain/tree/master/packages/hardhat) is also requisite.
 
 Check out my [solidity-template](https://github.com/paulrberg/solidity-template) for a boilerplate that combines
 Hardhat, Ethers and TypeChain.
@@ -270,12 +263,12 @@ task("execute-composite-call").setAction(async function (_, { ethers }) {
 
 ## Gas Efficiency
 
-On average, it costs 198,990 gas to deploy an instance of PRBProxy, whereas to deploy an instance
-of DSProxy it costs 596,198 gas. That's a whopping 3x reduction!
+It costs around 460,442 gas to deploy an instance of PRBProxy, whereas to deploy an instance of DSProxy it costs 596,198
+gas. That's a 1.29x reduction in deployment costs.
 
-The `execute` function in PRBProxy may consume a tad more gas than its counterpart in DSProxy, because I
-added extra sanity checks on the function inputs. But the lion's share of the gas cost when calling `execute`
-is attributed to the target contract, so the difference is negligible.
+The `execute` function in PRBProxy may cost a tiny bit more than its equivalent in DSProxy, but that's because I
+added an extra sanity check on the function inputs. Nevertheless, the lion's share of the gas cost when calling `execute`
+is due to the target contract.
 
 ## Security
 
@@ -311,4 +304,3 @@ This project follows the [Contributor Covenant](https://www.contributor-covenant
 
 [1]: https://eips.ethereum.org/EIPS/eip-1014
 [2]: https://ethereum.stackexchange.com/questions/3667/difference-between-call-callcode-and-delegatecall/3672
-[3]: https://eips.ethereum.org/EIPS/eip-1167
