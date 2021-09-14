@@ -1,6 +1,5 @@
 export enum OwnableErrors {
   NotOwner = "Ownable__NotOwner",
-  OwnerZeroAddress = "Ownable__OwnerZeroAddress",
 }
 
 export enum PanicCodes {

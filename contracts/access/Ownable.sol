@@ -30,21 +30,12 @@ contract Ownable is IOwnable {
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IOwnable
-    function renounceOwnership() external virtual override onlyOwner {
-        owner = address(0);
-        emit TransferOwnership(owner, address(0));
-    }
-
-    /// @inheritdoc IOwnable
     function transferOwnership(address newOwner) external virtual override onlyOwner {
         setOwner(newOwner);
     }
 
     /// INTERNAL NON-CONSTANT FUNCTIONS ///
     function setOwner(address newOwner) internal virtual {
-        if (newOwner == address(0)) {
-            revert Ownable__OwnerZeroAddress();
-        }
         owner = newOwner;
         emit TransferOwnership(owner, newOwner);
     }
