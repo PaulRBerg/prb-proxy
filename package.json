@@ -86,7 +86,7 @@
     "smart-contracts",
     "solidity"
   ],
-  "license": "WTFPL",
+  "license": "Unlicense",
   "main": "./dist/index.js",
   "peerDependencies": {
     "@ethersproject/abi": "^5.4.1",
