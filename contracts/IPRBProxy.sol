@@ -30,16 +30,6 @@ interface IPRBProxy is IOwnable {
     /// @return response The response received from the target contract.
     function execute(address target, bytes memory data) external payable returns (bytes memory response);
 
-    /// @notice Initializes the contract by setting the address of the owner of the proxy.
-    ///
-    /// @dev Supposed to be called by an EIP-1167 clone.
-    ///
-    /// Requirements:
-    /// - Can only be called once.
-    ///
-    /// @param owner_ The address of the owner of the proxy.
-    function initialize(address owner_) external;
-
     /// @notice Sets a new value for the `minGasReserve` storage variable.
     /// @dev Requirements:
     /// - The caller must be the owner.

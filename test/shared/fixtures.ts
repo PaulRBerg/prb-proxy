@@ -4,18 +4,16 @@ import { Artifact } from "hardhat/types";
 
 import { PRBProxy__factory } from "../../typechain/factories/PRBProxy__factory";
 import { PRBProxy } from "../../typechain/PRBProxy";
-import { GodModePRBProxyFactory } from "../../typechain/GodModePRBProxyFactory";
+import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
 import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
 import { TargetEcho } from "../../typechain/TargetEcho";
 import { TargetPanic } from "../../typechain/TargetPanic";
 import { TargetRevert } from "../../typechain/TargetRevert";
-import { computeFinalSalt } from "../../dist/salts";
 import { TargetSelfDestruct } from "../../typechain/TargetSelfDestruct";
 import { SALT_ZERO } from "../../helpers/constants";
 
 type IntegrationFixturePrbProxyReturnType = {
   prbProxy: PRBProxy;
-  prbProxyImplementation: PRBProxy;
   targetEcho: TargetEcho;
   targetPanic: TargetPanic;
   targetRevert: TargetRevert;
@@ -25,18 +23,14 @@ type IntegrationFixturePrbProxyReturnType = {
 export async function integrationFixturePrbProxy(signers: Signer[]): Promise<IntegrationFixturePrbProxyReturnType> {
   const deployer: Signer = signers[0];
 
-  const prbProxyArtifact: Artifact = await artifacts.readArtifact("PRBProxy");
-  const prbProxyImplementation: PRBProxy = <PRBProxy>await waffle.deployContract(deployer, prbProxyArtifact, []);
-
-  const godModePrbProxyFactoryArtifact: Artifact = await artifacts.readArtifact("GodModePRBProxyFactory");
-  const prbProxyFactory: GodModePRBProxyFactory = <GodModePRBProxyFactory>(
-    await waffle.deployContract(deployer, godModePrbProxyFactoryArtifact, [prbProxyImplementation.address])
+  const prbProxyFactoryArtifact: Artifact = await artifacts.readArtifact("PRBProxyFactory");
+  const prbProxyFactory: PRBProxyFactory = <PRBProxyFactory>(
+    await waffle.deployContract(deployer, prbProxyFactoryArtifact, [])
   );
 
   const deployerAddress: string = await deployer.getAddress();
-  const finalSalt: string = computeFinalSalt(deployerAddress, SALT_ZERO);
-  const prbProxyAddress: string = await prbProxyFactory.connect(deployer).callStatic.__godMode_clone(finalSalt);
-  await prbProxyFactory.connect(deployer).__godMode_clone(finalSalt);
+  const prbProxyAddress: string = await prbProxyFactory.connect(deployer).callStatic.deployFor(deployerAddress);
+  await prbProxyFactory.connect(deployer).deployFor(deployerAddress);
   const prbProxy: PRBProxy = PRBProxy__factory.connect(prbProxyAddress, deployer);
 
   const targetEchoArtifact: Artifact = await artifacts.readArtifact("TargetEcho");
@@ -53,12 +47,12 @@ export async function integrationFixturePrbProxy(signers: Signer[]): Promise<Int
     await waffle.deployContract(deployer, targetSelfDestructArtifact, [])
   );
 
-  return { prbProxy, prbProxyImplementation, targetEcho, targetPanic, targetRevert, targetSelfDestruct };
+  return { prbProxy, targetEcho, targetPanic, targetRevert, targetSelfDestruct };
 }
 
 type IntegrationFixturePrbProxyFactoryReturnType = {
-  prbProxyFactory: GodModePRBProxyFactory;
-  prbProxyImplementation: PRBProxy;
+  prbProxy: PRBProxy;
+  prbProxyFactory: PRBProxyFactory;
 };
 
 export async function integrationFixturePrbProxyFactory(
@@ -67,19 +61,19 @@ export async function integrationFixturePrbProxyFactory(
   const deployer: Signer = signers[0];
 
   const prbProxyArtifact: Artifact = await artifacts.readArtifact("PRBProxy");
-  const prbProxyImplementation: PRBProxy = <PRBProxy>await waffle.deployContract(deployer, prbProxyArtifact, []);
+  const prbProxy: PRBProxy = <PRBProxy>await waffle.deployContract(deployer, prbProxyArtifact, []);
 
-  const godeModePrbProxyFactoryArtifact: Artifact = await artifacts.readArtifact("GodModePRBProxyFactory");
-  const prbProxyFactory: GodModePRBProxyFactory = <GodModePRBProxyFactory>(
-    await waffle.deployContract(deployer, godeModePrbProxyFactoryArtifact, [prbProxyImplementation.address])
+  const prbProxyFactoryArtifact: Artifact = await artifacts.readArtifact("PRBProxyFactory");
+  const prbProxyFactory: PRBProxyFactory = <PRBProxyFactory>(
+    await waffle.deployContract(deployer, prbProxyFactoryArtifact, [])
   );
 
-  return { prbProxyFactory, prbProxyImplementation };
+  return { prbProxy, prbProxyFactory };
 }
 
 type IntegrationFixturePrbProxyRegistryReturnType = {
-  prbProxyFactory: GodModePRBProxyFactory;
-  prbProxyImplementation: PRBProxy;
+  prbProxy: PRBProxy;
+  prbProxyFactory: PRBProxyFactory;
   prbProxyRegistry: PRBProxyRegistry;
 };
 
@@ -89,11 +83,11 @@ export async function integrationFixturePrbProxyRegistry(
   const deployer: Signer = signers[0];
 
   const prbProxyArtifact: Artifact = await artifacts.readArtifact("PRBProxy");
-  const prbProxyImplementation: PRBProxy = <PRBProxy>await waffle.deployContract(deployer, prbProxyArtifact, []);
+  const prbProxy: PRBProxy = <PRBProxy>await waffle.deployContract(deployer, prbProxyArtifact, []);
 
-  const godeModePrbProxyFactoryArtifact: Artifact = await artifacts.readArtifact("GodModePRBProxyFactory");
-  const prbProxyFactory: GodModePRBProxyFactory = <GodModePRBProxyFactory>(
-    await waffle.deployContract(deployer, godeModePrbProxyFactoryArtifact, [prbProxyImplementation.address])
+  const prbProxyFactoryArtifact: Artifact = await artifacts.readArtifact("PRBProxyFactory");
+  const prbProxyFactory: PRBProxyFactory = <PRBProxyFactory>(
+    await waffle.deployContract(deployer, prbProxyFactoryArtifact, [])
   );
 
   const prbProxyRegistryArtifact: Artifact = await artifacts.readArtifact("PRBProxyRegistry");
@@ -101,5 +95,5 @@ export async function integrationFixturePrbProxyRegistry(
     await waffle.deployContract(deployer, prbProxyRegistryArtifact, [prbProxyFactory.address])
   );
 
-  return { prbProxyFactory, prbProxyImplementation, prbProxyRegistry };
+  return { prbProxy, prbProxyFactory, prbProxyRegistry };
 }

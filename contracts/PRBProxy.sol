@@ -4,9 +4,6 @@ pragma solidity >=0.8.4;
 import "./IPRBProxy.sol";
 import "./access/Ownable.sol";
 
-/// @notice Emitted when attempting to initialize the contract again.
-error PRBProxy__AlreadyInitialized();
-
 /// @notice Emitted when execution reverted with no reason.
 error PRBProxy__ExecutionReverted();
 
@@ -24,41 +21,18 @@ contract PRBProxy is
     /// @inheritdoc IPRBProxy
     uint256 public override minGasReserve;
 
-    /// INTERNAL STORAGE ///
-
-    /// @dev Indicates that the contract has been initialized.
-    bool internal initialized;
-
     /// CONSTRUCTOR ///
 
-    /// @dev Initializes the implementation contract. The owner is set to the zero address so that no function
-    /// can be called post deployment. This eliminates the risk of an accidental self destruct.
-    constructor() {
-        initialized = true;
-        owner = address(0);
+    constructor() Ownable() {
+        minGasReserve = 5000;
     }
 
     /// FALLBACK FUNCTION ///
 
     /// @dev Called when Ether is sent and the call data is empty.
-    receive() external payable {
-        // solhint-disable-previous-line no-empty-blocks
-    }
+    receive() external payable {}
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
-
-    /// @inheritdoc IPRBProxy
-    function initialize(address owner_) external override {
-        // Checks
-        if (initialized) {
-            revert PRBProxy__AlreadyInitialized();
-        }
-
-        // Effects
-        initialized = true;
-        minGasReserve = 5000;
-        setOwner(owner_);
-    }
 
     /// @inheritdoc IPRBProxy
     function execute(address target, bytes memory data)

@@ -4,11 +4,11 @@ import { shouldBehaveLikePrbProxyRegistry } from "./PRBProxyRegistry.behavior";
 export function integrationTestPrbProxyRegistry(): void {
   describe("PRBProxyRegistry", function () {
     beforeEach(async function () {
-      const { prbProxyFactory, prbProxyImplementation, prbProxyRegistry } = await this.loadFixture(
+      const { prbProxy, prbProxyFactory, prbProxyRegistry } = await this.loadFixture(
         integrationFixturePrbProxyRegistry,
       );
+      this.contracts.prbProxy = prbProxy;
       this.contracts.prbProxyFactory = prbProxyFactory;
-      this.contracts.prbProxyImplementation = prbProxyImplementation;
       this.contracts.prbProxyRegistry = prbProxyRegistry;
     });
 

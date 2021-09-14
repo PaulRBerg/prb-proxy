@@ -4,8 +4,8 @@ import { shouldBehaveLikePrbProxyFactory } from "./PRBProxyFactory.behavior";
 export function integrationTestPrbProxyFactory(): void {
   describe("PRBProxyFactory", function () {
     beforeEach(async function () {
-      const { prbProxyFactory, prbProxyImplementation } = await this.loadFixture(integrationFixturePrbProxyFactory);
-      this.contracts.prbProxyImplementation = prbProxyImplementation;
+      const { prbProxy, prbProxyFactory } = await this.loadFixture(integrationFixturePrbProxyFactory);
+      this.contracts.prbProxy = prbProxy;
       this.contracts.prbProxyFactory = prbProxyFactory;
     });
 

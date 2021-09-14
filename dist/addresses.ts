@@ -1,6 +1,7 @@
 import { getCreate2Address } from "@ethersproject/address";
 import { keccak256 as solidityKeccak256 } from "@ethersproject/solidity";
 
+import PRBProxyArtifact from "../artifacts/PRBProxy.json";
 import { computeFinalSalt } from "./salts";
 
 const addresses = {
@@ -10,11 +11,10 @@ const addresses = {
 };
 
 export function computeProxyAddress(deployer: string, salt: string): string {
-  const cloneBytecode: string[] = ["3d602d80600a3d3981f3363d3d373d3d3d363d73", "5af43d82803e903d91602b57fd5bf3"];
   return getCreate2Address(
     addresses.PRBProxyFactory,
     computeFinalSalt(deployer, salt),
-    solidityKeccak256(["bytes"], ["0x" + cloneBytecode[0] + addresses.PRBProxy + cloneBytecode[1]]),
+    solidityKeccak256(["bytes"], [PRBProxyArtifact.bytecode]),
   );
 }
 

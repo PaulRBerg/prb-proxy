@@ -27,15 +27,19 @@ contract Ownable is IOwnable {
         _;
     }
 
+    /// CONSTRUCTOR ///
+
+    /// @notice Initializes the contract by setting the caller as the initial owner.
+    constructor() {
+        address msgSender = msg.sender;
+        owner = msgSender;
+        emit TransferOwnership(address(0), msgSender);
+    }
+
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IOwnable
-    function transferOwnership(address newOwner) external virtual override onlyOwner {
-        setOwner(newOwner);
-    }
-
-    /// INTERNAL NON-CONSTANT FUNCTIONS ///
-    function setOwner(address newOwner) internal virtual {
+    function transferOwnership(address newOwner) public virtual override onlyOwner {
         owner = newOwner;
         emit TransferOwnership(owner, newOwner);
     }

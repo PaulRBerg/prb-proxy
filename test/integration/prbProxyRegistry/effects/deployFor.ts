@@ -1,11 +1,10 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { artifacts, ethers } from "hardhat";
 
 import { PRBProxy__factory } from "../../../../typechain/factories/PRBProxy__factory";
 import { PRBProxy } from "../../../../typechain/PRBProxy";
 import { computeProxyAddress } from "../../../shared/create2";
-import { getCloneDeployedBytecode } from "../../../shared/eip1167";
 import { PRBProxyRegistryErrors } from "../../../shared/errors";
 
 export default function shouldBehaveLikeDeployFor(): void {
@@ -16,7 +15,7 @@ export default function shouldBehaveLikeDeployFor(): void {
 
   beforeEach(async function () {
     deployer = this.signers.alice;
-    expectedBytecode = getCloneDeployedBytecode(this.contracts.prbProxyImplementation.address);
+    expectedBytecode = (await artifacts.readArtifact("PRBProxy")).deployedBytecode;
     owner = this.signers.bob;
     proxyAddress = await computeProxyAddress.call(this, deployer.address);
   });
