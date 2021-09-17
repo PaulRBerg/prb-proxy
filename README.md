@@ -1,7 +1,7 @@
 # PRBProxy [![Coverage Status](https://coveralls.io/repos/github/paulrberg/prb-proxy/badge.svg?branch=main)](https://coveralls.io/github/paulrberg/prb-proxy?branch=main) [![Styled with Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io) [![Commitizen Friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/) [![license: Unlicense](https://img.shields.io/badge/license-Unlicense-yellow.svg)](https://unlicense.org/)
 
 **Proxy contract to compose Ethereum transactions on behalf of the owner.** You can think of this as a smart wallet
-that enables developers to execute multiple contract calls in one transaction. Externally owned accounts do not
+that enables you to execute multiple contract calls in one transaction. Externally owned accounts do not
 have this feature; they are limited to interacting with only one contract per transaction.
 
 - Forwards calls with [DELEGATECALL][2]
