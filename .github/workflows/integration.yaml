@@ -28,19 +28,19 @@ jobs:
           cache: "yarn"
           node-version: "16"
 
-      - name: "Install dependencies"
+      - name: "Install the dependencies"
         run: "yarn install --immutable"
 
-      - name: "Lint Solidity and TypeScript code"
+      - name: "Lint the code"
         run: "yarn lint"
 
-      - name: "Compile the contracts and generate TypeChain bindings"
+      - name: "Compile the contracts and generate the TypeChain bindings"
         run: "yarn typechain"
 
-      - name: "Test the contracts and run code coverage"
+      - name: "Test the contracts and generate the coverage report"
         run: "yarn coverage"
 
-      - name: "Upload report to Coveralls"
+      - name: "Upload the coverage report to Coveralls"
         uses: "coverallsapp/github-action@master"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
