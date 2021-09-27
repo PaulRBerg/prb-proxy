@@ -19,7 +19,7 @@ contract PRBProxy is
     /// PUBLIC STORAGE ///
 
     /// @inheritdoc IPRBProxy
-    uint256 public override minGasReserve;
+    uint256 public minGasReserve;
 
     /// CONSTRUCTOR ///
 
@@ -35,13 +35,7 @@ contract PRBProxy is
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxy
-    function execute(address target, bytes memory data)
-        external
-        payable
-        override
-        onlyOwner
-        returns (bytes memory response)
-    {
+    function execute(address target, bytes memory data) external payable onlyOwner returns (bytes memory response) {
         // Check that the target is a valid contract.
         uint256 codeSize;
         assembly {
@@ -76,7 +70,7 @@ contract PRBProxy is
     }
 
     /// @inheritdoc IPRBProxy
-    function setMinGasReserve(uint256 newMinGasReserve) external override onlyOwner {
+    function setMinGasReserve(uint256 newMinGasReserve) external onlyOwner {
         minGasReserve = newMinGasReserve;
     }
 }

@@ -22,9 +22,7 @@ export default function shouldBehaveLikeExecute(): void {
       raider = this.signers.bob;
     });
 
-    // This and the other skipped tests are actually okay. There's a bug in Solidity which makes them fail:
-    // https://github.com/ethereum/solidity/issues/11898
-    it.skip("reverts", async function () {
+    it("reverts", async function () {
       const target: string = AddressZero;
       const data: string = "0x";
       await expect(this.contracts.prbProxy.connect(raider).execute(target, data)).to.be.revertedWith(
@@ -36,7 +34,7 @@ export default function shouldBehaveLikeExecute(): void {
   context("when the caller is the owner", function () {
     context("when the target is not a contract", function () {
       context("when the target is the zero address", function () {
-        it.skip("reverts", async function () {
+        it("reverts", async function () {
           const target: string = AddressZero;
           const data: string = "0x";
           await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(
@@ -46,7 +44,7 @@ export default function shouldBehaveLikeExecute(): void {
       });
 
       context("when the target is not the zero address", function () {
-        it.skip("reverts", async function () {
+        it("reverts", async function () {
           const target: string = "0x0000000000000000000000000000000000000001";
           const data: string = "0x";
           await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(

@@ -294,8 +294,6 @@ If you discover any security issues, you can report them via [Keybase](https://k
 Feel free to dive in! [Open](https://github.com/paulrberg/prb-proxy/issues/new) an issue,
 [start](https://github.com/paulrberg/prb-proxy/discussions/new) a discussion or submit a PR.
 
-This project follows the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct.
-
 ## License
 
 [Unlicense](./LICENSE.md) © Paul Razvan Berg

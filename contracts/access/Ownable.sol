@@ -15,7 +15,7 @@ contract Ownable is IOwnable {
     /// PUBLIC STORAGE ///
 
     /// @inheritdoc IOwnable
-    address public override owner;
+    address public owner;
 
     /// MODIFIERS ///
 
@@ -39,7 +39,7 @@ contract Ownable is IOwnable {
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IOwnable
-    function transferOwnership(address newOwner) public virtual override onlyOwner {
+    function transferOwnership(address newOwner) public virtual onlyOwner {
         owner = newOwner;
         emit TransferOwnership(owner, newOwner);
     }
