@@ -1,5 +1,5 @@
 import { getCreate2Address } from "@ethersproject/address";
-import { keccak256 as solidityKeccak256 } from "@ethersproject/solidity";
+import { keccak256 } from "@ethersproject/keccak256";
 import { artifacts } from "hardhat";
 
 import { computeFinalSalt } from "../../dist/salts";
@@ -10,6 +10,6 @@ export async function computeProxyAddress(this: Mocha.Context, deployer: string)
   return getCreate2Address(
     this.contracts.prbProxyFactory.address,
     computeFinalSalt(deployer, nextSalt),
-    solidityKeccak256(["bytes"], [bytecode]),
+    keccak256(bytecode),
   );
 }

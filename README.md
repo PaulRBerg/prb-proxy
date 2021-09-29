@@ -12,8 +12,8 @@ have this feature; they are limited to interacting with only one contract per tr
 
 ## Background
 
-The idea of a proxy contract has been popularised by [DappHub](https://github.com/dapphub), a team of developers who helped create
-the decentralised stablecoin [DAI](https://makerdao.com). DappHub is the creator of [ds-proxy](https://github.com/dapphub/ds-proxy),
+The idea of a proxy contract has been popularized by [DappHub](https://github.com/dapphub), a team of developers who helped create
+the decentralized stablecoin [DAI](https://makerdao.com). DappHub is the creator of [ds-proxy](https://github.com/dapphub/ds-proxy),
 which grew to become the [de facto](https://ethereum.stackexchange.com/a/90304/24693) solution for developers who need to execute multiple contract
 calls in one transaction. For example, [Maker](https://makerdao.com), [Balancer](https://balancer.fi), and [DeFi
 Saver](https://defisaver.com/) all use DSProxy.
@@ -53,7 +53,7 @@ $ yarn add prb-proxy
 Or npm:
 
 ```bash
-$ yarn add prb-proxy
+$ npm install prb-proxy
 ```
 
 ## Usage
@@ -126,7 +126,7 @@ compute the address of your next instance of PRBProxy, before it is deployed. Th
 Neither `PRBProxyFactory` nor `PRBProxyRegistry` lets users provide a custom salt when deploying a proxy. Instead,
 the factory contract maintains a mapping between
 [tx.origin](https://ethereum.stackexchange.com/questions/109680/is-tx-origin-always-an-externally-owned-account-eoa)
-accounts and some `bytes32` salts, each starting at `0x00`. Why `tx.origin`? It
+accounts and some `bytes32` salts, each starting at `0x00` and growing linearly from there. If you wonder why `tx.origin`, that's because it
 [prevents](https://ethereum.stackexchange.com/questions/109272/how-to-prevent-front-running-the-salt-when-using-create2)
 the front-running of the salt.
 
@@ -267,7 +267,7 @@ It costs around 460,442 gas to deploy an instance of PRBProxy, whereas to deploy
 gas. That's a 1.29x reduction in deployment costs.
 
 The `execute` function in PRBProxy may cost a tiny bit more than its equivalent in DSProxy, but that's because I
-added an extra sanity check on the function inputs. Nevertheless, the lion's share of the gas cost when calling `execute`
+added an extra sanity check on the function inputs. At any rate, the lion's share of the gas cost when calling `execute`
 is due to the target contract.
 
 ## Security
