@@ -1,14 +1,13 @@
 # directories
 .yarn/
-artifacts/
-build/
-cache/
-coverage/
-dist/**/*.d.ts
-dist/**/*.js
-lib/
-node_modules/
-typechain/
+**/.nyc_output
+**/artifacts
+**/build
+**/cache
+**/coverage
+**/dist
+**/node_modules
+**/typechain
 
 # files
 *.env

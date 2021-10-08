@@ -1,0 +1,5 @@
+{
+  "extends": "../../tsconfig.json",
+  "files": [],
+  "include": ["typechain/**/*.d.ts", "typechain/**/*.ts"]
+}
