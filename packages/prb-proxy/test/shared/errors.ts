@@ -7,6 +7,7 @@ export enum PanicCodes {
 export enum PRBProxyErrors {
   EXECUTION_REVERTED = "PRBProxy__ExecutionReverted",
   NOT_OWNER = "PRBProxy__NotOwner",
+  OWNER_CHANGED = "PRBProxy__OwnerChanged",
   TARGET_INVALID = "PRBProxy__TargetInvalid",
   TARGET_ZERO_ADDRESS = "PRBProxy__TargetZeroAddress",
 }

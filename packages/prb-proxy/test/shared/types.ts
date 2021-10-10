@@ -4,6 +4,7 @@ import { Fixture } from "ethereum-waffle";
 import { PRBProxy } from "../../typechain/PRBProxy";
 import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
 import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
+import { TargetChangeOwner } from "../../typechain/TargetChangeOwner";
 import { TargetEcho } from "../../typechain/TargetEcho";
 import { TargetPanic } from "../../typechain/TargetPanic";
 import { TargetRevert } from "../../typechain/TargetRevert";
@@ -21,14 +22,19 @@ export interface Contracts {
   prbProxy: PRBProxy;
   prbProxyFactory: PRBProxyFactory;
   prbProxyRegistry: PRBProxyRegistry;
-  targetEcho: TargetEcho;
-  targetPanic: TargetPanic;
-  targetRevert: TargetRevert;
-  targetSelfDestruct: TargetSelfDestruct;
+  targets: Targets;
 }
 
 export interface Signers {
   alice: SignerWithAddress;
   bob: SignerWithAddress;
   carol: SignerWithAddress;
+}
+
+export interface Targets {
+  changeOwner: TargetChangeOwner;
+  echo: TargetEcho;
+  panic: TargetPanic;
+  revert: TargetRevert;
+  selfDestruct: TargetSelfDestruct;
 }

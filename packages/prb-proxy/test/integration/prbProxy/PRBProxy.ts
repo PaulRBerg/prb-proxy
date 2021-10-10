@@ -4,14 +4,13 @@ import { shouldBehaveLikePrbProxy } from "./PRBProxy.behavior";
 export function integrationTestPrbProxy(): void {
   describe("PRBProxy", function () {
     beforeEach(async function () {
-      const { prbProxy, targetEcho, targetPanic, targetRevert, targetSelfDestruct } = await this.loadFixture(
-        integrationFixturePrbProxy,
-      );
+      const { prbProxy, targets } = await this.loadFixture(integrationFixturePrbProxy);
       this.contracts.prbProxy = prbProxy;
-      this.contracts.targetEcho = targetEcho;
-      this.contracts.targetPanic = targetPanic;
-      this.contracts.targetRevert = targetRevert;
-      this.contracts.targetSelfDestruct = targetSelfDestruct;
+      this.contracts.targets.changeOwner = targets.changeOwner;
+      this.contracts.targets.echo = targets.echo;
+      this.contracts.targets.panic = targets.panic;
+      this.contracts.targets.revert = targets.revert;
+      this.contracts.targets.selfDestruct = targets.selfDestruct;
     });
 
     shouldBehaveLikePrbProxy();

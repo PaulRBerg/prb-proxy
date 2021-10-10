@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.4;
 
+import "hardhat/console.sol";
 import "./IPRBProxy.sol";
 
 /// @notice Emitted when execution reverted with no reason.
@@ -9,8 +10,8 @@ error PRBProxy__ExecutionReverted();
 /// @notice Emitted when the caller is not the owner.
 error PRBProxy__NotOwner(address owner, address caller);
 
-/// @notice Emitted when setting the owner to the zero address.
-error PRBProxy__OwnerZeroAddress();
+/// @notice Emitted when the owner is changed during the DELEGATECALL.
+error PRBProxy__OwnerChanged(address originalOwner, address newOwner);
 
 /// @notice Emitted when passing an EOA or an undeployed contract as the target.
 error PRBProxy__TargetInvalid(address target);
@@ -62,12 +63,20 @@ contract PRBProxy is IPRBProxy {
             revert PRBProxy__TargetInvalid(target);
         }
 
-        // Ensure that there will remain enough gas after the DELEGATECALL.
+        // Save the owner address in memory. This local variable cannot be modified during the DELEGATECALL.
+        address owner_ = owner;
+
+        // Reserve some gas to ensure that there will be enough to complete the function execution.
         uint256 stipend = gasleft() - minGasReserve;
 
         // Delegate call to the target contract.
         bool success;
         (success, response) = target.delegatecall{ gas: stipend }(data);
+
+        // Check that the owner has not been changed.
+        if (owner_ != owner) {
+            revert PRBProxy__OwnerChanged(owner_, owner);
+        }
 
         // Log the execution.
         emit Execute(target, data, response);

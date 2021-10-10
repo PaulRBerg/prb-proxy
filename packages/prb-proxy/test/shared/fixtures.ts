@@ -6,6 +6,7 @@ import { PRBProxy__factory } from "../../typechain/factories/PRBProxy__factory";
 import { PRBProxy } from "../../typechain/PRBProxy";
 import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
 import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
+import { TargetChangeOwner } from "../../typechain/TargetChangeOwner";
 import { TargetEcho } from "../../typechain/TargetEcho";
 import { TargetPanic } from "../../typechain/TargetPanic";
 import { TargetRevert } from "../../typechain/TargetRevert";
@@ -13,10 +14,13 @@ import { TargetSelfDestruct } from "../../typechain/TargetSelfDestruct";
 
 type IntegrationFixturePrbProxyReturnType = {
   prbProxy: PRBProxy;
-  targetEcho: TargetEcho;
-  targetPanic: TargetPanic;
-  targetRevert: TargetRevert;
-  targetSelfDestruct: TargetSelfDestruct;
+  targets: {
+    changeOwner: TargetChangeOwner;
+    echo: TargetEcho;
+    panic: TargetPanic;
+    revert: TargetRevert;
+    selfDestruct: TargetSelfDestruct;
+  };
 };
 
 export async function integrationFixturePrbProxy(signers: Signer[]): Promise<IntegrationFixturePrbProxyReturnType> {
@@ -32,6 +36,11 @@ export async function integrationFixturePrbProxy(signers: Signer[]): Promise<Int
   await prbProxyFactory.connect(deployer).deployFor(deployerAddress);
   const prbProxy: PRBProxy = PRBProxy__factory.connect(prbProxyAddress, deployer);
 
+  const targetChangeOwnerArtifact: Artifact = await artifacts.readArtifact("TargetChangeOwner");
+  const targetChangeOwner: TargetChangeOwner = <TargetChangeOwner>(
+    await waffle.deployContract(deployer, targetChangeOwnerArtifact, [])
+  );
+
   const targetEchoArtifact: Artifact = await artifacts.readArtifact("TargetEcho");
   const targetEcho: TargetEcho = <TargetEcho>await waffle.deployContract(deployer, targetEchoArtifact, []);
 
@@ -46,7 +55,16 @@ export async function integrationFixturePrbProxy(signers: Signer[]): Promise<Int
     await waffle.deployContract(deployer, targetSelfDestructArtifact, [])
   );
 
-  return { prbProxy, targetEcho, targetPanic, targetRevert, targetSelfDestruct };
+  return {
+    prbProxy,
+    targets: {
+      changeOwner: targetChangeOwner,
+      echo: targetEcho,
+      panic: targetPanic,
+      revert: targetRevert,
+      selfDestruct: targetSelfDestruct,
+    },
+  };
 }
 
 type IntegrationFixturePrbProxyFactoryReturnType = {
