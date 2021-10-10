@@ -28,7 +28,7 @@ export default function shouldBehaveLikeDeployFor(): void {
     context("when the owner did not transfer ownership", function () {
       it("reverts", async function () {
         await expect(this.contracts.prbProxyRegistry.connect(deployer).deployFor(owner.address)).to.be.revertedWith(
-          PRBProxyRegistryErrors.ProxyAlreadyExists,
+          PRBProxyRegistryErrors.PROXY_ALREADY_EXISTS,
         );
       });
     });

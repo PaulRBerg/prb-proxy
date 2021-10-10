@@ -1,17 +1,20 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.4;
 
-import "./access/IOwnable.sol";
-
 /// @title IPRBProxy
 /// @author Paul Razvan Berg
 /// @notice Proxy contract to compose transactions on owner's behalf.
-interface IPRBProxy is IOwnable {
+interface IPRBProxy {
     /// EVENTS ///
 
     event Execute(address indexed target, bytes data, bytes response);
 
+    event TransferOwnership(address indexed oldOwner, address indexed newOwner);
+
     /// PUBLIC CONSTANT FUNCTIONS ///
+
+    /// @notice The address of the owner account or contract.
+    function owner() external view returns (address);
 
     /// @notice How much gas should remain for executing the remainder of the assembly code.
     function minGasReserve() external view returns (uint256);
@@ -34,4 +37,9 @@ interface IPRBProxy is IOwnable {
     /// @dev Requirements:
     /// - The caller must be the owner.
     function setMinGasReserve(uint256 newMinGasReserve) external;
+
+    /// @notice Transfers the owner of the contract to a new account (`newOwner`). Can only be
+    /// called by the current owner.
+    /// @param newOwner The acount of the new owner.
+    function transferOwnership(address newOwner) external;
 }

@@ -5,7 +5,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-import { OwnableErrors, PRBProxyErrors, PanicCodes } from "../../../shared/errors";
+import { PRBProxyErrors, PanicCodes } from "../../../shared/errors";
 import { bn } from "../../../shared/numbers";
 
 export default function shouldBehaveLikeExecute(): void {
@@ -26,7 +26,7 @@ export default function shouldBehaveLikeExecute(): void {
       const target: string = AddressZero;
       const data: string = "0x";
       await expect(this.contracts.prbProxy.connect(raider).execute(target, data)).to.be.revertedWith(
-        OwnableErrors.NotOwner,
+        PRBProxyErrors.NOT_OWNER,
       );
     });
   });
@@ -38,7 +38,7 @@ export default function shouldBehaveLikeExecute(): void {
           const target: string = AddressZero;
           const data: string = "0x";
           await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(
-            PRBProxyErrors.TargetInvalid,
+            PRBProxyErrors.TARGET_INVALID,
           );
         });
       });
@@ -48,7 +48,7 @@ export default function shouldBehaveLikeExecute(): void {
           const target: string = "0x0000000000000000000000000000000000000001";
           const data: string = "0x";
           await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(
-            PRBProxyErrors.TargetInvalid,
+            PRBProxyErrors.TARGET_INVALID,
           );
         });
       });
@@ -66,7 +66,7 @@ export default function shouldBehaveLikeExecute(): void {
           const target: string = this.contracts.targetEcho.address;
           const data: string = this.contracts.targetEcho.interface.encodeFunctionData("echoUint256", [Zero]);
           await expect(this.contracts.prbProxy.connect(owner).execute(target, data, { gasLimit })).to.be.revertedWith(
-            PanicCodes.ArithmeticOverflowOrUnderflow,
+            PanicCodes.ARITHMETIC_OVERFLOW_OR_UNDERFLOW,
           );
         });
       });
@@ -83,28 +83,28 @@ export default function shouldBehaveLikeExecute(): void {
             it("panics due to assert", async function () {
               const data: string = this.contracts.targetPanic.interface.encodeFunctionData("panicAssert");
               await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(
-                PanicCodes.Assert,
+                PanicCodes.ASSERT,
               );
             });
 
             it("panics due to division by zero", async function () {
               const data: string = this.contracts.targetPanic.interface.encodeFunctionData("panicDivisionByZero");
               await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(
-                PanicCodes.DivisionByZero,
+                PanicCodes.DIVISION_BY_ZERO,
               );
             });
 
             it("panics due to arithmetic overflow", async function () {
               const data: string = this.contracts.targetPanic.interface.encodeFunctionData("panicArithmeticOverflow");
               await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(
-                PanicCodes.ArithmeticOverflowOrUnderflow,
+                PanicCodes.ARITHMETIC_OVERFLOW_OR_UNDERFLOW,
               );
             });
 
             it("panics due to arithmetic underflow", async function () {
               const data: string = this.contracts.targetPanic.interface.encodeFunctionData("panicArithmeticUnderflow");
               await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(
-                PanicCodes.ArithmeticOverflowOrUnderflow,
+                PanicCodes.ARITHMETIC_OVERFLOW_OR_UNDERFLOW,
               );
             });
           });
@@ -121,7 +121,7 @@ export default function shouldBehaveLikeExecute(): void {
                 this.contracts.targetRevert.interface.encodeFunctionData("revertLackPayableModifier");
               await expect(
                 this.contracts.prbProxy.connect(owner).execute(target, data, { value: parseEther("3.14") }),
-              ).to.be.revertedWith(PRBProxyErrors.ExecutionReverted);
+              ).to.be.revertedWith(PRBProxyErrors.EXECUTION_REVERTED);
             });
 
             // Improve this when https://github.com/nomiclabs/hardhat/issues/1618 gets fixed.
@@ -133,7 +133,7 @@ export default function shouldBehaveLikeExecute(): void {
             it("reverts with nothing", async function () {
               const data: string = this.contracts.targetRevert.interface.encodeFunctionData("revertWithNothing");
               await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(
-                PRBProxyErrors.ExecutionReverted,
+                PRBProxyErrors.EXECUTION_REVERTED,
               );
             });
 
@@ -147,7 +147,7 @@ export default function shouldBehaveLikeExecute(): void {
             it("reverts with require", async function () {
               const data: string = this.contracts.targetRevert.interface.encodeFunctionData("revertWithRequire");
               await expect(this.contracts.prbProxy.connect(owner).execute(target, data)).to.be.revertedWith(
-                PRBProxyErrors.ExecutionReverted,
+                PRBProxyErrors.EXECUTION_REVERTED,
               );
             });
           });

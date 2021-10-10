@@ -69,8 +69,6 @@ const config: HardhatUserConfig = {
       "IPRBProxy",
       "IPRBProxyFactory",
       "IPRBProxyRegistry",
-      "IOwnable",
-      "Ownable",
       "PRBProxy",
       "PRBProxyFactory",
       "PRBProxyRegistry",

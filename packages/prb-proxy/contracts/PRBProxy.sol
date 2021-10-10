@@ -2,29 +2,46 @@
 pragma solidity >=0.8.4;
 
 import "./IPRBProxy.sol";
-import "./access/Ownable.sol";
 
 /// @notice Emitted when execution reverted with no reason.
 error PRBProxy__ExecutionReverted();
+
+/// @notice Emitted when the caller is not the owner.
+error PRBProxy__NotOwner(address owner, address caller);
+
+/// @notice Emitted when setting the owner to the zero address.
+error PRBProxy__OwnerZeroAddress();
 
 /// @notice Emitted when passing an EOA or an undeployed contract as the target.
 error PRBProxy__TargetInvalid(address target);
 
 /// @title PRBProxy
 /// @author Paul Razvan Berg
-contract PRBProxy is
-    IPRBProxy, // One dependency
-    Ownable // One dependency
-{
+contract PRBProxy is IPRBProxy {
     /// PUBLIC STORAGE ///
+
+    /// @inheritdoc IPRBProxy
+    address public owner;
 
     /// @inheritdoc IPRBProxy
     uint256 public minGasReserve;
 
+    /// MODIFIERS ///
+
+    /// @notice Reverts if called by any account other than the owner.
+    modifier onlyOwner() {
+        if (owner != msg.sender) {
+            revert PRBProxy__NotOwner(owner, msg.sender);
+        }
+        _;
+    }
+
     /// CONSTRUCTOR ///
 
-    constructor() Ownable() {
-        minGasReserve = 5000;
+    constructor() {
+        minGasReserve = 5_000;
+        owner = msg.sender;
+        emit TransferOwnership(address(0), msg.sender);
     }
 
     /// FALLBACK FUNCTION ///
@@ -72,5 +89,11 @@ contract PRBProxy is
     /// @inheritdoc IPRBProxy
     function setMinGasReserve(uint256 newMinGasReserve) external onlyOwner {
         minGasReserve = newMinGasReserve;
+    }
+
+    /// @inheritdoc IPRBProxy
+    function transferOwnership(address newOwner) external onlyOwner {
+        owner = newOwner;
+        emit TransferOwnership(owner, newOwner);
     }
 }

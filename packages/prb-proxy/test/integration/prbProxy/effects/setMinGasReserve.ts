@@ -2,7 +2,7 @@ import { Zero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 
-import { OwnableErrors } from "../../../shared/errors";
+import { PRBProxyErrors } from "../../../shared/errors";
 import { bn } from "../../../shared/numbers";
 
 export default function shouldBehaveLikeSetMinGasReserve(): void {
@@ -16,7 +16,7 @@ export default function shouldBehaveLikeSetMinGasReserve(): void {
     it("reverts", async function () {
       const raider: SignerWithAddress = this.signers.bob;
       await expect(this.contracts.prbProxy.connect(raider).setMinGasReserve(Zero)).to.be.revertedWith(
-        OwnableErrors.NotOwner,
+        PRBProxyErrors.NOT_OWNER,
       );
     });
   });
