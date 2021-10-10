@@ -1,4 +1,7 @@
 check-coverage: false
+exclude:
+  - "src/bytecode.ts"
+  - "src/constants.ts"
 extends: "@istanbuljs/nyc-config-typescript"
 include:
   - "src/**/*.ts"
