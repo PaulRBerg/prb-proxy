@@ -1,5 +1,5 @@
 import { TransactionRequest, TransactionResponse } from "@ethersproject/abstract-provider";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
 
 import { DETERMINISTIC_DEPLOYMENT_PROXY_ADDRESS } from "../../helpers/constants";

@@ -3,7 +3,7 @@ import { parseEther } from "@ethersproject/units";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-export default function shouldBehaveLikeReceive(): void {
+export function shouldBehaveLikeReceive(): void {
   context("when the call data is not empty", function () {
     it("reverts", async function () {
       await expect(

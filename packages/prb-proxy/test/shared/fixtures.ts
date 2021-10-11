@@ -8,6 +8,7 @@ import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
 import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
 import { TargetChangeOwner } from "../../typechain/TargetChangeOwner";
 import { TargetEcho } from "../../typechain/TargetEcho";
+import { TargetEnvoy } from "../../typechain/TargetEnvoy";
 import { TargetPanic } from "../../typechain/TargetPanic";
 import { TargetRevert } from "../../typechain/TargetRevert";
 import { TargetSelfDestruct } from "../../typechain/TargetSelfDestruct";
@@ -17,6 +18,7 @@ type IntegrationFixturePrbProxyReturnType = {
   targets: {
     changeOwner: TargetChangeOwner;
     echo: TargetEcho;
+    envoy: TargetEnvoy;
     panic: TargetPanic;
     revert: TargetRevert;
     selfDestruct: TargetSelfDestruct;
@@ -44,6 +46,9 @@ export async function integrationFixturePrbProxy(signers: Signer[]): Promise<Int
   const targetEchoArtifact: Artifact = await artifacts.readArtifact("TargetEcho");
   const targetEcho: TargetEcho = <TargetEcho>await waffle.deployContract(deployer, targetEchoArtifact, []);
 
+  const targetEnvoyArtifact: Artifact = await artifacts.readArtifact("TargetEnvoy");
+  const targetEnvoy: TargetEnvoy = <TargetEnvoy>await waffle.deployContract(deployer, targetEnvoyArtifact, []);
+
   const targetPanicArtifact: Artifact = await artifacts.readArtifact("TargetPanic");
   const targetPanic: TargetPanic = <TargetPanic>await waffle.deployContract(deployer, targetPanicArtifact, []);
 
@@ -60,6 +65,7 @@ export async function integrationFixturePrbProxy(signers: Signer[]): Promise<Int
     targets: {
       changeOwner: targetChangeOwner,
       echo: targetEcho,
+      envoy: targetEnvoy,
       panic: targetPanic,
       revert: targetRevert,
       selfDestruct: targetSelfDestruct,

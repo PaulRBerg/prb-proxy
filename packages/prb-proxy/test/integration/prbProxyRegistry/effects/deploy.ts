@@ -1,10 +1,10 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { artifacts, ethers } from "hardhat";
 
 import { computeProxyAddress } from "../../../shared/create2";
 
-export default function shouldBehaveLikeDeploy(): void {
+export function shouldBehaveLikeDeploy(): void {
   let deployer: SignerWithAddress;
   let proxyAddress: string;
 

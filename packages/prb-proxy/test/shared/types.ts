@@ -6,6 +6,7 @@ import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
 import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
 import { TargetChangeOwner } from "../../typechain/TargetChangeOwner";
 import { TargetEcho } from "../../typechain/TargetEcho";
+import { TargetEnvoy } from "../../typechain/TargetEnvoy";
 import { TargetPanic } from "../../typechain/TargetPanic";
 import { TargetRevert } from "../../typechain/TargetRevert";
 import { TargetSelfDestruct } from "../../typechain/TargetSelfDestruct";
@@ -34,6 +35,7 @@ export interface Signers {
 export interface Targets {
   changeOwner: TargetChangeOwner;
   echo: TargetEcho;
+  envoy: TargetEnvoy;
   panic: TargetPanic;
   revert: TargetRevert;
   selfDestruct: TargetSelfDestruct;

@@ -7,6 +7,9 @@ import "./IPRBProxy.sol";
 error PRBProxy__ExecutionReverted();
 
 /// @notice Emitted when the caller is not the owner.
+error PRBProxy__ExecutionNotAuthorized(address owner, address caller, address target, bytes4 selector);
+
+/// @notice Emitted when the caller is not the owner.
 error PRBProxy__NotOwner(address owner, address caller);
 
 /// @notice Emitted when the owner is changed during the DELEGATECALL.
@@ -26,15 +29,8 @@ contract PRBProxy is IPRBProxy {
     /// @inheritdoc IPRBProxy
     uint256 public minGasReserve;
 
-    /// MODIFIERS ///
-
-    /// @notice Reverts if called by any account other than the owner.
-    modifier onlyOwner() {
-        if (owner != msg.sender) {
-            revert PRBProxy__NotOwner(owner, msg.sender);
-        }
-        _;
-    }
+    /// @inheritdoc IPRBProxy
+    mapping(address => mapping(address => mapping(bytes4 => bool))) public permissions;
 
     /// CONSTRUCTOR ///
 
@@ -52,7 +48,18 @@ contract PRBProxy is IPRBProxy {
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxy
-    function execute(address target, bytes memory data) external payable onlyOwner returns (bytes memory response) {
+    function execute(address target, bytes calldata data) external payable returns (bytes memory response) {
+        // Check that the caller is either the owner or a delegated account.
+        if (owner != msg.sender) {
+            bytes4 selector;
+            assembly {
+                selector := calldataload(data.offset)
+            }
+            if (!permissions[msg.sender][target][selector]) {
+                revert PRBProxy__ExecutionNotAuthorized(owner, msg.sender, target, selector);
+            }
+        }
+
         // Check that the target is a valid contract.
         uint256 codeSize;
         assembly {
@@ -95,12 +102,31 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function setMinGasReserve(uint256 newMinGasReserve) external onlyOwner {
+    function setPermission(
+        address envoy,
+        address target,
+        bytes4 selector,
+        bool permission
+    ) external {
+        if (owner != msg.sender) {
+            revert PRBProxy__NotOwner(owner, msg.sender);
+        }
+        permissions[envoy][target][selector] = permission;
+    }
+
+    /// @inheritdoc IPRBProxy
+    function setMinGasReserve(uint256 newMinGasReserve) external {
+        if (owner != msg.sender) {
+            revert PRBProxy__NotOwner(owner, msg.sender);
+        }
         minGasReserve = newMinGasReserve;
     }
 
     /// @inheritdoc IPRBProxy
-    function transferOwnership(address newOwner) external onlyOwner {
+    function transferOwnership(address newOwner) external {
+        if (owner != msg.sender) {
+            revert PRBProxy__NotOwner(owner, msg.sender);
+        }
         owner = newOwner;
         emit TransferOwnership(owner, newOwner);
     }

@@ -1,5 +1,5 @@
-import shouldBehaveLikeDeploy from "./effects/deploy";
-import shouldBehaveLikeDeployFor from "./effects/deployFor";
+import { shouldBehaveLikeDeploy } from "./effects/deploy";
+import { shouldBehaveLikeDeployFor } from "./effects/deployFor";
 
 export function shouldBehaveLikePrbProxyFactory(): void {
   describe("Effects Functions", function () {

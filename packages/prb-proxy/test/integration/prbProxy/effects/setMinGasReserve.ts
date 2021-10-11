@@ -1,11 +1,11 @@
 import { Zero } from "@ethersproject/constants";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 
 import { PRBProxyErrors } from "../../../shared/errors";
 import { bn } from "../../../shared/numbers";
 
-export default function shouldBehaveLikeSetMinGasReserve(): void {
+export function shouldBehaveLikeSetMinGasReserve(): void {
   let owner: SignerWithAddress;
 
   beforeEach(async function () {

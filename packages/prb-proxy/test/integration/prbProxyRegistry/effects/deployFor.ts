@@ -1,4 +1,4 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { artifacts, ethers } from "hardhat";
 
@@ -7,7 +7,7 @@ import { PRBProxy } from "../../../../typechain/PRBProxy";
 import { computeProxyAddress } from "../../../shared/create2";
 import { PRBProxyRegistryErrors } from "../../../shared/errors";
 
-export default function shouldBehaveLikeDeployFor(): void {
+export function shouldBehaveLikeDeployFor(): void {
   let deployer: SignerWithAddress;
   let expectedBytecode: string;
   let owner: SignerWithAddress;
