@@ -15,14 +15,14 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// @dev Internal mapping to track all deployed proxies.
     mapping(address => bool) internal proxies;
 
-    /// @dev Internal mapping to track the next salt to be used by an EOA.
-    mapping(address => bytes32) internal nextSalts;
+    /// @dev Internal mapping to track the next seed to be used by an EOA.
+    mapping(address => bytes32) internal nextSeeds;
 
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyFactory
-    function getNextSalt(address eoa) external view returns (bytes32 nextSalt) {
-        nextSalt = nextSalts[eoa];
+    function getNextSeed(address eoa) external view returns (bytes32 nextSeed) {
+        nextSeed = nextSeeds[eoa];
     }
 
     /// @inheritdoc IPRBProxyFactory
@@ -39,10 +39,10 @@ contract PRBProxyFactory is IPRBProxyFactory {
 
     /// @inheritdoc IPRBProxyFactory
     function deployFor(address owner) public returns (address payable proxy) {
-        bytes32 salt = nextSalts[tx.origin];
+        bytes32 seed = nextSeeds[tx.origin];
 
-        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided salt.
-        bytes32 finalSalt = keccak256(abi.encode(tx.origin, salt));
+        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
+        bytes32 salt = keccak256(abi.encode(tx.origin, seed));
 
         // Load the proxy bytecode.
         bytes memory bytecode = type(PRBProxy).creationCode;
@@ -52,7 +52,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
             let endowment := 0
             let bytecodeStart := add(bytecode, 0x20)
             let bytecodeLength := mload(bytecode)
-            proxy := create2(endowment, bytecodeStart, bytecodeLength, finalSalt)
+            proxy := create2(endowment, bytecodeStart, bytecodeLength, salt)
         }
 
         // Transfer the ownership from this factory contract to the specified owner.
@@ -61,12 +61,12 @@ contract PRBProxyFactory is IPRBProxyFactory {
         // Mark the proxy as deployed.
         proxies[proxy] = true;
 
-        // Increment the salt.
+        // Increment the seed.
         unchecked {
-            nextSalts[tx.origin] = bytes32(uint256(salt) + 1);
+            nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
         }
 
         // Log the proxy via en event.
-        emit DeployProxy(tx.origin, msg.sender, owner, salt, finalSalt, address(proxy));
+        emit DeployProxy(tx.origin, msg.sender, owner, seed, salt, address(proxy));
     }
 }

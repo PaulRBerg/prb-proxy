@@ -8,4 +8,4 @@ export { PRB_PROXY_FACTORY_ADDRESS, PRB_PROXY_REGISTRY_ADDRESS } from "./constan
 export { computeProxyAddress } from "./create2";
 
 // salts.ts
-export { computeFinalSalt } from "./salts";
+export { computeSalt } from "./salts";

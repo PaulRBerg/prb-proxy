@@ -11,16 +11,16 @@ interface IPRBProxyFactory {
         address indexed origin,
         address indexed deployer,
         address indexed owner,
+        bytes32 seed,
         bytes32 salt,
-        bytes32 finalSalt,
         address proxy
     );
 
     /// PUBLIC CONSTANT FUNCTIONS ///
 
-    /// @notice Gets the next salt that will be used to deploy the proxy.
+    /// @notice Gets the next seed that will be used to deploy the proxy.
     /// @param eoa The externally owned account which deployed proxies.
-    function getNextSalt(address eoa) external view returns (bytes32 result);
+    function getNextSeed(address eoa) external view returns (bytes32 result);
 
     /// @notice Mapping to track all deployed proxies.
     /// @param proxy The address of the proxy to make the check for.

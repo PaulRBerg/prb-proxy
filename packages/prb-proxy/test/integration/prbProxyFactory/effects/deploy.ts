@@ -1,9 +1,9 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { artifacts, ethers } from "hardhat";
-import { computeFinalSalt } from "prb-proxy.js";
+import { computeSalt } from "prb-proxy.js";
 
-import { SALT_ONE, SALT_ZERO } from "../../../shared/constants";
+import { SEED_ONE, SEED_ZERO } from "../../../shared/constants";
 import { computeProxyAddress } from "../../../shared/create2";
 
 export default function shouldBehaveLikeDeploy(): void {
@@ -22,10 +22,10 @@ export default function shouldBehaveLikeDeploy(): void {
     expect(deployedBytecode).to.equal(expectedBytecode);
   });
 
-  it("updates the nextSalts mapping", async function () {
+  it("updates the nextSeeds mapping", async function () {
     await this.contracts.prbProxyFactory.connect(deployer).deploy();
-    const nextSalt: string = await this.contracts.prbProxyFactory.getNextSalt(deployer.address);
-    expect(nextSalt).to.equal(SALT_ONE);
+    const nextSeed: string = await this.contracts.prbProxyFactory.getNextSeed(deployer.address);
+    expect(nextSeed).to.equal(SEED_ONE);
   });
 
   it("updates the proxies mapping", async function () {
@@ -41,8 +41,8 @@ export default function shouldBehaveLikeDeploy(): void {
         deployer.address,
         deployer.address,
         deployer.address,
-        SALT_ZERO,
-        computeFinalSalt(deployer.address, SALT_ZERO),
+        SEED_ZERO,
+        computeSalt(deployer.address, SEED_ZERO),
         proxyAddress,
       );
   });
