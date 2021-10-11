@@ -13,18 +13,19 @@ interface IPRBProxy {
 
     /// PUBLIC CONSTANT FUNCTIONS ///
 
+    /// @notice Returns a boolean flag that indicates whether the envoy has permittion to call the given target
+    /// contract and function selector.
+    function getPermission(
+        address envoy,
+        address target,
+        bytes4 selector
+    ) external view returns (bool);
+
     /// @notice The address of the owner account or contract.
     function owner() external view returns (address);
 
     /// @notice How much gas should remain for executing the remainder of the assembly code.
     function minGasReserve() external view returns (uint256);
-
-    /// @notice Maps envoys to target contracts to function selectors to boolean flags.
-    function permissions(
-        address envoy,
-        address target,
-        bytes4 selector
-    ) external view returns (bool);
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 

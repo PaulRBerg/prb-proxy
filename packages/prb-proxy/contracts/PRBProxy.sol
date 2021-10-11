@@ -29,8 +29,8 @@ contract PRBProxy is IPRBProxy {
     /// @inheritdoc IPRBProxy
     uint256 public minGasReserve;
 
-    /// @inheritdoc IPRBProxy
-    mapping(address => mapping(address => mapping(bytes4 => bool))) public permissions;
+    /// @notice Maps envoys to target contracts to function selectors to boolean flags.
+    mapping(address => mapping(address => mapping(bytes4 => bool))) internal permissions;
 
     /// CONSTRUCTOR ///
 
@@ -44,6 +44,17 @@ contract PRBProxy is IPRBProxy {
 
     /// @dev Called when Ether is sent and the call data is empty.
     receive() external payable {}
+
+    /// PUBLIC CONSTANT FUNCTIONS ///
+
+    /// @inheritdoc IPRBProxy
+    function getPermission(
+        address envoy,
+        address target,
+        bytes4 selector
+    ) external view returns (bool) {
+        return permissions[envoy][target][selector];
+    }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
@@ -102,6 +113,14 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
+    function setMinGasReserve(uint256 newMinGasReserve) external {
+        if (owner != msg.sender) {
+            revert PRBProxy__NotOwner(owner, msg.sender);
+        }
+        minGasReserve = newMinGasReserve;
+    }
+
+    /// @inheritdoc IPRBProxy
     function setPermission(
         address envoy,
         address target,
@@ -112,14 +131,6 @@ contract PRBProxy is IPRBProxy {
             revert PRBProxy__NotOwner(owner, msg.sender);
         }
         permissions[envoy][target][selector] = permission;
-    }
-
-    /// @inheritdoc IPRBProxy
-    function setMinGasReserve(uint256 newMinGasReserve) external {
-        if (owner != msg.sender) {
-            revert PRBProxy__NotOwner(owner, msg.sender);
-        }
-        minGasReserve = newMinGasReserve;
     }
 
     /// @inheritdoc IPRBProxy
