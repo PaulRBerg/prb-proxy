@@ -13,9 +13,11 @@
     "noImplicitAny": true,
     "removeComments": true,
     "resolveJsonModule": true,
-    "sourceMap": false,
+    "sourceMap": true,
     "strict": true,
     "target": "es6"
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "files": ["hardhat.config.ts"],
+  "include": ["artifacts/**/*.json", "helpers/**/*", "src/**/*", "tasks/**/*", "test/**/*", "typechain/**/*"]
 }

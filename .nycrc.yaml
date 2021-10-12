@@ -5,7 +5,7 @@ exclude:
 extends: "@istanbuljs/nyc-config-typescript"
 include:
   - "src/**/*.ts"
-report-dir: "coverage"
+report-dir: "coverage-src"
 reporter:
   - "html"
-  - "nyc-report-lcov-absolute"
+  - "lcov"

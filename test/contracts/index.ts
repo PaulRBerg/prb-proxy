@@ -3,7 +3,7 @@ import { integrationTestPrbProxy } from "./prbProxy/PRBProxy";
 import { integrationTestPrbProxyFactory } from "./prbProxyFactory/PRBProxyFactory";
 import { integrationTestPrbProxyRegistry } from "./prbProxyRegistry/PRBProxyRegistry";
 
-baseContext("Integration Tests", function () {
+baseContext("PRBProxy Solidity", function () {
   integrationTestPrbProxy();
   integrationTestPrbProxyFactory();
   integrationTestPrbProxyRegistry();

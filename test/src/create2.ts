@@ -1,9 +1,9 @@
 import { AddressZero } from "@ethersproject/constants";
-import { expect } from "earljs";
+import { expect } from "chai";
 import forEach from "mocha-each";
 
-import { computeProxyAddress } from "../src/create2";
-import { DEPLOYER_ADDRESS, SEED_ONE, SEED_ZERO } from "./shared/constants";
+import { computeProxyAddress } from "../../src/create2";
+import { DEPLOYER_ADDRESS, SEED_ONE, SEED_ZERO } from "../shared/constants";
 
 export function shouldBehaveLikeCreate2(): void {
   const testSets = [
@@ -27,7 +27,7 @@ export function shouldBehaveLikeCreate2(): void {
     "takes %.6s... and %.8s... and returns %.6s...",
     function (deployer: string, seed: string, expected: string) {
       const result: string = computeProxyAddress(deployer, seed);
-      expect(expected).toEqual(result);
+      expect(expected).to.equal(result);
     },
   );
 }

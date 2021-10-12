@@ -1,17 +1,17 @@
 import { hexZeroPad } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
-import { expect } from "earljs";
+import { expect } from "chai";
 import forEach from "mocha-each";
 
-import { computeSalt } from "../src/salts";
-import { DEPLOYER_ADDRESS, SEED_ONE, SEED_ZERO } from "./shared/constants";
+import { computeSalt } from "../../src/salts";
+import { DEPLOYER_ADDRESS, SEED_ONE, SEED_ZERO } from "../shared/constants";
 
 export function shouldBehaveLikeSalts(): void {
   context("when the deployer is not an address", function () {
     it("throws an error", function () {
       const deployer: string = "foo";
       const seed: string = SEED_ZERO;
-      expect(() => computeSalt(deployer, seed)).toThrow(expect.stringMatching("invalid address"));
+      expect(() => computeSalt(deployer, seed)).to.throw("invalid address");
     });
   });
 
@@ -21,7 +21,7 @@ export function shouldBehaveLikeSalts(): void {
 
       forEach(testSets).it("takes %.8s... and throws an error", function (seed: string) {
         const deployer: string = DEPLOYER_ADDRESS;
-        expect(() => computeSalt(deployer, seed)).toThrow(expect.stringMatching("incorrect data length"));
+        expect(() => computeSalt(deployer, seed)).to.throw("incorrect data length");
       });
     });
 
@@ -47,7 +47,7 @@ export function shouldBehaveLikeSalts(): void {
         "takes %.6s... and %.8s... and returns %.8s...",
         function (deployer: string, seed: string, expected: string) {
           const result: string = computeSalt(deployer, seed);
-          expect(expected).toEqual(result);
+          expect(expected).to.equal(result);
         },
       );
     });

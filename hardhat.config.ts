@@ -13,7 +13,7 @@ import { NetworkUserConfig } from "hardhat/types";
 
 import { getEnvVar } from "./helpers/env";
 
-dotenvConfig({ path: resolve(__dirname, "..", "..", ".env") });
+dotenvConfig({ path: resolve(__dirname, ".env") });
 
 const chainIds = {
   goerli: 5,

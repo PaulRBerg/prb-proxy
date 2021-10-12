@@ -10,6 +10,8 @@
 **/build
 **/cache
 **/coverage
+**/coverage-contracts
+**/coverage-src
 **/dist
 **/node_modules
 **/typechain

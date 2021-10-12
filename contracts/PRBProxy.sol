@@ -114,6 +114,7 @@ contract PRBProxy is IPRBProxy {
 
     /// @inheritdoc IPRBProxy
     function setMinGasReserve(uint256 newMinGasReserve) external {
+        // TODO: is this really more efficient than a modifier?
         if (owner != msg.sender) {
             revert PRBProxy__NotOwner(owner, msg.sender);
         }

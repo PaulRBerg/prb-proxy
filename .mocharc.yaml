@@ -1,8 +1,6 @@
 extension: "ts"
 recursive: true
 require:
-  - "earljs/mocha"
   - "ts-node/register/transpile-only"
-  - "source-map-support/register"
-spec: "test/**/*.test.ts"
+spec: "test/src/**/*.ts"
 watchExtension: "ts"

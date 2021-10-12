@@ -16,7 +16,7 @@ on:
       - "main"
 
 jobs:
-  run-prb-proxy-integration:
+  run-contracts-integration:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
@@ -32,16 +32,13 @@ jobs:
         run: "yarn install --immutable"
 
       - name: "Lint the code"
-        run: "yarn workspace prb-proxy lint"
-
-      - name: "Build prb-proxy.js"
-        run: "yarn workspace prb-proxy.js build:node"
+        run: "yarn lint:contracts"
 
       - name: "Compile the contracts and generate the TypeChain bindings"
-        run: "yarn workspace prb-proxy typechain"
+        run: "yarn typechain"
 
       - name: "Test the contracts and generate the coverage report"
-        run: "yarn workspace prb-proxy coverage"
+        run: "yarn coverage:contracts"
 
       - name: "Prepare the coverage report"
         uses: "coverallsapp/github-action@master"
@@ -49,9 +46,9 @@ jobs:
           flag-name: "prb-proxy"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel: true
-          path-to-lcov: "./packages/prb-proxy/coverage/lcov.info"
+          path-to-lcov: "./coverage-contracts/lcov.info"
 
-  run-prb-proxy-js-integration:
+  run-src-integration:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
@@ -67,10 +64,10 @@ jobs:
         run: "yarn install --immutable"
 
       - name: "Lint the code"
-        run: "yarn workspace prb-proxy.js lint"
+        run: "yarn lint:ts"
 
-      - name: "Test the contracts and generate the coverage report"
-        run: "yarn workspace prb-proxy.js coverage"
+      - name: "Test the code and generate the coverage report"
+        run: "yarn coverage:src"
 
       - name: "Prepare the coverage report"
         uses: "coverallsapp/github-action@master"
@@ -78,12 +75,12 @@ jobs:
           flag-name: "prb-proxy.js"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel: true
-          path-to-lcov: "./packages/prb-proxy.js/coverage/lcov.info"
+          path-to-lcov: "./coverage-src/lcov.info"
 
   upload-coverage-report:
     needs:
-      - "run-prb-proxy-integration"
-      - "run-prb-proxy-js-integration"
+      - "run-contracts-integration"
+      - "run-src-integration"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Upload the coverage reports to Coveralls"

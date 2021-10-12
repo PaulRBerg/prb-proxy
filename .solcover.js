@@ -1,6 +1,7 @@
 const shell = require("shelljs");
 
 module.exports = {
+  istanbulFolder: "coverage-contracts",
   istanbulReporter: ["html", "lcov"],
   onCompileComplete: async function (_config) {
     await run("typechain");
