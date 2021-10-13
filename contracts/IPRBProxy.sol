@@ -13,7 +13,7 @@ interface IPRBProxy {
 
     /// PUBLIC CONSTANT FUNCTIONS ///
 
-    /// @notice Returns a boolean flag that indicates whether the envoy has permittion to call the given target
+    /// @notice Returns a boolean flag that indicates whether the envoy has permission to call the given target
     /// contract and function selector.
     function getPermission(
         address envoy,
