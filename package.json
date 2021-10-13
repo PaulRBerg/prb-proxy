@@ -89,6 +89,7 @@
     "solidity"
   ],
   "license": "Unlicense",
+  "main": "./dist/index.js",
   "peerDependencies": {
     "@ethersproject/abi": "^5.4.1",
     "@ethersproject/address": "^5.4.0",
@@ -102,7 +103,7 @@
     "url": "https://github.com/paulrberg/prb-proxy"
   },
   "scripts": {
-    "build": "yarn build:contracts && yarn build:ts",
+    "build": "yarn build:contracts && yarn build:src",
     "build:contracts": "cross-env TS_NODE_TRANSPILE_ONLY=true yarn hardhat prepare-package && tsc --project ./tsconfig.contracts.json",
     "build:src": "tsc --project ./tsconfig.src.json",
     "clean": "shx rm -rf ./.nyc_output ./artifacts ./cache ./coverage-contracts ./coverage-src ./dist ./typechain ./coverage.json ./tsconfig.prod.tsbuildinfo",
