@@ -26,6 +26,10 @@ interface IPRBProxyFactory {
     /// @param proxy The address of the proxy to make the check for.
     function isProxy(address proxy) external view returns (bool result);
 
+    /// @notice The release version of PRBProxy.
+    /// @dev This is stored in the factory rather than the proxy to save gas for end users.
+    function version() external view returns (uint256);
+
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @notice Deploys a new proxy via CREATE2.

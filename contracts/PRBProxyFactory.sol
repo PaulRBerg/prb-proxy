@@ -10,6 +10,9 @@ import "./PRBProxy.sol";
 contract PRBProxyFactory is IPRBProxyFactory {
     /// PUBLIC STORAGE ///
 
+    /// @inheritdoc IPRBProxyFactory
+    uint256 public constant version = 1;
+
     /// INTERNAL STORAGE ///
 
     /// @dev Internal mapping to track all deployed proxies.
