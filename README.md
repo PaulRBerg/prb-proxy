@@ -40,7 +40,7 @@ On the security front, I made three enhancements:
 
 1. The CREATE2 seeds are generated in such a way that they cannot be front-run.
 2. The owner cannot be changed during the `DELEGATECALL` operation.
-3. A minimum gas reserve is saved in storage such that the proxy does not become unusable if OPCODE gas costs change in the future.
+3. A minimum gas reserve is saved in storage such that the proxy does not become unusable if EVM opcode gas costs change in the future.
 
 A noteworthy knock-on effect of using `CREATE2` is that it eliminates the risk of a [chain
 reorg](https://en.bitcoin.it/wiki/Chain_Reorganization) overriding the owner of the proxy. With DSProxy, one has to wait for a few blocks to be

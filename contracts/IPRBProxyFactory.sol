@@ -3,7 +3,7 @@ pragma solidity >=0.8.4;
 
 /// @title IPRBProxyFactory
 /// @author Paul Razvan Berg
-/// @notice Deploys new proxy instances with CREATE2.
+/// @notice Deploys new proxies with CREATE2.
 interface IPRBProxyFactory {
     /// EVENTS ///
 
@@ -19,7 +19,7 @@ interface IPRBProxyFactory {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @notice Gets the next seed that will be used to deploy the proxy.
-    /// @param eoa The externally owned account which deployed proxies.
+    /// @param eoa The externally owned account that will own the proxy.
     function getNextSeed(address eoa) external view returns (bytes32 result);
 
     /// @notice Mapping to track all deployed proxies.

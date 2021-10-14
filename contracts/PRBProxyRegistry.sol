@@ -30,7 +30,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyRegistry
-    function getCurrentProxy(address owner) public view returns (IPRBProxy proxy) {
+    function getCurrentProxy(address owner) external view returns (IPRBProxy proxy) {
         proxy = currentProxies[owner];
     }
 
@@ -43,7 +43,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     /// @inheritdoc IPRBProxyRegistry
     function deployFor(address owner) public returns (address payable proxy) {
-        IPRBProxy currentProxy = getCurrentProxy(owner);
+        IPRBProxy currentProxy = currentProxies[owner];
 
         // Do not deploy if the proxy already exists and the owner is the same.
         if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {

@@ -11,10 +11,10 @@ import "./IPRBProxyFactory.sol";
 interface IPRBProxyRegistry {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
-    /// @notice Proxy factory contract.
+    /// @notice Address of the proxy factory contract.
     function factory() external view returns (IPRBProxyFactory proxyFactory);
 
-    /// @notice Gets the current proxy that belongs to the given owner.
+    /// @notice Gets the current proxy of the given owner.
     /// @param owner The address of the owner of the current proxy.
     function getCurrentProxy(address owner) external view returns (IPRBProxy proxy);
 

@@ -3,11 +3,11 @@ pragma solidity >=0.8.4;
 
 import "./IPRBProxy.sol";
 
-/// @notice Emitted when execution reverted with no reason.
-error PRBProxy__ExecutionReverted();
-
 /// @notice Emitted when the caller is not the owner.
 error PRBProxy__ExecutionNotAuthorized(address owner, address caller, address target, bytes4 selector);
+
+/// @notice Emitted when execution reverted with no reason.
+error PRBProxy__ExecutionReverted();
 
 /// @notice Emitted when the caller is not the owner.
 error PRBProxy__NotOwner(address owner, address caller);
@@ -28,6 +28,8 @@ contract PRBProxy is IPRBProxy {
 
     /// @inheritdoc IPRBProxy
     uint256 public minGasReserve;
+
+    /// INTERNAL STORAGE ///
 
     /// @notice Maps envoys to target contracts to function selectors to boolean flags.
     mapping(address => mapping(address => mapping(bytes4 => bool))) internal permissions;
@@ -60,7 +62,7 @@ contract PRBProxy is IPRBProxy {
 
     /// @inheritdoc IPRBProxy
     function execute(address target, bytes calldata data) external payable returns (bytes memory response) {
-        // Check that the caller is either the owner or a delegated account.
+        // Check that the caller is either the owner or an envoy.
         if (owner != msg.sender) {
             bytes4 selector;
             assembly {
@@ -83,7 +85,7 @@ contract PRBProxy is IPRBProxy {
         // Save the owner address in memory. This local variable cannot be modified during the DELEGATECALL.
         address owner_ = owner;
 
-        // Reserve some gas to ensure that there will be enough to complete the function execution.
+        // Reserve some gas to ensure that the function has enough to finish the execution.
         uint256 stipend = gasleft() - minGasReserve;
 
         // Delegate call to the target contract.
@@ -114,7 +116,6 @@ contract PRBProxy is IPRBProxy {
 
     /// @inheritdoc IPRBProxy
     function setMinGasReserve(uint256 newMinGasReserve) external {
-        // TODO: is this really more efficient than a modifier?
         if (owner != msg.sender) {
             revert PRBProxy__NotOwner(owner, msg.sender);
         }

@@ -24,26 +24,34 @@ interface IPRBProxy {
     /// @notice The address of the owner account or contract.
     function owner() external view returns (address);
 
-    /// @notice How much gas should remain for executing the remainder of the assembly code.
+    /// @notice How much gas to reserve for running the remainder of the "execute" function after the DELEGATECALL.
+    /// @dev This prevents the proxy from becoming unusable if EVM opcode gas costs change in the future.
     function minGasReserve() external view returns (uint256);
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
-    /// @notice Delegate calls to the target contract by forwarding the call data. This function returns the data
-    /// it gets back, including when the contract call reverts with a reason or custom error.
+    /// @notice Delegate calls to the target contract by forwarding the call data. Returns the data it gets back,
+    /// including when the contract call reverts with a reason or custom error.
     ///
     /// @dev Requirements:
-    /// - The caller must be the owner.
-    /// - `target` must be a contract.
+    /// - The caller must be either an owner or an envoy.
+    /// - `target` must be a deployed contract.
+    /// - The owner cannot be changed during the DELEGATECALL.
     ///
     /// @param target The address of the target contract.
     /// @param data Function selector plus ABI encoded data.
     /// @return response The response received from the target contract.
     function execute(address target, bytes calldata data) external payable returns (bytes memory response);
 
+    /// @notice Sets a new value for the minimum gas reserve.
+    /// @dev Requirements:
+    /// - The caller must be the owner.
+    /// @param newMinGasReserve The new minimum gas reserve.
+    function setMinGasReserve(uint256 newMinGasReserve) external;
+
     /// @notice Gives or takes a permission from an envoy to call the given target contract and function selector
     /// on behalf of the owner.
-    /// @dev It is not an error to set a permission on the same (envoy,target,selector) tuple multiple types.
+    /// @dev It is not an error to reset a permission on the same (envoy,target,selector) tuple multiple types.
     ///
     /// Requirements:
     /// - The caller must be the owner.
@@ -59,15 +67,9 @@ interface IPRBProxy {
         bool permission
     ) external;
 
-    /// @notice Sets a new value for the minimum gas reserve.
+    /// @notice Transfers the owner of the contract to a new account.
     /// @dev Requirements:
     /// - The caller must be the owner.
-    /// @param newMinGasReserve The new minimum gas reserve.
-    function setMinGasReserve(uint256 newMinGasReserve) external;
-
-    /// @notice Transfers the owner of the contract to a new account (`newOwner`).
-    /// @dev Requirements:
-    /// - The caller must be the owner.
-    /// @param newOwner The account of the new owner.
+    /// @param newOwner The address of the new owner account.
     function transferOwnership(address newOwner) external;
 }
