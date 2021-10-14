@@ -152,15 +152,13 @@ seed that the factory will use, you can query the constant function `getNextSeed
 
 ```ts
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { PRB_PROXY_FACTORY_ADDRESS, computeProxyAddress } from "prb-proxy";
-import { PRBProxyFactory__factory } from "prb-proxy/typechain/factories/PRBProxyFactory__factory";
-import { PRBProxyFactory } from "prb-proxy/typechain/PRBProxyFactory";
+import { PRBProxyFactory, computeProxyAddress, getPRBProxyFactory } from "prb-proxy";
 
 task("compute-proxy-address").setAction(async function (_, { ethers }) {
   const signers: SignerWithAddress[] = await ethers.getSigners();
 
   // Load PRBProxyFactory as an ethers.js contract.
-  const factory: PRBProxyFactory = PRBProxyFactory__factory.connect(PRB_PROXY_FACTORY_ADDRESS, signers[0]);
+  const factory: PRBProxyFactory = getPRBProxyFactory(signers[0]);
 
   // Load the next seed. "signers[0]" is assumed to be the proxy deployer.
   const nextSeed: string = await factory.getNextSeed(signers[0].address);
@@ -183,15 +181,13 @@ can have only one proxy at a time.
 ```ts
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
-import { PRB_PROXY_REGISTRY_ADDRESS } from "prb-proxy";
-import { PRBProxyRegistry__factory } from "prb-proxy/typechain/factories/PRBProxyRegistry__factory";
-import { PRBProxyRegistry } from "prb-proxy/typechain/PRBProxyRegistry";
+import { PRBProxyRegistry, getPRBProxyRegistry } from "prb-proxy";
 
 task("deploy-prb-proxy").setAction(async function (_, { ethers }) {
   const signers: SignerWithAddress[] = await ethers.getSigners();
 
   // Load PRBProxyRegistry as an ethers.js contract.
-  const registry: PRBProxyRegistry = PRBProxyRegistry__factory.connect(PRB_PROXY_REGISTRY_ADDRESS, signers[0]);
+  const registry: PRBProxyRegistry = getPRBProxyRegistry(signers[0]);
 
   // Call contract function "deploy" to deploy a PRBProxy belonging to "msg.sender".
   const tx = await registry.deploy();
@@ -205,22 +201,20 @@ task("deploy-prb-proxy").setAction(async function (_, { ethers }) {
 
 ### Get Current Proxy
 
-Before deploying a new proxy, you may need to know if the owner owns one already.
+Before deploying a new proxy, you may need to know if the account owns one already.
 
 <details>
 <summary>Code Snippet</summary>
 
 ```ts
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { PRB_PROXY_REGISTRY_ADDRESS, computeProxyAddress } from "prb-proxy";
-import { PRBProxyRegistry__factory } from "prb-proxy/typechain/factories/PRBProxyRegistry__factory";
-import { PRBProxyRegistry } from "prb-proxy/typechain/PRBProxyRegistry";
+import { PRBProxyRegistry, getPRBProxyRegistry } from "prb-proxy";
 
 task("get-current-proxy").setAction(async function (_, { ethers }) {
   const signers: SignerWithAddress[] = await ethers.getSigners();
 
   // Load PRBProxyRegistry as an ethers.js contract.
-  const registry: PRBProxyRegistry = PRBProxyRegistry__factory.connect(PRB_PROXY_REGISTRY_ADDRESS, signers[0]);
+  const registry: PRBProxyRegistry = getPRBProxyRegistry(signers[0]);
 
   // Query the address of the current proxy. "signers[0]" is assumed to be the proxy owner.
   const currentProxy: string = await registry.getCurrentProxy(signers[0].address);
@@ -242,8 +236,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { parseUnits } from "@ethersproject/units";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
-import { PRBProxy__factory } from "prb-proxy/typechain/factories/PRBProxy__factory";
-import { PRBProxy } from "prb-proxy/typechain/PRBProxy";
+import { PRBProxy, getPRBProxy } from "prb-proxy";
 
 import { TargetERC20Transfer__factory } from "../typechain/factories/TargetERC20Transfer__factory";
 import { TargetERC20Transfer } from "../typechain/TargetERC20Transfer";
@@ -253,7 +246,7 @@ task("execute-composite-call").setAction(async function (_, { ethers }) {
 
   // Load the PRBProxy as an ethers.js contract.
   const prbProxyAddress: string = "0x...";
-  const prbProxy: PRBProxy = PRBProxy__factory.connect(prbProxyAddress, signers[0]);
+  const prbProxy: PRBProxy = getPRBProxy(prbProxyAddress, signers[0]);
 
   // Load the TargetERC20Transfer as an ethers.js contract.
   const targetAddress: string = "0x...";

@@ -104,7 +104,7 @@
     "clean:node_modules": "shx rm -rf ./node_modules",
     "compile": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat compile",
     "coverage": "yarn coverage:contracts && yarn coverage:ts",
-    "coverage:contracts": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
+    "coverage:contracts": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/contracts/**/*.ts\"",
     "coverage:ts": "yarn nyc --nycrc-path ./.nycrc.yaml mocha",
     "filter:types": "cross-env TS_NODE_TRANSPILE_ONLY=true yarn hardhat prepare-package",
     "generate:types": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain",

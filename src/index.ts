@@ -2,10 +2,15 @@
 export { PRB_PROXY_FACTORY_ADDRESS, PRB_PROXY_REGISTRY_ADDRESS } from "./constants";
 
 // contracts
-export { getFactory, getRegistry } from "./contracts";
+export { getPRBProxyFactory, getPRBProxyRegistry } from "./contracts";
 
 // create2.ts
 export { computeProxyAddress } from "./create2";
 
 // salts.ts
 export { computeSalt } from "./salts";
+
+// types/**/*.ts
+export { PRBProxy } from "./types/PRBProxy";
+export { PRBProxyFactory } from "./types/PRBProxyFactory";
+export { PRBProxyRegistry } from "./types/PRBProxyRegistry";

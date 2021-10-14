@@ -2,17 +2,24 @@ import type { Provider } from "@ethersproject/abstract-provider";
 import type { Signer } from "@ethersproject/abstract-signer";
 
 import { PRB_PROXY_FACTORY_ADDRESS, PRB_PROXY_REGISTRY_ADDRESS } from "./constants";
+import { PRBProxy__factory } from "./types/factories/PRBProxy__factory";
 import { PRBProxyFactory__factory } from "./types/factories/PRBProxyFactory__factory";
 import { PRBProxyRegistry__factory } from "./types/factories/PRBProxyRegistry__factory";
+import type { PRBProxy } from "./types/PRBProxy";
 import type { PRBProxyFactory } from "./types/PRBProxyFactory";
-import { PRBProxyRegistry } from "./types/PRBProxyRegistry";
+import type { PRBProxyRegistry } from "./types/PRBProxyRegistry";
 
-export function getFactory(signerOrProvider: Provider | Signer): PRBProxyFactory {
+export function getPRBProxy(address: string, signerOrProvider: Provider | Signer): PRBProxy {
+  const proxy: PRBProxy = PRBProxy__factory.connect(address, signerOrProvider);
+  return proxy;
+}
+
+export function getPRBProxyFactory(signerOrProvider: Provider | Signer): PRBProxyFactory {
   const factory: PRBProxyFactory = PRBProxyFactory__factory.connect(PRB_PROXY_FACTORY_ADDRESS, signerOrProvider);
   return factory;
 }
 
-export function getRegistry(signerOrProvider: Provider | Signer): PRBProxyRegistry {
+export function getPRBProxyRegistry(signerOrProvider: Provider | Signer): PRBProxyRegistry {
   const registry: PRBProxyRegistry = PRBProxyRegistry__factory.connect(PRB_PROXY_REGISTRY_ADDRESS, signerOrProvider);
   return registry;
 }
