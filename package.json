@@ -106,6 +106,7 @@
     "coverage": "yarn coverage:contracts && yarn coverage:ts",
     "coverage:contracts": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
     "coverage:ts": "yarn nyc --nycrc-path ./.nycrc.yaml mocha",
+    "filter:types": "cross-env TS_NODE_TRANSPILE_ONLY=true yarn hardhat prepare-package",
     "generate:types": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain",
     "lint": "yarn lint:contracts && yarn lint:ts && yarn prettier:check",
     "lint:contracts": "solhint --config ./.solhint.json --ignore-path ./.solhintignore --max-warnings 0 \"contracts/**/*.sol\"",
