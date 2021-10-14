@@ -2,5 +2,5 @@ extension: "ts"
 recursive: true
 require:
   - "ts-node/register/transpile-only"
-spec: "test/src/**/*.ts"
+spec: "test/ts/**/*.ts"
 watchExtension: "ts"

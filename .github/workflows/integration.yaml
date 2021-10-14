@@ -35,7 +35,7 @@ jobs:
         run: "yarn lint:contracts"
 
       - name: "Compile the contracts and generate the TypeChain bindings"
-        run: "yarn typechain"
+        run: "yarn generate:types"
 
       - name: "Test the contracts and generate the coverage report"
         run: "yarn coverage:contracts"
@@ -48,7 +48,7 @@ jobs:
           parallel: true
           path-to-lcov: "./coverage-contracts/lcov.info"
 
-  run-src-integration:
+  run-ts-integration:
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
@@ -67,7 +67,7 @@ jobs:
         run: "yarn lint:ts"
 
       - name: "Test the code and generate the coverage report"
-        run: "yarn coverage:src"
+        run: "yarn coverage:ts"
 
       - name: "Prepare the coverage report"
         uses: "coverallsapp/github-action@master"
@@ -75,12 +75,12 @@ jobs:
           flag-name: "prb-proxy.js"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel: true
-          path-to-lcov: "./coverage-src/lcov.info"
+          path-to-lcov: "./coverage-ts/lcov.info"
 
   upload-coverage-report:
     needs:
       - "run-contracts-integration"
-      - "run-src-integration"
+      - "run-ts-integration"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Upload the coverage reports to Coveralls"

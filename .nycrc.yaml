@@ -2,10 +2,12 @@ check-coverage: false
 exclude:
   - "src/bytecode.ts"
   - "src/constants.ts"
+  - "src/types/**/*.d.ts"
+  - "src/types/**/*.ts"
 extends: "@istanbuljs/nyc-config-typescript"
 include:
   - "src/**/*.ts"
-report-dir: "coverage-src"
+report-dir: "coverage-ts"
 reporter:
   - "html"
   - "lcov"

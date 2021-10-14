@@ -3,7 +3,7 @@ import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
 
 import { DETERMINISTIC_DEPLOYMENT_PROXY_ADDRESS } from "../../helpers/constants";
-import { PRBProxy__factory } from "../../typechain/factories/PRBProxy__factory";
+import { PRBProxy__factory } from "../../src/types/factories/PRBProxy__factory";
 
 task("deploy:contract:prb-proxy").setAction(async function (_, { ethers }): Promise<void> {
   const signers: SignerWithAddress[] = await ethers.getSigners();

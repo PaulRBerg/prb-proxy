@@ -4,7 +4,7 @@ import { task } from "hardhat/config";
 import { TaskArguments } from "hardhat/types";
 
 import { DETERMINISTIC_DEPLOYMENT_PROXY_ADDRESS } from "../../helpers/constants";
-import { PRBProxyRegistry__factory } from "../../typechain/factories/PRBProxyRegistry__factory";
+import { PRBProxyRegistry__factory } from "../../src/types/factories/PRBProxyRegistry__factory";
 
 task("deploy:contract:prb-proxy-registry")
   .addOptionalParam("factory", "Address of PRBProxyFactory contract")

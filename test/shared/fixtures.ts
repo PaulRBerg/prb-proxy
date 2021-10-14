@@ -2,16 +2,16 @@ import { Signer } from "@ethersproject/abstract-signer";
 import { artifacts, waffle } from "hardhat";
 import { Artifact } from "hardhat/types";
 
-import { PRBProxy__factory } from "../../typechain/factories/PRBProxy__factory";
-import { PRBProxy } from "../../typechain/PRBProxy";
-import { PRBProxyFactory } from "../../typechain/PRBProxyFactory";
-import { PRBProxyRegistry } from "../../typechain/PRBProxyRegistry";
-import { TargetChangeOwner } from "../../typechain/TargetChangeOwner";
-import { TargetEcho } from "../../typechain/TargetEcho";
-import { TargetEnvoy } from "../../typechain/TargetEnvoy";
-import { TargetPanic } from "../../typechain/TargetPanic";
-import { TargetRevert } from "../../typechain/TargetRevert";
-import { TargetSelfDestruct } from "../../typechain/TargetSelfDestruct";
+import { PRBProxy__factory } from "../../src/types/factories/PRBProxy__factory";
+import { PRBProxy } from "../../src/types/PRBProxy";
+import { PRBProxyFactory } from "../../src/types/PRBProxyFactory";
+import { PRBProxyRegistry } from "../../src/types/PRBProxyRegistry";
+import { TargetChangeOwner } from "../../src/types/TargetChangeOwner";
+import { TargetEcho } from "../../src/types/TargetEcho";
+import { TargetEnvoy } from "../../src/types/TargetEnvoy";
+import { TargetPanic } from "../../src/types/TargetPanic";
+import { TargetRevert } from "../../src/types/TargetRevert";
+import { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
 
 type IntegrationFixturePrbProxyReturnType = {
   prbProxy: PRBProxy;

@@ -68,14 +68,10 @@
     "typescript": "^4.4.3"
   },
   "files": [
-    "/artifacts/**/*.json",
-    "/contracts",
     "/dist/**/*.d.ts",
     "/dist/**/*.d.ts.map",
     "/dist/**/*.js",
     "/dist/**/*.js.map",
-    "/typechain/**/*.d.ts",
-    "/typechain/**/*.js",
     "CHANGELOG.md"
   ],
   "homepage": "https://github.com/paulrberg/prb-proxy#readme",
@@ -103,15 +99,14 @@
     "url": "https://github.com/paulrberg/prb-proxy"
   },
   "scripts": {
-    "build": "yarn build:contracts && yarn build:src",
-    "build:contracts": "cross-env TS_NODE_TRANSPILE_ONLY=true yarn hardhat prepare-package && tsc --project ./tsconfig.contracts.json",
-    "build:src": "tsc --project ./tsconfig.src.json",
-    "clean": "shx rm -rf ./.nyc_output ./artifacts ./cache ./coverage-contracts ./coverage-src ./dist ./typechain ./coverage.json ./tsconfig.prod.tsbuildinfo",
+    "build": "cross-env TS_NODE_TRANSPILE_ONLY=true yarn hardhat prepare-package && tsc --project ./tsconfig.prod.json",
+    "clean": "shx rm -rf ./.nyc_output ./artifacts ./cache ./coverage-contracts ./coverage-ts ./dist ./coverage.json ./tsconfig.prod.tsbuildinfo",
     "clean:node_modules": "shx rm -rf ./node_modules",
     "compile": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat compile",
-    "coverage": "yarn coverage:contracts && yarn coverage:src",
+    "coverage": "yarn coverage:contracts && yarn coverage:ts",
     "coverage:contracts": "cross-env CODE_COVERAGE=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
-    "coverage:src": "yarn nyc --nycrc-path ./.nycrc.yaml mocha",
+    "coverage:ts": "yarn nyc --nycrc-path ./.nycrc.yaml mocha",
+    "generate:types": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain",
     "lint": "yarn lint:contracts && yarn lint:ts && yarn prettier:check",
     "lint:contracts": "solhint --config ./.solhint.json --ignore-path ./.solhintignore --max-warnings 0 \"contracts/**/*.sol\"",
     "lint:ts": "eslint --config ./.eslintrc.yaml --ignore-path ./.eslintignore --ext .js,.ts .",
@@ -123,7 +118,6 @@
     "prettier:check": "prettier --check --config ./.prettierrc.yaml --ignore-path ./.prettierignore \"**/*.{js,json,md,sol,ts,yaml,yml}\"",
     "test": "hardhat test",
     "test:contracts": "hardhat test ./test/contracts --network hardhat",
-    "test:src": "yarn mocha --config ./.mocharc.yaml",
-    "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain"
+    "test:ts": "yarn mocha --config ./.mocharc.yaml"
   }
 }
