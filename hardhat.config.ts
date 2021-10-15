@@ -5,6 +5,8 @@ import "hardhat-gas-reporter";
 import "hardhat-packager";
 import "solidity-coverage";
 
+import "./tasks/deploy";
+
 import { resolve } from "path";
 
 import { config as dotenvConfig } from "dotenv";

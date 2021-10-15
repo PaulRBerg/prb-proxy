@@ -11,6 +11,6 @@ export { computeProxyAddress } from "./create2";
 export { computeSalt } from "./salts";
 
 // types/**/*.ts
-export { PRBProxy } from "./types/PRBProxy";
-export { PRBProxyFactory } from "./types/PRBProxyFactory";
-export { PRBProxyRegistry } from "./types/PRBProxyRegistry";
+export type { PRBProxy } from "./types/PRBProxy";
+export type { PRBProxyFactory } from "./types/PRBProxyFactory";
+export type { PRBProxyRegistry } from "./types/PRBProxyRegistry";
