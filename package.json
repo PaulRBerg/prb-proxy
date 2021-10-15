@@ -99,7 +99,7 @@
     "url": "https://github.com/paulrberg/prb-proxy"
   },
   "scripts": {
-    "build": "cross-env TS_NODE_TRANSPILE_ONLY=true yarn hardhat prepare-package && tsc --project ./tsconfig.prod.json",
+    "build": "yarn prepare:types && tsc --project ./tsconfig.prod.json",
     "clean": "shx rm -rf ./.nyc_output ./artifacts ./cache ./coverage-contracts ./coverage-ts ./dist ./coverage.json ./tsconfig.prod.tsbuildinfo",
     "clean:node_modules": "shx rm -rf ./node_modules",
     "compile": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat compile",
