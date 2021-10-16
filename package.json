@@ -11,14 +11,14 @@
   },
   "dependencies": {
     "@ethersproject/abi": "^5.4.1",
+    "@ethersproject/abstract-provider": "^5.4.1",
+    "@ethersproject/abstract-signer": "^5.4.1",
     "@ethersproject/address": "^5.4.0",
     "@ethersproject/keccak256": "^5.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.2.0",
     "@commitlint/config-conventional": "^13.2.0",
-    "@ethersproject/abstract-provider": "^5.4.1",
-    "@ethersproject/abstract-signer": "^5.4.1",
     "@ethersproject/bignumber": "^5.4.2",
     "@ethersproject/bytes": "^5.4.0",
     "@ethersproject/constants": "^5.4.0",
@@ -40,6 +40,7 @@
     "@typescript-eslint/parser": "^4.32.0",
     "chai": "^4.3.4",
     "commitizen": "^4.2.4",
+    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "eslint": "^7.32.0",
@@ -88,6 +89,8 @@
   "main": "./dist/index.js",
   "peerDependencies": {
     "@ethersproject/abi": "^5.4.1",
+    "@ethersproject/abstract-provider": "^5.4.1",
+    "@ethersproject/abstract-signer": "^5.4.1",
     "@ethersproject/address": "^5.4.0",
     "@ethersproject/keccak256": "^5.4.0"
   },
@@ -99,7 +102,7 @@
     "url": "https://github.com/paulrberg/prb-proxy"
   },
   "scripts": {
-    "build": "yarn prepare:types && tsc --project ./tsconfig.prod.json",
+    "build": "yarn prepare:types && tsc --project ./tsconfig.prod.json && copyfiles --up 1 \"./src/**/*.d.ts\" ./dist",
     "clean": "shx rm -rf ./.nyc_output ./artifacts ./cache ./coverage-contracts ./coverage-ts ./dist ./coverage.json ./tsconfig.prod.tsbuildinfo",
     "clean:node_modules": "shx rm -rf ./node_modules",
     "compile": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat compile",
