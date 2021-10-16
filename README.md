@@ -83,12 +83,12 @@ To deploy your own proxy, you can use the registry at the address below. In fact
 The address of the contracts are the same on all supported chains.
 
 - [x] Ethereum Mainnet
+- [x] Polygon Mainnet
+- [x] Binance Smart Chain Mainnet
 - [x] Ethereum Goerli Testnet
 - [x] Ethereum Kovan Testnet
 - [x] Ethereum Rinkeby Testnet
 - [x] Ethereum Ropsten Testnet
-- [x] Polygon Mainnet
-- [x] Binance Smart Chain Mainnet
 
 ## Code Snippets
 
