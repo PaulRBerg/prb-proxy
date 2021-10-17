@@ -268,11 +268,10 @@ task("execute-composite-call").setAction(async function (_, { ethers }) {
 ## Gas Efficiency
 
 It costs 577,443 gas to deploy a PRBProxy, whereas in the case of DSProxy the cost is 596,198 gas. That's a slight
-reduction in deployment costs; every little helps!
+reduction in deployment costs, but every little helps.
 
 The `execute` function in PRBProxy costs a bit more than its equivalent in DSProxy. This is because of the additional
-safety checks, but anyways the lion's share of the gas cost when calling `execute` is due to the logic in the target
-contract.
+safety checks, but the lion's share of the gas cost when calling `execute` is due to the logic in the target contract.
 
 ## Security
 
@@ -291,7 +290,7 @@ If you discover any security issues, you can report them via [Keybase](https://k
 ## Related Efforts
 
 - [ds-proxy](https://github.com/dapphub/ds-proxy) - DappHub's proxy, which powers the Maker protocol.
-- [wand](https://github.com/nmushegian/wand) - attempt to build DSProxy 2.0, built by one of the original authors of DSProxy.
+- [wand](https://github.com/nmushegian/wand) - attempt to build DSProxy 2.0, started by one of the original authors of DSProxy.
 - [dsa-contracts](https://github.com/Instadapp/dsa-contracts) - InstaDapp's DeFi Smart Accounts.
 
 ## Contributing
