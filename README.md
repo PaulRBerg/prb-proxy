@@ -15,7 +15,7 @@ limited to interacting with only one contract per transaction.
 
 The idea of a proxy contract has been popularized by [DappHub](https://github.com/dapphub), a team of developers who
 helped create the decentralized stablecoin [DAI](https://makerdao.com). DappHub created
-[DSProxy](https://github.com/dapphub/ds-proxy), which became the [de
+[DSProxy](https://github.com/dapphub/ds-proxy), which grew to become the [de
 facto](https://ethereum.stackexchange.com/a/90304/24693) proxy contract for developers who need to execute multiple
 contract calls in one transaction. For example, [Maker](https://makerdao.com), [Balancer](https://balancer.fi), and
 [DeFi Saver](https://defisaver.com/) all use DSProxy.
@@ -25,7 +25,8 @@ when DSProxy was originally developed. The Solidity compiler has been significan
 new OPCODES have been added to the EVM, and development environments like [Hardhat](https://hardhat.org/) make writing smart contracts a breeze.
 
 PRBProxy is a modern version of DSProxy, a "DSProxy 2.0", if you will. PRBProxy still uses `DELEGATECALL` to forwards contract calls, though it employs the
-[high-level instruction](https://ethereum.stackexchange.com/q/37601/24693) rather than inline assembly. All in all, there are three major improvements:
+[high-level instruction](https://ethereum.stackexchange.com/q/37601/24693) rather than inline assembly, which makes the
+code easier to understand. All in all, there are two major improvements:
 
 1. PRBProxy is deployed with [CREATE2][1], unlike DSProxy which is deployed with
    [CREATE](https://ethereum.stackexchange.com/questions/760/how-is-the-address-of-an-ethereum-contract-computed). This
@@ -56,14 +57,16 @@ just keep in mind the differences between the two.
 With yarn:
 
 ```bash
-$ yarn add prb-proxy
+$ yarn add prb-proxy ethers@5
 ```
 
 Or npm:
 
 ```bash
-$ npm install prb-proxy
+$ npm install prb-proxy ethers@5
 ```
+
+The trailing package is ethers.js, the only peer dependency of `prb-proxy`.
 
 ## Usage
 
@@ -85,6 +88,7 @@ The address of the contracts are the same on all supported chains.
 - [x] Ethereum Mainnet
 - [x] Polygon Mainnet
 - [x] Binance Smart Chain Mainnet
+- [x] Fantom
 - [x] Ethereum Goerli Testnet
 - [x] Ethereum Kovan Testnet
 - [x] Ethereum Rinkeby Testnet
@@ -92,7 +96,7 @@ The address of the contracts are the same on all supported chains.
 
 ## Code Snippets
 
-All scripts below are written in TypeScript. It is assumed that you run them in a local [Hardhat](https://hardhat.org) project.
+All snippets are written in TypeScript. It is assumed that you run them in a local [Hardhat](https://hardhat.org) project.
 Familiarity with [Ethers](https://github.com/ethers-io/ethers.js) and
 [TypeChain](https://github.com/ethereum-ts/TypeChain/tree/master/packages/hardhat) is also requisite.
 
