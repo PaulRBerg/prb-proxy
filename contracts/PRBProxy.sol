@@ -24,10 +24,10 @@ contract PRBProxy is IPRBProxy {
     /// PUBLIC STORAGE ///
 
     /// @inheritdoc IPRBProxy
-    address public owner;
+    address public override owner;
 
     /// @inheritdoc IPRBProxy
-    uint256 public minGasReserve;
+    uint256 public override minGasReserve;
 
     /// INTERNAL STORAGE ///
 
@@ -54,14 +54,14 @@ contract PRBProxy is IPRBProxy {
         address envoy,
         address target,
         bytes4 selector
-    ) external view returns (bool) {
+    ) external view override returns (bool) {
         return permissions[envoy][target][selector];
     }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxy
-    function execute(address target, bytes calldata data) external payable returns (bytes memory response) {
+    function execute(address target, bytes calldata data) external payable override returns (bytes memory response) {
         // Check that the caller is either the owner or an envoy.
         if (owner != msg.sender) {
             bytes4 selector;
@@ -74,11 +74,7 @@ contract PRBProxy is IPRBProxy {
         }
 
         // Check that the target is a valid contract.
-        uint256 codeSize;
-        assembly {
-            codeSize := extcodesize(target)
-        }
-        if (codeSize == 0) {
+        if (target.code.length == 0) {
             revert PRBProxy__TargetInvalid(target);
         }
 
@@ -115,7 +111,7 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function setMinGasReserve(uint256 newMinGasReserve) external {
+    function setMinGasReserve(uint256 newMinGasReserve) external override {
         if (owner != msg.sender) {
             revert PRBProxy__NotOwner(owner, msg.sender);
         }
@@ -128,7 +124,7 @@ contract PRBProxy is IPRBProxy {
         address target,
         bytes4 selector,
         bool permission
-    ) external {
+    ) external override {
         if (owner != msg.sender) {
             revert PRBProxy__NotOwner(owner, msg.sender);
         }
@@ -136,7 +132,7 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function transferOwnership(address newOwner) external {
+    function transferOwnership(address newOwner) external override {
         if (owner != msg.sender) {
             revert PRBProxy__NotOwner(owner, msg.sender);
         }

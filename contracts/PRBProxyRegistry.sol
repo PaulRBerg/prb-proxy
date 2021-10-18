@@ -14,7 +14,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     /// PUBLIC STORAGE ///
 
     /// @inheritdoc IPRBProxyRegistry
-    IPRBProxyFactory public factory;
+    IPRBProxyFactory public override factory;
 
     /// INTERNAL STORAGE ///
 
@@ -30,19 +30,19 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyRegistry
-    function getCurrentProxy(address owner) external view returns (IPRBProxy proxy) {
+    function getCurrentProxy(address owner) external view override returns (IPRBProxy proxy) {
         proxy = currentProxies[owner];
     }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyRegistry
-    function deploy() external returns (address payable proxy) {
+    function deploy() external override returns (address payable proxy) {
         proxy = deployFor(msg.sender);
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner) public returns (address payable proxy) {
+    function deployFor(address owner) public override returns (address payable proxy) {
         IPRBProxy currentProxy = currentProxies[owner];
 
         // Do not deploy if the proxy already exists and the owner is the same.
