@@ -25,17 +25,17 @@ yarn-debug.log*
 yarn-error.log*
 
 # types
-src/types/hardhat.d.ts
-src/types/index.ts
-src/types/TargetChangeOwner.d.ts
-src/types/TargetEcho.d.ts
-src/types/TargetEnvoy.d.ts
-src/types/TargetPanic.d.ts
-src/types/TargetRevert.d.ts
-src/types/TargetSelfDestruct.d.ts
-src/types/factories/TargetChangeOwner__factory.ts
-src/types/factories/TargetEcho__factory.ts
-src/types/factories/TargetEnvoy__factory.ts
-src/types/factories/TargetPanic__factory.ts
-src/types/factories/TargetRevert__factory.ts
-src/types/factories/TargetSelfDestruct__factory.ts
+src/types/*
+!src/types/common.d.ts
+!src/types/IPRBProxy.d.ts
+!src/types/IPRBProxyFactory.d.ts
+!src/types/IPRBProxyRegistry.d.ts
+!src/types/PRBProxy.d.ts
+!src/types/PRBProxyFactory.d.ts
+!src/types/PRBProxyRegistry.d.ts
+!src/types/factories/IPRBProxy__factory.ts
+!src/types/factories/IPRBProxyFactory__factory.ts
+!src/types/factories/IPRBProxyRegistry__factory.ts
+!src/types/factories/PRBProxy__factory.ts
+!src/types/factories/PRBProxyFactory__factory.ts
+!src/types/factories/PRBProxyRegistry__factory.ts
