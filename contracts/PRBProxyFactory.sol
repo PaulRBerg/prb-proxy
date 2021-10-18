@@ -11,7 +11,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// PUBLIC STORAGE ///
 
     /// @inheritdoc IPRBProxyFactory
-    uint256 public constant version = 1;
+    uint256 public constant override version = 1;
 
     /// INTERNAL STORAGE ///
 
@@ -24,24 +24,24 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// PUBLIC CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyFactory
-    function getNextSeed(address eoa) external view returns (bytes32 nextSeed) {
+    function getNextSeed(address eoa) external view override returns (bytes32 nextSeed) {
         nextSeed = nextSeeds[eoa];
     }
 
     /// @inheritdoc IPRBProxyFactory
-    function isProxy(address proxy) external view returns (bool result) {
+    function isProxy(address proxy) external view override returns (bool result) {
         result = proxies[proxy];
     }
 
     /// PUBLIC NON-CONSTANT FUNCTIONS ///
 
     /// @inheritdoc IPRBProxyFactory
-    function deploy() external returns (address payable proxy) {
+    function deploy() external override returns (address payable proxy) {
         proxy = deployFor(msg.sender);
     }
 
     /// @inheritdoc IPRBProxyFactory
-    function deployFor(address owner) public returns (address payable proxy) {
+    function deployFor(address owner) public override returns (address payable proxy) {
         bytes32 seed = nextSeeds[tx.origin];
 
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
