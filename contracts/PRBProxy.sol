@@ -74,7 +74,11 @@ contract PRBProxy is IPRBProxy {
         }
 
         // Check that the target is a valid contract.
-        if (target.code.length == 0) {
+        uint256 codeSize;
+        assembly {
+            codeSize := extcodesize(target)
+        }
+        if (codeSize == 0) {
             revert PRBProxy__TargetInvalid(target);
         }
 

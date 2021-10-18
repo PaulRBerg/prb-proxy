@@ -47,8 +47,16 @@ contract PRBProxyFactory is IPRBProxyFactory {
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
         bytes32 salt = keccak256(abi.encode(tx.origin, seed));
 
+        // Load the proxy bytecode.
+        bytes memory bytecode = type(PRBProxy).creationCode;
+
         // Deploy the proxy with CREATE2.
-        proxy = payable(new PRBProxy{ salt: salt }());
+        assembly {
+            let endowment := 0
+            let bytecodeStart := add(bytecode, 0x20)
+            let bytecodeLength := mload(bytecode)
+            proxy := create2(endowment, bytecodeStart, bytecodeLength, salt)
+        }
 
         // Transfer the ownership from this factory contract to the specified owner.
         IPRBProxy(proxy).transferOwnership(owner);
