@@ -118,16 +118,21 @@ protocol.
 // SPDX-License-Identifier: Unlicense
 pragma solidity >=0.8.4;
 
-import "@openzeppelin/contracts/token/erc20/IERC20.sol"
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract TargetERC20Transfer {
-    function transferTokens(IERC20 token, uint256 amount, address recipient) {
-      // Transfer tokens from user to PRBProxy.
-      token.transferFrom(msg.sender, amount);
+  function transferTokens(
+    IERC20 token,
+    uint256 amount,
+    address to,
+    address recipient
+  ) external {
+    // Transfer tokens from user to PRBProxy.
+    token.transferFrom(msg.sender, to, amount);
 
-      // Transfer tokens from PRBProxy to specific recipient.
-      token.transfer(recipient, amount);
-    }
+    // Transfer tokens from PRBProxy to specific recipient.
+    token.transfer(recipient, amount);
+  }
 }
 
 ```
@@ -156,6 +161,7 @@ seed that the factory will use, you can query the constant function `getNextSeed
 
 ```ts
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { task } from "hardhat/config";
 import { PRBProxyFactory, computeProxyAddress, getPRBProxyFactory } from "prb-proxy";
 
 task("compute-proxy-address").setAction(async function (_, { ethers }) {
@@ -187,7 +193,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
 import { PRBProxyRegistry, getPRBProxyRegistry } from "prb-proxy";
 
-task("deploy-prb-proxy").setAction(async function (_, { ethers }) {
+task("deploy-proxy").setAction(async function (_, { ethers }) {
   const signers: SignerWithAddress[] = await ethers.getSigners();
 
   // Load PRBProxyRegistry as an ethers.js contract.
@@ -212,6 +218,7 @@ Before deploying a new proxy, you may need to know if the account owns one alrea
 
 ```ts
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { task } from "hardhat/config";
 import { PRBProxyRegistry, getPRBProxyRegistry } from "prb-proxy";
 
 task("get-current-proxy").setAction(async function (_, { ethers }) {
@@ -236,14 +243,14 @@ This section assumes that you already own a PRBProxy and that you compiled and d
 <summary>Code Snippet</summary>
 
 ```ts
-import { BigNumber } from "@ethersproject/bignumber";
+import type { BigNumber } from "@ethersproject/bignumber";
 import { parseUnits } from "@ethersproject/units";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
 import { PRBProxy, getPRBProxy } from "prb-proxy";
 
-import { TargetERC20Transfer__factory } from "../typechain/factories/TargetERC20Transfer__factory";
-import { TargetERC20Transfer } from "../typechain/TargetERC20Transfer";
+import { TargetERC20Transfer__factory } from "../types/factories/TargetERC20Transfer__factory";
+import type { TargetERC20Transfer } from "../types/TargetERC20Transfer";
 
 task("execute-composite-call").setAction(async function (_, { ethers }) {
   const signers: SignerWithAddress[] = await ethers.getSigners();
@@ -258,12 +265,12 @@ task("execute-composite-call").setAction(async function (_, { ethers }) {
 
   // Encode the target contract call as calldata.
   const tokenAddress: string = "0x...";
-  const amount: BigNumber = parseUnits("100");
-  const recipient: string = "0x...";
+  const amount: BigNumber = parseUnits("100", 18); // assuming the token has 18 decimals
+  const recipient: string = signers[1].address;
   const data: string = target.interface.encodeFunctionData("transferTokens", [tokenAddress, amount, recipient]);
 
   // Execute the composite call.
-  const receipt = await prbProxy.execute(targetAddress, data);
+  const receipt = await prbProxy.execute(targetAddress, data, { gasLimit });
 });
 ```
 

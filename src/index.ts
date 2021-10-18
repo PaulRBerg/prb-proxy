@@ -2,7 +2,7 @@
 export { PRB_PROXY_FACTORY_ADDRESS, PRB_PROXY_REGISTRY_ADDRESS } from "./constants";
 
 // contracts
-export { getPRBProxyFactory, getPRBProxyRegistry } from "./contracts";
+export { getPRBProxy, getPRBProxyFactory, getPRBProxyRegistry } from "./contracts";
 
 // create2.ts
 export { computeProxyAddress } from "./create2";
