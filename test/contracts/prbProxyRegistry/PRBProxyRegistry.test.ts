@@ -1,5 +1,6 @@
 import { integrationFixturePrbProxyRegistry } from "../../shared/fixtures";
-import { shouldBehaveLikePrbProxyRegistry } from "./PRBProxyRegistry.behavior";
+import { shouldBehaveLikeDeploy } from "./effects/deploy.test";
+import { shouldBehaveLikeDeployFor } from "./effects/deployFor.test";
 
 export function integrationTestPrbProxyRegistry(): void {
   describe("PRBProxyRegistry", function () {
@@ -12,6 +13,14 @@ export function integrationTestPrbProxyRegistry(): void {
       this.contracts.prbProxyRegistry = prbProxyRegistry;
     });
 
-    shouldBehaveLikePrbProxyRegistry();
+    describe("Effects Functions", function () {
+      describe("deploy", function () {
+        shouldBehaveLikeDeploy();
+      });
+
+      describe("deployFor", function () {
+        shouldBehaveLikeDeployFor();
+      });
+    });
   });
 }

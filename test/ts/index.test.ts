@@ -1,5 +1,5 @@
-import { shouldBehaveLikeCreate2 } from "./create2";
-import { shouldBehaveLikeSalts } from "./salts";
+import { shouldBehaveLikeCreate2 } from "./create2.test";
+import { shouldBehaveLikeSalts } from "./salts.test";
 
 describe("PRBProxy TypeScript", function () {
   describe("create2", function () {
