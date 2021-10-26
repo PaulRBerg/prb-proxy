@@ -10,8 +10,8 @@ import "./tasks/deploy";
 import { resolve } from "path";
 
 import { config as dotenvConfig } from "dotenv";
-import { HardhatUserConfig } from "hardhat/config";
-import { NetworkUserConfig } from "hardhat/types";
+import type { HardhatUserConfig } from "hardhat/config";
+import type { NetworkUserConfig } from "hardhat/types";
 
 import { getEnvVar } from "./helpers/env";
 
