@@ -137,10 +137,11 @@ contract PRBProxy is IPRBProxy {
 
     /// @inheritdoc IPRBProxy
     function transferOwnership(address newOwner) external override {
-        if (owner != msg.sender) {
-            revert PRBProxy__NotOwner(owner, msg.sender);
+        address oldOwner = owner;
+        if (oldOwner != msg.sender) {
+            revert PRBProxy__NotOwner(oldOwner, msg.sender);
         }
         owner = newOwner;
-        emit TransferOwnership(owner, newOwner);
+        emit TransferOwnership(oldOwner, newOwner);
     }
 }
