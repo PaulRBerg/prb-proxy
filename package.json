@@ -132,5 +132,6 @@
     "test:contracts": "hardhat test ./test/contracts --network hardhat",
     "test:ts": "yarn mocha --config ./.mocharc.yaml"
   },
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "packageManager": "yarn@3.2.0"
 }
