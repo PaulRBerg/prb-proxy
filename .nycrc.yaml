@@ -1,7 +1,7 @@
 check-coverage: false
 exclude:
   - "src/constants.ts"
-  - "src/types/**/*.d.ts"
+  - "src/contracts.ts"
   - "src/types/**/*.ts"
 extends: "@istanbuljs/nyc-config-typescript"
 include:
