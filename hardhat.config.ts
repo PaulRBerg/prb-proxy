@@ -18,10 +18,14 @@ import { getEnvVar } from "./helpers/env";
 dotenvConfig({ path: resolve(__dirname, ".env") });
 
 const chainIds = {
+  avalanche: 43114,
+  bsc: 56,
   goerli: 5,
+  fantom: 250,
   hardhat: 31337,
   kovan: 42,
   mainnet: 1,
+  "polygon-mainnet": 137,
   rinkeby: 4,
   ropsten: 3,
 };
@@ -30,16 +34,29 @@ const chainIds = {
 const mnemonic: string = getEnvVar("MNEMONIC");
 const infuraApiKey: string = getEnvVar("INFURA_API_KEY");
 
-function getChainConfig(network: keyof typeof chainIds): NetworkUserConfig {
-  const url: string = "https://" + network + ".infura.io/v3/" + infuraApiKey;
+function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
+  let jsonRpcUrl: string;
+  switch (chain) {
+    case "avalanche":
+      jsonRpcUrl = "https://api.avax.network/ext/bc/C/rpc";
+      break;
+    case "bsc":
+      jsonRpcUrl = "https://bsc-dataseed1.binance.org";
+      break;
+    case "fantom":
+      jsonRpcUrl = "https://rpc.ftm.tools";
+      break;
+    default:
+      jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
+  }
   return {
     accounts: {
       count: 10,
       mnemonic,
       path: "m/44'/60'/0'/0",
     },
-    chainId: chainIds[network],
-    url,
+    chainId: chainIds[chain],
+    url: jsonRpcUrl,
   };
 }
 
@@ -61,8 +78,13 @@ const config: HardhatUserConfig = {
       },
       chainId: chainIds.hardhat,
     },
+    avalanche: getChainConfig("avalanche"),
+    bsc: getChainConfig("bsc"),
+    fantom: getChainConfig("fantom"),
     goerli: getChainConfig("goerli"),
     kovan: getChainConfig("kovan"),
+    mainnet: getChainConfig("mainnet"),
+    "polygon-mainnet": getChainConfig("polygon-mainnet"),
     rinkeby: getChainConfig("rinkeby"),
     ropsten: getChainConfig("ropsten"),
   },
