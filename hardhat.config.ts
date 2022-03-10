@@ -63,7 +63,17 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   etherscan: {
-    apiKey: getEnvVar("ETHERSCAN_API_KEY"),
+    apiKey: {
+      avalanche: process.env.SNOWTRACE_API_KEY,
+      bsc: process.env.BSCSCAN_API_KEY,
+      goerli: process.env.ETHERSCAN_API_KEY,
+      kovan: process.env.ETHERSCAN_API_KEY,
+      mainnet: process.env.ETHERSCAN_API_KEY,
+      opera: process.env.FTMSCAN_API_KEY,
+      polygon: process.env.POLYGONSCAN_API_KEY,
+      rinkeby: process.env.ETHERSCAN_API_KEY,
+      ropsten: process.env.ETHERSCAN_API_KEY,
+    },
   },
   gasReporter: {
     currency: "USD",

@@ -78,8 +78,8 @@ To deploy your own proxy, you can use the registry at the address below. In fact
 
 | Contract         | Address                                    |
 | ---------------- | ------------------------------------------ |
-| PRBProxyRegistry | 0xE29bCc91E088733a584FfCa4013d258957BfCe60 |
-| PRBProxyFactory  | 0xc3b9b328b2F1175C4FcE1C441ebC58b573920db0 |
+| PRBProxyRegistry | 0x8A4BE6586D4BeDf9F67E3aAd8697114e3925e6A2 |
+| PRBProxyFactory  | 0xE7580B599e7252c4a93ef36f22f780c62BbE6bDf |
 
 ### Supported Chains
 
@@ -279,8 +279,7 @@ task("execute-composite-call").setAction(async function (_, { ethers }) {
 
 ## Gas Efficiency
 
-It costs 577,443 gas to deploy a PRBProxy, whereas in the case of DSProxy the cost is 596,198 gas. That's a slight
-reduction in deployment costs, but every little helps.
+It costs 562,500 gas to deploy a PRBProxy, whereas DSProxy costs 596,198 gas. That's a slight reduction in deployment costs - but every little helps.
 
 The `execute` function in PRBProxy costs a bit more than its equivalent in DSProxy. This is because of the additional
 safety checks, but the lion's share of the gas cost when calling `execute` is due to the logic in the target contract.
