@@ -1786,7 +1786,6 @@ __metadata:
     "@typechain/hardhat": ^5.0.0
     "@types/chai": ^4.3.0
     "@types/mocha": ^9.1.0
-    "@types/mocha-each": ^2.0.0
     "@types/node": ^17.0.21
     "@typescript-eslint/eslint-plugin": ^5.14.0
     "@typescript-eslint/parser": ^5.14.0
@@ -2251,22 +2250,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 21e6681ee18cee6314dbe0f57ada48981912b76de8266f438ba2573770d60aaa8dd376baad3f20e2346696a7cca84b0aadd1737222341553a0091831a46e6ad1
-  languageName: node
-  linkType: hard
-
-"@types/mocha-each@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@types/mocha-each@npm:2.0.0"
-  dependencies:
-    "@types/mocha": "*"
-  checksum: 83be93fab0095c0ec4d8dbfcc5b7e0da0bf4edc3b45f98985e302c725675501c17dbfdc1fd0df9bd23e04ea8d86bbf08756f4a7491799fb0de481db0a0a07875
-  languageName: node
-  linkType: hard
-
-"@types/mocha@npm:*":
-  version: 9.0.0
-  resolution: "@types/mocha@npm:9.0.0"
-  checksum: 73e6edaba045bc250b69085a770d5029edfed006ed8e75344435474a2cb8d38064acd7b34b6cc62756caa845a5cf335bde66db11e8c8c6565c62a790e933704a
   languageName: node
   linkType: hard
 

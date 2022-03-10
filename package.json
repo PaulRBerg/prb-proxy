@@ -1,7 +1,7 @@
 {
   "name": "@prb/proxy",
   "description": "Proxy contract to compose Ethereum transactions on behalf of the owner",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "author": {
     "name": "Paul Razvan Berg",
     "url": "https://paulrberg.com"
@@ -41,7 +41,6 @@
     "@typechain/hardhat": "^5.0.0",
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.1.0",
-    "@types/mocha-each": "^2.0.0",
     "@types/node": "^17.0.21",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",

@@ -78,8 +78,8 @@ To deploy your own proxy, you can use the registry at the address below. In fact
 
 | Contract         | Address                                    |
 | ---------------- | ------------------------------------------ |
-| PRBProxyRegistry | 0x8A4BE6586D4BeDf9F67E3aAd8697114e3925e6A2 |
-| PRBProxyFactory  | 0xE7580B599e7252c4a93ef36f22f780c62BbE6bDf |
+| PRBProxyRegistry | 0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63 |
+| PRBProxyFactory  | 0xb0C00C9B13a978D8F18bd2BAdc8ad1A123E843ED |
 
 ### Supported Chains
 
