@@ -1,15 +1,16 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-import { Fixture } from "ethereum-waffle";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
+import type { Fixture } from "ethereum-waffle";
 
-import { PRBProxy } from "../../src/types/PRBProxy";
-import { PRBProxyFactory } from "../../src/types/PRBProxyFactory";
-import { PRBProxyRegistry } from "../../src/types/PRBProxyRegistry";
-import { TargetChangeOwner } from "../../src/types/TargetChangeOwner";
-import { TargetEcho } from "../../src/types/TargetEcho";
-import { TargetEnvoy } from "../../src/types/TargetEnvoy";
-import { TargetPanic } from "../../src/types/TargetPanic";
-import { TargetRevert } from "../../src/types/TargetRevert";
-import { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
+import type { Create2Utility } from "../../src/types/Create2Utility";
+import type { PRBProxy } from "../../src/types/PRBProxy";
+import type { PRBProxyFactory } from "../../src/types/PRBProxyFactory";
+import type { PRBProxyRegistry } from "../../src/types/PRBProxyRegistry";
+import type { TargetChangeOwner } from "../../src/types/TargetChangeOwner";
+import type { TargetEcho } from "../../src/types/TargetEcho";
+import type { TargetEnvoy } from "../../src/types/TargetEnvoy";
+import type { TargetPanic } from "../../src/types/TargetPanic";
+import type { TargetRevert } from "../../src/types/TargetRevert";
+import type { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
 
 declare module "mocha" {
   export interface Context {
@@ -20,6 +21,7 @@ declare module "mocha" {
 }
 
 export interface Contracts {
+  create2Utility: Create2Utility;
   prbProxy: PRBProxy;
   prbProxyFactory: PRBProxyFactory;
   prbProxyRegistry: PRBProxyRegistry;

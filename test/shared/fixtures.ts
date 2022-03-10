@@ -1,17 +1,18 @@
-import { Signer } from "@ethersproject/abstract-signer";
+import type { Signer } from "@ethersproject/abstract-signer";
 import { artifacts, waffle } from "hardhat";
-import { Artifact } from "hardhat/types";
+import type { Artifact } from "hardhat/types";
 
 import { PRBProxy__factory } from "../../src/types/factories/PRBProxy__factory";
-import { PRBProxy } from "../../src/types/PRBProxy";
-import { PRBProxyFactory } from "../../src/types/PRBProxyFactory";
-import { PRBProxyRegistry } from "../../src/types/PRBProxyRegistry";
-import { TargetChangeOwner } from "../../src/types/TargetChangeOwner";
-import { TargetEcho } from "../../src/types/TargetEcho";
-import { TargetEnvoy } from "../../src/types/TargetEnvoy";
-import { TargetPanic } from "../../src/types/TargetPanic";
-import { TargetRevert } from "../../src/types/TargetRevert";
-import { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
+import type { PRBProxy } from "../../src/types/PRBProxy";
+import type { PRBProxyFactory } from "../../src/types/PRBProxyFactory";
+import type { PRBProxyRegistry } from "../../src/types/PRBProxyRegistry";
+import type { TargetChangeOwner } from "../../src/types/TargetChangeOwner";
+import type { TargetEcho } from "../../src/types/TargetEcho";
+import type { TargetEnvoy } from "../../src/types/TargetEnvoy";
+import type { TargetPanic } from "../../src/types/TargetPanic";
+import type { TargetRevert } from "../../src/types/TargetRevert";
+import type { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
+import type { Create2Utility } from "../../src/types/Create2Utility";
 
 type IntegrationFixturePrbProxyReturnType = {
   prbProxy: PRBProxy;
@@ -119,4 +120,19 @@ export async function integrationFixturePrbProxyRegistry(
   );
 
   return { prbProxy, prbProxyFactory, prbProxyRegistry };
+}
+
+type IntegrationFixtureCreate2Utility = {
+  create2Utility: Create2Utility;
+};
+
+export async function integrationFixtureCreate2Utility(signers: Signer[]): Promise<IntegrationFixtureCreate2Utility> {
+  const deployer: Signer = signers[0];
+
+  const create2UtilityArtifact: Artifact = await artifacts.readArtifact("Create2Utility");
+  const create2Utility: Create2Utility = <Create2Utility>(
+    await waffle.deployContract(deployer, create2UtilityArtifact, [])
+  );
+
+  return { create2Utility };
 }

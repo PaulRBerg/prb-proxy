@@ -1,9 +1,9 @@
-import { Signer } from "@ethersproject/abstract-signer";
-import { Wallet } from "@ethersproject/wallet";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
+import type { Signer } from "@ethersproject/abstract-signer";
+import type { Wallet } from "@ethersproject/wallet";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import { ethers, waffle } from "hardhat";
 
-import { Contracts, Signers, Targets } from "./types";
+import type { Contracts, Signers, Targets } from "./types";
 
 const { createFixtureLoader } = waffle;
 
