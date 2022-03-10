@@ -11,7 +11,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
     /// PUBLIC STORAGE ///
 
     /// @inheritdoc IPRBProxyFactory
-    uint256 public constant override version = 1;
+    uint256 public constant override version = 2;
 
     /// INTERNAL STORAGE ///
 
