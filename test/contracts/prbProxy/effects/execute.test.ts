@@ -96,7 +96,13 @@ export function shouldBehaveLikeExecute(): void {
         let target: string;
 
         beforeEach(async function () {
-          await this.contracts.prbProxy.connect(owner).setMinGasReserve(gasLimit.add(1));
+          (async () => {
+            const target: string = this.contracts.targets.minGasReserve.address;
+            const data: string = this.contracts.targets.minGasReserve.interface.encodeFunctionData("setMinGasReserve", [
+              gasLimit.add(1),
+            ]);
+            await this.contracts.prbProxy.connect(owner).execute(target, data);
+          })();
           target = this.contracts.targets.echo.address;
           data = this.contracts.targets.echo.interface.encodeFunctionData("echoUint256", [Zero]);
           selector = this.contracts.targets.echo.interface.getSighash("echoUint256");

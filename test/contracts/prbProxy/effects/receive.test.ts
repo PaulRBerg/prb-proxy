@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import type { BigNumber } from "@ethersproject/bignumber";
 import { parseEther } from "@ethersproject/units";
 import { expect } from "chai";
 import { ethers } from "hardhat";

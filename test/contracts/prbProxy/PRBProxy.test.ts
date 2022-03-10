@@ -1,7 +1,6 @@
 import { integrationFixturePrbProxy } from "../../shared/fixtures";
 import { shouldBehaveLikeExecute } from "./effects/execute.test";
 import { shouldBehaveLikeReceive } from "./effects/receive.test";
-import { shouldBehaveLikeSetMinGasReserve } from "./effects/setMinGasReserve.test";
 import { shouldBehaveLikeSetPermission } from "./effects/setPermission.test";
 import { shouldBehaveLikeTransferOwnership } from "./effects/transferOwnership.test";
 
@@ -13,6 +12,7 @@ export function integrationTestPrbProxy(): void {
       this.contracts.targets.changeOwner = targets.changeOwner;
       this.contracts.targets.echo = targets.echo;
       this.contracts.targets.envoy = targets.envoy;
+      this.contracts.targets.minGasReserve = targets.minGasReserve;
       this.contracts.targets.panic = targets.panic;
       this.contracts.targets.revert = targets.revert;
       this.contracts.targets.selfDestruct = targets.selfDestruct;
@@ -25,10 +25,6 @@ export function integrationTestPrbProxy(): void {
 
       describe("receive", function () {
         shouldBehaveLikeReceive();
-      });
-
-      describe("setMinGasReserve", function () {
-        shouldBehaveLikeSetMinGasReserve();
       });
 
       describe("setPermission", function () {

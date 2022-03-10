@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { artifacts, ethers } from "hardhat";
 
 import { PRBProxy__factory } from "../../../../src/types/factories/PRBProxy__factory";
-import { PRBProxy } from "../../../../src/types/PRBProxy";
+import type { PRBProxy } from "../../../../src/types/PRBProxy";
 import { computeProxyAddress } from "../../../shared/create2";
 import { PRBProxyRegistryErrors } from "../../../shared/errors";
 

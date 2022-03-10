@@ -1,5 +1,5 @@
 import { AddressZero } from "@ethersproject/constants";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 
 import { PRBProxyErrors } from "../../../shared/errors";
@@ -27,6 +27,13 @@ export function shouldBehaveLikeTransferOwnership(): void {
         await this.contracts.prbProxy.connect(owner).transferOwnership(newOwner);
         expect(newOwner).to.equal(await this.contracts.prbProxy.owner());
       });
+
+      it("emits a TransferOwnership event", async function () {
+        const newOwner: string = AddressZero;
+        await expect(this.contracts.prbProxy.connect(owner).transferOwnership(newOwner))
+          .to.emit(this.contracts.prbProxy, "TransferOwnership")
+          .withArgs(owner.address, newOwner);
+      });
     });
 
     context("when the new owner is not the zero address", function () {
@@ -34,6 +41,13 @@ export function shouldBehaveLikeTransferOwnership(): void {
         const newOwner: string = this.signers.bob.address;
         await this.contracts.prbProxy.connect(owner).transferOwnership(newOwner);
         expect(newOwner).to.equal(await this.contracts.prbProxy.owner());
+      });
+
+      it("emits a TransferOwnership event", async function () {
+        const newOwner: string = this.signers.bob.address;
+        await expect(this.contracts.prbProxy.connect(owner).transferOwnership(newOwner))
+          .to.emit(this.contracts.prbProxy, "TransferOwnership")
+          .withArgs(owner.address, newOwner);
       });
     });
   });

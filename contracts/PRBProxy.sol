@@ -74,11 +74,7 @@ contract PRBProxy is IPRBProxy {
         }
 
         // Check that the target is a valid contract.
-        uint256 codeSize;
-        assembly {
-            codeSize := extcodesize(target)
-        }
-        if (codeSize == 0) {
+        if (target.code.length == 0) {
             revert PRBProxy__TargetInvalid(target);
         }
 
@@ -115,14 +111,6 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function setMinGasReserve(uint256 newMinGasReserve) external override {
-        if (owner != msg.sender) {
-            revert PRBProxy__NotOwner(owner, msg.sender);
-        }
-        minGasReserve = newMinGasReserve;
-    }
-
-    /// @inheritdoc IPRBProxy
     function setPermission(
         address envoy,
         address target,
@@ -137,10 +125,11 @@ contract PRBProxy is IPRBProxy {
 
     /// @inheritdoc IPRBProxy
     function transferOwnership(address newOwner) external override {
-        if (owner != msg.sender) {
-            revert PRBProxy__NotOwner(owner, msg.sender);
+        address oldOwner = owner;
+        if (oldOwner != msg.sender) {
+            revert PRBProxy__NotOwner(oldOwner, msg.sender);
         }
         owner = newOwner;
-        emit TransferOwnership(owner, newOwner);
+        emit TransferOwnership(oldOwner, newOwner);
     }
 }

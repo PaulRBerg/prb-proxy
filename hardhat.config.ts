@@ -5,7 +5,7 @@ import "hardhat-gas-reporter";
 import "hardhat-packager";
 import "solidity-coverage";
 
-// import "./tasks/deploy";
+import "./tasks/deploy";
 
 import { resolve } from "path";
 
@@ -84,7 +84,7 @@ const config: HardhatUserConfig = {
     tests: "./test",
   },
   solidity: {
-    version: "0.8.9",
+    version: "0.8.12",
     settings: {
       metadata: {
         bytecodeHash: "none",
