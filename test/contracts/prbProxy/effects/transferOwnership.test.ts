@@ -32,7 +32,7 @@ export function shouldBehaveLikeTransferOwnership(): void {
         const newOwner: string = AddressZero;
         await expect(this.contracts.prbProxy.connect(owner).transferOwnership(newOwner))
           .to.emit(this.contracts.prbProxy, "TransferOwnership")
-          .withArgs(owner, newOwner);
+          .withArgs(owner.address, newOwner);
       });
     });
 
@@ -47,7 +47,7 @@ export function shouldBehaveLikeTransferOwnership(): void {
         const newOwner: string = this.signers.bob.address;
         await expect(this.contracts.prbProxy.connect(owner).transferOwnership(newOwner))
           .to.emit(this.contracts.prbProxy, "TransferOwnership")
-          .withArgs(owner, newOwner);
+          .withArgs(owner.address, newOwner);
       });
     });
   });
