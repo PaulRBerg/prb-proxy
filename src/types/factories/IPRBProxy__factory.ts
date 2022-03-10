@@ -133,19 +133,6 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "newMinGasReserve",
-        type: "uint256",
-      },
-    ],
-    name: "setMinGasReserve",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "envoy",
         type: "address",

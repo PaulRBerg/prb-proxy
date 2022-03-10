@@ -11,6 +11,7 @@ import type { TargetEnvoy } from "../../src/types/TargetEnvoy";
 import type { TargetPanic } from "../../src/types/TargetPanic";
 import type { TargetRevert } from "../../src/types/TargetRevert";
 import type { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
+import type { TargetMinGasReserve } from "../../src/types/TargetMinGasReserve";
 
 declare module "mocha" {
   export interface Context {
@@ -38,6 +39,7 @@ export interface Targets {
   changeOwner: TargetChangeOwner;
   echo: TargetEcho;
   envoy: TargetEnvoy;
+  minGasReserve: TargetMinGasReserve;
   panic: TargetPanic;
   revert: TargetRevert;
   selfDestruct: TargetSelfDestruct;

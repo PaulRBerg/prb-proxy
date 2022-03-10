@@ -12,6 +12,7 @@ import type { TargetEnvoy } from "../../src/types/TargetEnvoy";
 import type { TargetPanic } from "../../src/types/TargetPanic";
 import type { TargetRevert } from "../../src/types/TargetRevert";
 import type { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
+import type { TargetMinGasReserve } from "../../src/types/TargetMinGasReserve";
 import type { Create2Utility } from "../../src/types/Create2Utility";
 
 type IntegrationFixturePrbProxyReturnType = {
@@ -20,6 +21,7 @@ type IntegrationFixturePrbProxyReturnType = {
     changeOwner: TargetChangeOwner;
     echo: TargetEcho;
     envoy: TargetEnvoy;
+    minGasReserve: TargetMinGasReserve;
     panic: TargetPanic;
     revert: TargetRevert;
     selfDestruct: TargetSelfDestruct;
@@ -61,12 +63,18 @@ export async function integrationFixturePrbProxy(signers: Signer[]): Promise<Int
     await waffle.deployContract(deployer, targetSelfDestructArtifact, [])
   );
 
+  const targetMinGasReserveArtifact: Artifact = await artifacts.readArtifact("TargetMinGasReserve");
+  const targetMinGasReserve: TargetMinGasReserve = <TargetMinGasReserve>(
+    await waffle.deployContract(deployer, targetMinGasReserveArtifact, [])
+  );
+
   return {
     prbProxy,
     targets: {
       changeOwner: targetChangeOwner,
       echo: targetEcho,
       envoy: targetEnvoy,
+      minGasReserve: targetMinGasReserve,
       panic: targetPanic,
       revert: targetRevert,
       selfDestruct: targetSelfDestruct,

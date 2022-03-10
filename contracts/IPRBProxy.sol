@@ -43,12 +43,6 @@ interface IPRBProxy {
     /// @return response The response received from the target contract.
     function execute(address target, bytes calldata data) external payable returns (bytes memory response);
 
-    /// @notice Sets a new value for the minimum gas reserve.
-    /// @dev Requirements:
-    /// - The caller must be the owner.
-    /// @param newMinGasReserve The new minimum gas reserve.
-    function setMinGasReserve(uint256 newMinGasReserve) external;
-
     /// @notice Gives or takes a permission from an envoy to call the given target contract and function selector
     /// on behalf of the owner.
     /// @dev It is not an error to reset a permission on the same (envoy,target,selector) tuple multiple types.

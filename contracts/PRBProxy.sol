@@ -111,14 +111,6 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function setMinGasReserve(uint256 newMinGasReserve) external override {
-        if (owner != msg.sender) {
-            revert PRBProxy__NotOwner(owner, msg.sender);
-        }
-        minGasReserve = newMinGasReserve;
-    }
-
-    /// @inheritdoc IPRBProxy
     function setPermission(
         address envoy,
         address target,

@@ -3,7 +3,7 @@ import { shouldBehaveLikeCreate2 } from "./create2.test";
 import { shouldBehaveLikeSalts } from "./salts.test";
 
 baseContext("PRBProxy TypeScript", function () {
-  describe.only("create2", function () {
+  describe("create2", function () {
     shouldBehaveLikeCreate2();
   });
 
