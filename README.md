@@ -57,16 +57,16 @@ just keep in mind the differences between the two.
 With yarn:
 
 ```bash
-$ yarn add prb-proxy ethers@5
+$ yarn add @prb/proxy ethers@5
 ```
 
 Or npm:
 
 ```bash
-$ npm install prb-proxy ethers@5
+$ npm install @prb/proxy ethers@5
 ```
 
-The trailing package is ethers.js, the only peer dependency of `prb-proxy`.
+The trailing package is ethers.js, the only peer dependency of `@prb/proxy`.
 
 ## Usage
 
@@ -163,7 +163,7 @@ seed that the factory will use, you can query the constant function `getNextSeed
 ```ts
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
-import { PRBProxyFactory, computeProxyAddress, getPRBProxyFactory } from "prb-proxy";
+import { PRBProxyFactory, computeProxyAddress, getPRBProxyFactory } from "@prb/proxy";
 
 task("compute-proxy-address").setAction(async function (_, { ethers }) {
   const signers: SignerWithAddress[] = await ethers.getSigners();
@@ -192,7 +192,7 @@ can have only one proxy at a time.
 ```ts
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
-import { PRBProxyRegistry, getPRBProxyRegistry } from "prb-proxy";
+import { PRBProxyRegistry, getPRBProxyRegistry } from "@prb/proxy";
 
 task("deploy-proxy").setAction(async function (_, { ethers }) {
   const signers: SignerWithAddress[] = await ethers.getSigners();
@@ -220,7 +220,7 @@ Before deploying a new proxy, you may need to know if the account owns one alrea
 ```ts
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
-import { PRBProxyRegistry, getPRBProxyRegistry } from "prb-proxy";
+import { PRBProxyRegistry, getPRBProxyRegistry } from "@prb/proxy";
 
 task("get-current-proxy").setAction(async function (_, { ethers }) {
   const signers: SignerWithAddress[] = await ethers.getSigners();
@@ -248,7 +248,7 @@ import type { BigNumber } from "@ethersproject/bignumber";
 import { parseUnits } from "@ethersproject/units";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { task } from "hardhat/config";
-import { PRBProxy, getPRBProxy } from "prb-proxy";
+import { PRBProxy, getPRBProxy } from "@prb/proxy";
 
 import { TargetERC20Transfer__factory } from "../types/factories/TargetERC20Transfer__factory";
 import type { TargetERC20Transfer } from "../types/TargetERC20Transfer";
