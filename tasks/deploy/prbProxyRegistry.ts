@@ -21,7 +21,7 @@ task("deploy:contract:prb-proxy-registry")
     deploymentTx.to = DETERMINISTIC_DEPLOYMENT_PROXY_ADDRESS;
     const prbProxyRegistryAddress: string = await deployer.call(deploymentTx);
     const txResponse: TransactionResponse = await deployer.sendTransaction(deploymentTx);
-    await txResponse.wait();
+    await txResponse.wait(taskArgs.confirmations);
 
     if (taskArgs.setOutput) {
       core.setOutput("prb-proxy-registry", prbProxyRegistryAddress);
