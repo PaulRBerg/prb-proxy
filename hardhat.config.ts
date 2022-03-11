@@ -26,6 +26,7 @@ const chainIds = {
   kovan: 42,
   mainnet: 1,
   "polygon-mainnet": 137,
+  "polygon-mumbai": 80001,
   rinkeby: 4,
   ropsten: 3,
 };
@@ -71,6 +72,7 @@ const config: HardhatUserConfig = {
       mainnet: process.env.ETHERSCAN_API_KEY,
       opera: process.env.FTMSCAN_API_KEY,
       polygon: process.env.POLYGONSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGONSCAN_API_KEY,
       rinkeby: process.env.ETHERSCAN_API_KEY,
       ropsten: process.env.ETHERSCAN_API_KEY,
     },
@@ -95,6 +97,7 @@ const config: HardhatUserConfig = {
     kovan: getChainConfig("kovan"),
     mainnet: getChainConfig("mainnet"),
     "polygon-mainnet": getChainConfig("polygon-mainnet"),
+    "polygon-mumbai": getChainConfig("polygon-mumbai"),
     rinkeby: getChainConfig("rinkeby"),
     ropsten: getChainConfig("ropsten"),
   },
