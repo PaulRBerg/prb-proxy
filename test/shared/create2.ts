@@ -1,6 +1,7 @@
 import { getCreate2Address } from "@ethersproject/address";
 import { keccak256 } from "@ethersproject/keccak256";
 import { artifacts } from "hardhat";
+
 import { computeSalt } from "../../src";
 
 export async function computeProxyAddress(this: Mocha.Context, deployer: string): Promise<string> {

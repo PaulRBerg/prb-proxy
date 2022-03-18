@@ -8,10 +8,10 @@ import type { PRBProxyRegistry } from "../../src/types/PRBProxyRegistry";
 import type { TargetChangeOwner } from "../../src/types/TargetChangeOwner";
 import type { TargetEcho } from "../../src/types/TargetEcho";
 import type { TargetEnvoy } from "../../src/types/TargetEnvoy";
+import type { TargetMinGasReserve } from "../../src/types/TargetMinGasReserve";
 import type { TargetPanic } from "../../src/types/TargetPanic";
 import type { TargetRevert } from "../../src/types/TargetRevert";
 import type { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
-import type { TargetMinGasReserve } from "../../src/types/TargetMinGasReserve";
 
 declare module "mocha" {
   export interface Context {

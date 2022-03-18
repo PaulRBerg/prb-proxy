@@ -2,8 +2,8 @@ import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { artifacts, ethers } from "hardhat";
 
-import { PRBProxy__factory } from "../../../../src/types/factories/PRBProxy__factory";
 import type { PRBProxy } from "../../../../src/types/PRBProxy";
+import { PRBProxy__factory } from "../../../../src/types/factories/PRBProxy__factory";
 import { computeProxyAddress } from "../../../shared/create2";
 import { PRBProxyRegistryErrors } from "../../../shared/errors";
 

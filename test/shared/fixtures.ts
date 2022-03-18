@@ -2,18 +2,18 @@ import type { Signer } from "@ethersproject/abstract-signer";
 import { artifacts, waffle } from "hardhat";
 import type { Artifact } from "hardhat/types";
 
-import { PRBProxy__factory } from "../../src/types/factories/PRBProxy__factory";
+import type { Create2Utility } from "../../src/types/Create2Utility";
 import type { PRBProxy } from "../../src/types/PRBProxy";
 import type { PRBProxyFactory } from "../../src/types/PRBProxyFactory";
 import type { PRBProxyRegistry } from "../../src/types/PRBProxyRegistry";
 import type { TargetChangeOwner } from "../../src/types/TargetChangeOwner";
 import type { TargetEcho } from "../../src/types/TargetEcho";
 import type { TargetEnvoy } from "../../src/types/TargetEnvoy";
+import type { TargetMinGasReserve } from "../../src/types/TargetMinGasReserve";
 import type { TargetPanic } from "../../src/types/TargetPanic";
 import type { TargetRevert } from "../../src/types/TargetRevert";
 import type { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
-import type { TargetMinGasReserve } from "../../src/types/TargetMinGasReserve";
-import type { Create2Utility } from "../../src/types/Create2Utility";
+import { PRBProxy__factory } from "../../src/types/factories/PRBProxy__factory";
 
 type IntegrationFixturePrbProxyReturnType = {
   prbProxy: PRBProxy;

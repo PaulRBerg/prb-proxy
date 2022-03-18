@@ -1,5 +1,6 @@
 import type { BigNumber } from "@ethersproject/bignumber";
 import { expect } from "chai";
+
 import { bn } from "../../../shared/numbers";
 
 export function shouldBehaveLikeVersionGetter(): void {

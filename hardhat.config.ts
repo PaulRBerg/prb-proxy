@@ -1,19 +1,16 @@
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
+import { config as dotenvConfig } from "dotenv";
 import "hardhat-gas-reporter";
 import "hardhat-packager";
-import "solidity-coverage";
-
-import "./tasks/deploy";
-
-import { resolve } from "path";
-
-import { config as dotenvConfig } from "dotenv";
 import type { HardhatUserConfig } from "hardhat/config";
 import type { NetworkUserConfig } from "hardhat/types";
+import { resolve } from "path";
+import "solidity-coverage";
 
 import { getEnvVar } from "./helpers/env";
+import "./tasks/deploy";
 
 dotenvConfig({ path: resolve(__dirname, ".env") });
 

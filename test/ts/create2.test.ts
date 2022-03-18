@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import forEach from "mocha-each";
-import { PRB_PROXY_FACTORY_ADDRESS } from "../../src";
 
+import { PRB_PROXY_FACTORY_ADDRESS } from "../../src";
 import { computeProxyAddress } from "../../src/create2";
 import { PRBProxy__factory } from "../../src/types/factories/PRBProxy__factory";
 import { DEPLOYER_ADDRESS, SEED_ONE, SEED_ZERO } from "../shared/constants";

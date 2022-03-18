@@ -1,8 +1,8 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { artifacts, ethers } from "hardhat";
-import { computeSalt } from "../../../../src";
 
+import { computeSalt } from "../../../../src";
 import { SEED_ONE, SEED_ZERO } from "../../../shared/constants";
 import { computeProxyAddress } from "../../../shared/create2";
 
