@@ -1,17 +1,17 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import type { Fixture } from "ethereum-waffle";
 
-import type { Create2Utility } from "../../src/types/Create2Utility";
 import type { PRBProxy } from "../../src/types/PRBProxy";
 import type { PRBProxyFactory } from "../../src/types/PRBProxyFactory";
 import type { PRBProxyRegistry } from "../../src/types/PRBProxyRegistry";
-import type { TargetChangeOwner } from "../../src/types/TargetChangeOwner";
-import type { TargetEcho } from "../../src/types/TargetEcho";
-import type { TargetEnvoy } from "../../src/types/TargetEnvoy";
-import type { TargetMinGasReserve } from "../../src/types/TargetMinGasReserve";
-import type { TargetPanic } from "../../src/types/TargetPanic";
-import type { TargetRevert } from "../../src/types/TargetRevert";
-import type { TargetSelfDestruct } from "../../src/types/TargetSelfDestruct";
+import type { Create2Utility } from "../../src/types/test/Create2Utility";
+import type { TargetChangeOwner } from "../../src/types/test/TargetChangeOwner";
+import type { TargetEcho } from "../../src/types/test/TargetEcho";
+import type { TargetEnvoy } from "../../src/types/test/TargetEnvoy";
+import type { TargetMinGasReserve } from "../../src/types/test/TargetMinGasReserve";
+import type { TargetPanic } from "../../src/types/test/TargetPanic";
+import type { TargetRevert } from "../../src/types/test/TargetRevert";
+import type { TargetSelfDestruct } from "../../src/types/test/TargetSelfDestruct";
 
 declare module "mocha" {
   export interface Context {
