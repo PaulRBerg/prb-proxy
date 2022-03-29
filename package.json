@@ -56,7 +56,7 @@
     "from-exponential": "^1.1.1",
     "hardhat": "^2.9.2",
     "hardhat-gas-reporter": "^1.0.8",
-    "hardhat-packager": "^1.4.0",
+    "hardhat-packager": "^1.4.1",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.7",
     "lodash": "^4.17.21",

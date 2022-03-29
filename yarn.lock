@@ -2355,7 +2355,7 @@ __metadata:
     from-exponential: ^1.1.1
     hardhat: ^2.9.2
     hardhat-gas-reporter: ^1.0.8
-    hardhat-packager: ^1.4.0
+    hardhat-packager: ^1.4.1
     husky: ^7.0.4
     lint-staged: ^12.3.7
     lodash: ^4.17.21
@@ -8991,9 +8991,9 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
-"hardhat-packager@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "hardhat-packager@npm:1.4.0"
+"hardhat-packager@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "hardhat-packager@npm:1.4.1"
   dependencies:
     "@typechain/hardhat": ^6.0.0
     fs-extra: ^10.0.1
@@ -9005,7 +9005,7 @@ fsevents@~2.3.2:
     hardhat: 2.x
     lodash: 4.x
     typechain: 8.x
-  checksum: 8b7abaa1f5cde3cc2348b0f4be179ce6c08294c549321bcb5ae920c38d0eab9cd7c42a83a0ac220f672e6e625697612ca67967965475f9ba71893fba3ba58a13
+  checksum: 5ddfbd1bd7860b629573e5727acdf42355ad57744bcd59de022456162d9b63785c35e5cdec287d74f74a43ac72fba86e01299d721fa15bd0cbeb6f0d9e572900
   languageName: node
   linkType: hard
 
