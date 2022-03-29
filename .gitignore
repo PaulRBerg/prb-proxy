@@ -26,13 +26,13 @@ yarn-error.log*
 
 # types
 src/types/*
-!src/types/common.d.ts
-!src/types/IPRBProxy.d.ts
-!src/types/IPRBProxyFactory.d.ts
-!src/types/IPRBProxyRegistry.d.ts
-!src/types/PRBProxy.d.ts
-!src/types/PRBProxyFactory.d.ts
-!src/types/PRBProxyRegistry.d.ts
+!src/types/common.ts
+!src/types/IPRBProxy.ts
+!src/types/IPRBProxyFactory.ts
+!src/types/IPRBProxyRegistry.ts
+!src/types/PRBProxy.ts
+!src/types/PRBProxyFactory.ts
+!src/types/PRBProxyRegistry.ts
 
 # factories
 !src/types/factories
