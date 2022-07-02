@@ -117,21 +117,21 @@
     "compile": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat compile",
     "coverage": "yarn coverage:contracts && yarn coverage:ts",
     "coverage:contracts": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/contracts/**/*.ts\"",
-    "coverage:ts": "yarn nyc --nycrc-path ./.nycrc.yaml mocha",
+    "coverage:ts": "yarn nyc --nycrc-path ./.nycrc.yml mocha",
     "generate:types": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain",
     "lint": "yarn lint:contracts && yarn lint:ts && yarn prettier:check",
     "lint:contracts": "solhint --config ./.solhint.json --ignore-path ./.solhintignore --max-warnings 0 \"contracts/**/*.sol\"",
-    "lint:ts": "eslint --config ./.eslintrc.yaml --ignore-path ./.eslintignore --ext .js,.ts .",
+    "lint:ts": "eslint --config ./.eslintrc.yml --ignore-path ./.eslintignore --ext .js,.ts .",
     "postinstall": "husky install",
     "postpublish": "pinst --enable",
     "prepack": "yarn build",
     "prepare:types": "cross-env TS_NODE_TRANSPILE_ONLY=true yarn hardhat prepare-package",
     "prepublishOnly": "pinst --disable",
-    "prettier": "prettier --config ./.prettierrc.yaml --ignore-path ./.prettierignore --write \"**/*.{js,json,md,sol,ts,yaml,yml}\"",
-    "prettier:check": "prettier --check --config ./.prettierrc.yaml --ignore-path ./.prettierignore \"**/*.{js,json,md,sol,ts,yaml,yml}\"",
+    "prettier": "prettier --config ./.prettierrc.yml --ignore-path ./.prettierignore --write \"**/*.{js,json,md,sol,ts,yaml,yml}\"",
+    "prettier:check": "prettier --check --config ./.prettierrc.yml --ignore-path ./.prettierignore \"**/*.{js,json,md,sol,ts,yaml,yml}\"",
     "test": "hardhat test",
     "test:contracts": "hardhat test ./test/contracts --network hardhat",
-    "test:ts": "yarn mocha --config ./.mocharc.yaml"
+    "test:ts": "yarn mocha --config ./.mocharc.yml"
   },
   "types": "./dist/index.d.ts"
 }
