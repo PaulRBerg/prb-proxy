@@ -1,0 +1,9 @@
+transferOwnership.t.sol
+├── when the caller is not the owner
+│  └── it should revert
+└── when the caller is the owner
+   ├── when ownership is transferred to the zero address
+   │  └── it should transfer the ownership
+   └── when ownership is not transferred to the zero address
+      ├── it should transfer the ownership
+      └── it should emit a TransferOwnership event

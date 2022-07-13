@@ -1,0 +1,49 @@
+execute.t.sol
+├── when the caller is not authorized
+│  ├── when the caller does not have permission for anything
+│  │  └── it should revert
+│  ├── when the caller has permission for a different target
+│  │  └── it should revert
+│  └── when the caller has permission for the same target but a different function
+│     └── it should revert
+└── when the caller is authorized
+   ├── when the target is not a contract
+   │  └── it should revert
+   └── when the target is a contract
+      ├── when the gas stipend calculation results into an underflow
+      │  └── it should revert
+      └── when the gas stipend calculation does not result into an underflow
+         ├── when the owner was changed during the delegate call
+         │  └── it should revert
+         └── when the owner was not changed during the delegate call
+            ├── when the delegate call reverts
+            │  ├── when the exception is a panic
+            │  │  ├── it should panic due to a failed assertion
+            │  │  ├── it should panic due to division by zero
+            │  │  ├── it should panic due to arithmetic overflow
+            │  │  └── it should panic due to arithmetic underflow
+            │  └── when the exception is an error
+            │     ├── it should revert due to a revert statement
+            │     ├── it should revert due to a custom error
+            │     ├── it should revert due to a require
+            │     ├── it should revert due to a reason string
+            │     └── it should revert due to a lack of a payable modifier
+            └── when the delegate call does not revert
+               ├── when ETH is sent
+               │  └── returns the ETH amount
+               └── when ETH is not sent
+                  ├── when the target self-destructs
+                  │  ├── when the caller is the owner
+                  │  │  └── returns an empty response and sends the ETH to the selfdestruct recipient
+                  │  └── when the caller is an envoy
+                  │     └── returns an empty response and sends the ETH to the selfdestruct recipient
+                  └── when the target does not self-destruct
+                     ├── it should return the address
+                     ├── it should return the bytes array
+                     ├── it should return the bytes32
+                     ├── it should return the string
+                     ├── it should return the struct
+                     ├── it should return the uint8
+                     ├── it should return the uint256
+                     ├── it should return the uint256 array
+                     └── it should emit an Execute event

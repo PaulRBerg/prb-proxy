@@ -1,7 +1,7 @@
-# PRBProxy [![GitHub Actions][gha-badge]][gha] [![Coverage Status][coveralls-badge]][coveralls] [![Styled with Prettier][prettier-badge]][prettier] [![License: Unlicense][license-badge]][license]
+# PRBProxy [![Github Actions][gha-badge]][gha] [![Coverage Status][coveralls-badge]][coveralls] [![Styled with Prettier][prettier-badge]][prettier] [![License: Unlicense][license-badge]][license]
 
 [gha]: https://github.com/paulrberg/prb-proxy/actions
-[gha-badge]: https://github.com/paulrberg/prb-proxy/actions/workflows/integration.yml/badge.svg
+[gha-badge]: https://github.com/paulrberg/prb-proxy/actions/workflows/ci.yml/badge.svg
 [coveralls]: https://coveralls.io/github/paulrberg/prb-proxy
 [coveralls-badge]: https://coveralls.io/repos/github/paulrberg/prb-proxy/badge.svg?branch=main
 [prettier]: https://prettier.io
@@ -253,14 +253,13 @@ This section assumes that you already own a PRBProxy and that you compiled and d
 <summary>Code Snippet</summary>
 
 ```ts
+import type { TargetERC20Transfer } from "../types/TargetERC20Transfer";
+import { TargetERC20Transfer__factory } from "../types/factories/TargetERC20Transfer__factory";
 import type { BigNumber } from "@ethersproject/bignumber";
 import { parseUnits } from "@ethersproject/units";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { PRBProxy, getPRBProxy } from "@prb/proxy";
 import { task } from "hardhat/config";
-
-import type { TargetERC20Transfer } from "../types/TargetERC20Transfer";
-import { TargetERC20Transfer__factory } from "../types/factories/TargetERC20Transfer__factory";
 
 task("execute-composite-call").setAction(async function (_, { ethers }) {
   const signers: SignerWithAddress[] = await ethers.getSigners();
