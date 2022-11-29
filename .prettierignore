@@ -1,6 +1,8 @@
 # directories
 .yarn/
+**/broadcast
 **/cache
+**/lib
 **/out
 **/node_modules
 
@@ -8,7 +10,5 @@
 *.env
 *.log
 .pnp.*
-coverage.json
-npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

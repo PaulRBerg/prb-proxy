@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.4;
 
-import { PRBProxyFactory } from "../../src/PRBProxyFactory.sol";
+import { PRBProxyFactory } from "src/PRBProxyFactory.sol";
 
 import { BaseTest } from "../BaseTest.t.sol";
 

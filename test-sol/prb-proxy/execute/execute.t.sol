@@ -3,7 +3,7 @@ pragma solidity >=0.8.4;
 
 import { console2 } from "forge-std/console2.sol";
 import { stdError } from "forge-std/StdError.sol";
-import { IPRBProxy } from "../../../src/IPRBProxy.sol";
+import { IPRBProxy } from "src/IPRBProxy.sol";
 import { PRBProxyTest } from "../PRBProxyTest.t.sol";
 import { TargetChangeOwner } from "../../shared/TargetChangeOwner.t.sol";
 import { TargetDummy } from "../../shared/TargetDummy.t.sol";

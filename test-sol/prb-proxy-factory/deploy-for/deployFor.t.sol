@@ -2,7 +2,7 @@
 pragma solidity >=0.8.4;
 
 import "forge-std/console2.sol";
-import { PRBProxy } from "../../../src/PRBProxy.sol";
+import { PRBProxy } from "src/PRBProxy.sol";
 import { PRBProxyFactoryTest } from "../PRBProxyFactoryTest.t.sol";
 
 contract PRBProxyFactory__DeployFor is PRBProxyFactoryTest {

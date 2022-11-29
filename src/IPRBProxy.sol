@@ -38,11 +38,7 @@ interface IPRBProxy {
 
     /// @notice Returns a boolean flag that indicates whether the envoy has permission to call the given target
     /// contract and function selector.
-    function getPermission(
-        address envoy,
-        address target,
-        bytes4 selector
-    ) external view returns (bool);
+    function getPermission(address envoy, address target, bytes4 selector) external view returns (bool);
 
     /// @notice The address of the owner account or contract.
     function owner() external view returns (address);
@@ -79,12 +75,7 @@ interface IPRBProxy {
     /// @param target The address of the target contract.
     /// @param selector The 4 byte function selector on the target contract.
     /// @param permission The boolean permission to set.
-    function setPermission(
-        address envoy,
-        address target,
-        bytes4 selector,
-        bool permission
-    ) external;
+    function setPermission(address envoy, address target, bytes4 selector, bool permission) external;
 
     /// @notice Transfers the owner of the contract to a new account.
     /// @dev Requirements:

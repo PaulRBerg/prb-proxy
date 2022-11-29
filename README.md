@@ -131,12 +131,7 @@ pragma solidity >=0.8.4;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract TargetERC20Transfer {
-  function transferTokens(
-    IERC20 token,
-    uint256 amount,
-    address to,
-    address recipient
-  ) external {
+  function transferTokens(IERC20 token, uint256 amount, address to, address recipient) external {
     // Transfer tokens from user to PRBProxy.
     token.transferFrom(msg.sender, to, amount);
 

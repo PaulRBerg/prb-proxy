@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.4;
 
-import { PRBProxy } from "../../src/PRBProxy.sol";
+import { PRBProxy } from "src/PRBProxy.sol";
 import { BaseTest } from "../BaseTest.t.sol";
 import { TargetChangeOwner } from "../shared/TargetChangeOwner.t.sol";
 import { TargetDummy } from "../shared/TargetDummy.t.sol";

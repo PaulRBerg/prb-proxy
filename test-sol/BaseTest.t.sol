@@ -6,7 +6,7 @@ import { IERC20 } from "@prb/contracts/token/erc20/IERC20.sol";
 import { PRBTest } from "@prb/test/PRBTest.sol";
 import { StdCheats, StdUtils } from "forge-std/Components.sol";
 
-import { PRBProxy } from "../src/PRBProxy.sol";
+import { PRBProxy } from "src/PRBProxy.sol";
 
 /// @title BaseTest
 /// @author Paul Razvan Berg
@@ -59,7 +59,7 @@ abstract contract BaseTest is PRBTest, StdCheats, StdUtils {
 
     /// @dev Helper function that multiplies the `amount` by `10^decimals` and returns a `uint256.`
     function bn(uint256 amount, uint256 decimals) internal pure returns (uint256 result) {
-        result = amount * 10**decimals;
+        result = amount * 10 ** decimals;
     }
 
     /*//////////////////////////////////////////////////////////////////////////

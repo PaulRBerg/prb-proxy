@@ -45,11 +45,7 @@ contract PRBProxy is IPRBProxy {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxy
-    function getPermission(
-        address envoy,
-        address target,
-        bytes4 selector
-    ) external view override returns (bool) {
+    function getPermission(address envoy, address target, bytes4 selector) external view override returns (bool) {
         return permissions[envoy][target][selector];
     }
 
@@ -108,12 +104,7 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function setPermission(
-        address envoy,
-        address target,
-        bytes4 selector,
-        bool permission
-    ) external override {
+    function setPermission(address envoy, address target, bytes4 selector, bool permission) external override {
         if (owner != msg.sender) {
             revert PRBProxy__NotOwner(owner, msg.sender);
         }
