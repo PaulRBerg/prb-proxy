@@ -39,7 +39,7 @@
     "smart-contracts",
     "solidity"
   ],
-  "license": "Unlicense",
+  "license": "MIT",
   "packageManager": "yarn@3.3.0",
   "publishConfig": {
     "access": "public"
