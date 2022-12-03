@@ -2,7 +2,7 @@
 pragma solidity >=0.8.4 <=0.9.0;
 
 contract TargetEcho {
-    struct Struct {
+    struct SomeStruct {
         uint256 foo;
         uint256 bar;
         uint256 baz;
@@ -28,7 +28,7 @@ contract TargetEcho {
         return input;
     }
 
-    function echoStruct(Struct calldata input) external pure returns (Struct calldata) {
+    function echoStruct(SomeStruct calldata input) external pure returns (SomeStruct calldata) {
         return input;
     }
 

@@ -9,6 +9,7 @@ import { StdUtils } from "forge-std/StdUtils.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 import { IPRBProxyFactory } from "src/interfaces/IPRBProxyFactory.sol";
+import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 import { PRBProxy } from "src/PRBProxy.sol";
 import { PRBProxyFactory } from "src/PRBProxyFactory.sol";
@@ -76,6 +77,16 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     /*//////////////////////////////////////////////////////////////////////////
                            INTERNAL NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev Helper function to compare two `IPRBProxyPlugin` addresses.
+    function assertEq(IPRBProxyPlugin a, IPRBProxyPlugin b) internal {
+        assertEq(address(a), address(b));
+    }
+
+    /// @dev Helper function to compare two `IPRBProxyPlugin` addresses.
+    function assertEq(IPRBProxyPlugin a, IPRBProxyPlugin b, string memory err) internal {
+        assertEq(address(a), address(b), err);
+    }
 
     /// @dev Computes the proxy address without deploying it.
     function computeProxyAddress(address deployer, bytes32 seed) internal view returns (address proxyAddress) {

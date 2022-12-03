@@ -7,7 +7,7 @@ import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
 import { PRBProxy_Test } from "../PRBProxy.t.sol";
 import { TargetEcho } from "../../helpers/targets/TargetEcho.t.sol";
-import { TargetRevert } from "../../helpers/targets/TargetRevert.t.sol";
+import { TargetReverter } from "../../helpers/targets/TargetReverter.t.sol";
 
 contract Execute_Test is PRBProxy_Test {
     modifier callerUnauthorized() {
@@ -111,8 +111,8 @@ contract Execute_Test is PRBProxy_Test {
         targetContract
         gasStipendCalculationDoesNotUnderflow
     {
-        bytes memory data = bytes.concat(targets.changeOwner.changeOwner.selector);
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(0)));
+        bytes memory data = bytes.concat(targets.changeOwner.changeIt.selector);
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(1729)));
         proxy.execute(address(targets.changeOwner), data);
     }
 
@@ -133,22 +133,8 @@ contract Execute_Test is PRBProxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        bytes memory data = bytes.concat(targets.panic.assertion.selector);
+        bytes memory data = bytes.concat(targets.panic.failedAssertion.selector);
         vm.expectRevert(stdError.assertionError);
-        proxy.execute(address(targets.panic), data);
-    }
-
-    /// @dev it should revert.
-    function test_RevertWhen_Panic_DivisionByZero()
-        external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
-    {
-        bytes memory data = bytes.concat(targets.panic.divisionByZero.selector);
-        vm.expectRevert(stdError.divisionError);
         proxy.execute(address(targets.panic), data);
     }
 
@@ -167,7 +153,7 @@ contract Execute_Test is PRBProxy_Test {
     }
 
     /// @dev it should revert.
-    function test_RevertWhen_Panic_ArithmeticUnderflow()
+    function test_RevertWhen_Panic_DivisionByZero()
         external
         callerAuthorized
         targetContract
@@ -175,8 +161,22 @@ contract Execute_Test is PRBProxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        bytes memory data = bytes.concat(targets.panic.arithmeticUnderflow.selector);
-        vm.expectRevert(stdError.arithmeticError);
+        bytes memory data = bytes.concat(targets.panic.divisionByZero.selector);
+        vm.expectRevert(stdError.divisionError);
+        proxy.execute(address(targets.panic), data);
+    }
+
+    /// @dev it should revert.
+    function test_RevertWhen_Panic_IndexOOB()
+        external
+        callerAuthorized
+        targetContract
+        gasStipendCalculationDoesNotUnderflow
+        ownerNotChangedDuringDelegateCall
+        delegateCallReverts
+    {
+        bytes memory data = bytes.concat(targets.panic.indexOOB.selector);
+        vm.expectRevert(stdError.indexOOBError);
         proxy.execute(address(targets.panic), data);
     }
 
@@ -189,9 +189,9 @@ contract Execute_Test is PRBProxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        bytes memory data = bytes.concat(targets.revert.withNothing.selector);
-        vm.expectRevert();
-        proxy.execute(address(targets.revert), data);
+        bytes memory data = bytes.concat(targets.reverter.withNothing.selector);
+        vm.expectRevert(IPRBProxy.PRBProxy_ExecutionReverted.selector);
+        proxy.execute(address(targets.reverter), data);
     }
 
     /// @dev it should revert.
@@ -203,9 +203,9 @@ contract Execute_Test is PRBProxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        bytes memory data = bytes.concat(targets.revert.withCustomError.selector);
-        vm.expectRevert(TargetRevert.TargetError.selector);
-        proxy.execute(address(targets.revert), data);
+        bytes memory data = bytes.concat(targets.reverter.withCustomError.selector);
+        vm.expectRevert(TargetReverter.SomeError.selector);
+        proxy.execute(address(targets.reverter), data);
     }
 
     /// @dev it should revert.
@@ -217,9 +217,9 @@ contract Execute_Test is PRBProxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        bytes memory data = bytes.concat(targets.revert.withRequire.selector);
+        bytes memory data = bytes.concat(targets.reverter.withRequire.selector);
         vm.expectRevert();
-        proxy.execute(address(targets.revert), data);
+        proxy.execute(address(targets.reverter), data);
     }
 
     /// @dev it should revert.
@@ -231,9 +231,9 @@ contract Execute_Test is PRBProxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        bytes memory data = bytes.concat(targets.revert.withReasonString.selector);
+        bytes memory data = bytes.concat(targets.reverter.withReasonString.selector);
         vm.expectRevert("You shall not pass");
-        proxy.execute(address(targets.revert), data);
+        proxy.execute(address(targets.reverter), data);
     }
 
     /// @dev it should revert.
@@ -245,9 +245,9 @@ contract Execute_Test is PRBProxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        bytes memory data = bytes.concat(targets.revert.dueToNoPayableModifier.selector);
+        bytes memory data = bytes.concat(targets.reverter.dueToNoPayableModifier.selector);
         vm.expectRevert();
-        proxy.execute{ value: 0.1 ether }(address(targets.revert), data);
+        proxy.execute{ value: 0.1 ether }(address(targets.reverter), data);
     }
 
     modifier delegateCallDoesNotRevert() {
@@ -284,18 +284,25 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
     {
+        // Load Bob's initial balance.
         uint256 initialBobBalance = users.bob.balance;
+
+        // Set the proxy's balance.
         uint256 proxyBalance = 3.14 ether;
         vm.deal({ account: address(proxy), newBalance: proxyBalance });
 
-        bytes memory data = abi.encodeCall(targets.selfDestruct.destroyMe, (users.bob));
-        bytes memory actualResponse = proxy.execute(address(targets.selfDestruct), data);
+        // Call the target contract.
+        bytes memory data = abi.encodeCall(targets.selfDestructer.destroyMe, (users.bob));
+        bytes memory actualResponse = proxy.execute(address(targets.selfDestructer), data);
         bytes memory expectedResponse = "";
-        assertEq(actualResponse, expectedResponse, "selfDestruct.destroyMe response");
 
+        // Assert that the response is empty.
+        assertEq(actualResponse, expectedResponse, "selfDestructer response");
+
+        // Assert that Bob's balance has increased by the contract's balance.
         uint256 actualBobBalance = users.bob.balance;
-        uint256 expectedBobBalance = initialBobBalance + proxyBalance;
-        assertEq(actualBobBalance, expectedBobBalance, "Bob's balance");
+        uint256 expectedAliceBalance = initialBobBalance + proxyBalance;
+        assertEq(actualBobBalance, expectedAliceBalance, "selfDestructer balance");
     }
 
     modifier targetDoesNotSelfDestruct() {
@@ -398,9 +405,9 @@ contract Execute_Test is PRBProxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoString response");
     }
 
-    /// @dev it should return the string.
+    /// @dev it should return the struct.
     function testFuzz_Execute_ReturnStruct(
-        TargetEcho.Struct memory input
+        TargetEcho.SomeStruct memory input
     )
         external
         callerAuthorized
@@ -418,7 +425,7 @@ contract Execute_Test is PRBProxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoStruct response");
     }
 
-    /// @dev it should return the string.
+    /// @dev it should return the uint8.
     function testFuzz_Execute_ReturnUint8(
         uint8 input
     )
@@ -438,7 +445,7 @@ contract Execute_Test is PRBProxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint8 response");
     }
 
-    /// @dev it should return the string.
+    /// @dev it should return the uint256.
     function testFuzz_Execute_ReturnUint256(
         uint256 input
     )
@@ -458,7 +465,7 @@ contract Execute_Test is PRBProxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint256 response");
     }
 
-    /// @dev it should return the string.
+    /// @dev it should return the uint256 array.
     function testFuzz_Execute_ReturnUint256Array(
         uint256[] memory input
     )

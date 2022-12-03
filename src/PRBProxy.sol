@@ -2,6 +2,7 @@
 pragma solidity >=0.8.4;
 
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
+import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 
 /*
 
@@ -32,7 +33,10 @@ contract PRBProxy is IPRBProxy {
                                   INTERNAL STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Maps envoys to target contracts to function selectors to boolean flags.
+    /// @dev Maps plugin methods to plugin implementation.
+    mapping(bytes4 => IPRBProxyPlugin) internal plugins;
+
+    /// @dev Maps envoys to target contracts to function selectors to boolean flags.
     mapping(address => mapping(address => mapping(bytes4 => bool))) internal permissions;
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -57,8 +61,38 @@ contract PRBProxy is IPRBProxy {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                  FALLBACK FUNCTION
+                                  FALLBACK FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Used for running plugins.
+    /// @dev Called when the call data is not empty.
+    fallback(bytes calldata data) external payable returns (bytes memory response) {
+        // Check if the function signature exists in the installed plugin methods mapping.
+        IPRBProxyPlugin plugin = plugins[msg.sig];
+        if (address(plugin) == address(0)) {
+            revert PRBProxy_PluginNotInstalledForMethod(msg.sender, msg.sig);
+        }
+
+        // Delegate call to the plugin.
+        bool success;
+        (success, response) = _safeDelegateCall(address(plugin), data);
+
+        // Log the plugin run.
+        emit RunPlugin(plugin, data, response);
+
+        // Check if the call was successful or not.
+        if (!success) {
+            // If there is return data, the call reverted with a reason or a custom error.
+            if (response.length > 0) {
+                assembly {
+                    let returndata_size := mload(response)
+                    revert(add(32, response), returndata_size)
+                }
+            } else {
+                revert PRBProxy_PluginReverted(plugin);
+            }
+        }
+    }
 
     /// @dev Called when the call data is empty.
     receive() external payable {}
@@ -76,7 +110,12 @@ contract PRBProxy is IPRBProxy {
         permission = permissions[envoy][target][selector];
     }
 
-    /*//////////////////////////////////////////////////////////////////////////
+    /// @inheritdoc IPRBProxy
+    function getPluginForMethod(bytes4 method) external view override returns (IPRBProxyPlugin plugin) {
+        plugin = plugins[method];
+    }
+
+    /*/////////////////////////////////////////////////////////////////////////
                             PUBLIC NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
@@ -103,20 +142,9 @@ contract PRBProxy is IPRBProxy {
             revert PRBProxy_TargetNotContract(target);
         }
 
-        // Save the owner address in memory. This local variable cannot be modified during the DELEGATECALL.
-        address owner_ = owner;
-
-        // Reserve some gas to ensure that the function has enough to finish the execution.
-        uint256 stipend = gasleft() - minGasReserve;
-
         // Delegate call to the target contract.
         bool success;
-        (success, response) = target.delegatecall{ gas: stipend }(data);
-
-        // Check that the owner has not been changed.
-        if (owner_ != owner) {
-            revert PRBProxy_OwnerChanged(owner_, owner);
-        }
+        (success, response) = _safeDelegateCall(target, data);
 
         // Log the execution.
         emit Execute(target, data, response);
@@ -136,7 +164,35 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function setPermission(
+    function installPlugin(IPRBProxyPlugin plugin) external override {
+        // Check that the caller is the owner.
+        if (owner != msg.sender) {
+            revert PRBProxy_NotOwner(owner, msg.sender);
+        }
+
+        // Get the method list to install.
+        bytes4[] memory methodList = plugin.methodList();
+
+        // The plugin must have at least one listed method.
+        uint256 length = methodList.length;
+        if (length == 0) {
+            revert PRBProxy_NoPluginMethods(plugin);
+        }
+
+        // Enable every method in the list.
+        for (uint256 i = 0; i < length; ) {
+            plugins[methodList[i]] = plugin;
+            unchecked {
+                i += 1;
+            }
+        }
+
+        // Log the plugin installation.
+        emit InstallPlugin(plugin);
+    }
+
+    /// @inheritdoc IPRBProxy
+        function setPermission(
         address envoy,
         address target,
         bytes4 selector,
@@ -156,5 +212,55 @@ contract PRBProxy is IPRBProxy {
 
         // Log the transfer of the owner.
         emit TransferOwnership(oldOwner, newOwner);
+    }
+
+    /// @inheritdoc IPRBProxy
+    function uninstallPlugin(IPRBProxyPlugin plugin) external override {
+        // Check that the caller is the owner.
+        if (owner != msg.sender) {
+            revert PRBProxy_NotOwner(owner, msg.sender);
+        }
+
+        // Get the method list to uninstall.
+        bytes4[] memory methodList = plugin.methodList();
+
+        // The plugin must have at least one listed method.
+        uint256 length = methodList.length;
+        if (length == 0) {
+            revert PRBProxy_NoPluginMethods(plugin);
+        }
+
+        // Disable every method in the list.
+        for (uint256 i = 0; i < length; ) {
+            delete plugins[methodList[i]];
+            unchecked {
+                i += 1;
+            }
+        }
+
+        // Log the plugin uninstallation.
+        emit UninstallPlugin(plugin);
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                          INTERNAL NON-CONSTANT FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Performs a delegatecall to the given address with the given data.
+    /// @dev Shared logic between the {execute} and the {fallback} functions.
+    function _safeDelegateCall(address to, bytes memory data) internal returns (bool success, bytes memory response) {
+        // Save the owner address in memory. This variable cannot be modified during the DELEGATECALL.
+        address owner_ = owner;
+
+        // Reserve some gas to ensure that the function has enough to finish the execution.
+        uint256 stipend = gasleft() - minGasReserve;
+
+        // Delegate call to the given contract.
+        (success, response) = to.delegatecall{ gas: stipend }(data);
+
+        // Check that the owner has not been changed.
+        if (owner_ != owner) {
+            revert PRBProxy_OwnerChanged(owner_, owner);
+        }
     }
 }

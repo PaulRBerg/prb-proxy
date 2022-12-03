@@ -5,7 +5,9 @@
   bytecode_hash = "none"
   cbor_metadata = false
   gas_reports = ["*"]
-  ignored_error_codes = [5159]
+  ignored_error_codes = [
+    5159, # ignore selfdestruct warning
+  ]
   libs = ["lib"]
   optimizer = true
   optimizer_runs = 10_000
