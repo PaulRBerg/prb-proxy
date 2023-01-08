@@ -11,7 +11,7 @@ optimizer_runs = 10_000
 out = "out"
 solc = "0.8.17"
 src = "src"
-test = "test-sol"
+test = "test"
 
 [profile.ci]
 fuzz = { runs = 10_000 }
