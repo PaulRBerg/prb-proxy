@@ -1,0 +1,3 @@
+deploy.t.sol
+├── it should deploy the proxy
+└── it should update the proxies mapping

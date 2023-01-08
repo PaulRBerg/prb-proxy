@@ -12,7 +12,7 @@ import { TargetPanic } from "../helpers/targets/TargetPanic.t.sol";
 import { TargetRevert } from "../helpers/targets/TargetRevert.t.sol";
 import { TargetSelfDestruct } from "../helpers/targets/TargetSelfDestruct.t.sol";
 
-contract PRBProxy_Test is BaseTest {
+abstract contract PRBProxy_Test is BaseTest {
     /*//////////////////////////////////////////////////////////////////////////
                                        STRUCTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -36,10 +36,15 @@ contract PRBProxy_Test is BaseTest {
     event TransferOwnership(address indexed oldOwner, address indexed newOwner);
 
     /*//////////////////////////////////////////////////////////////////////////
+                                      STORAGE
+    //////////////////////////////////////////////////////////////////////////*/
+
+    address internal owner;
+
+    /*//////////////////////////////////////////////////////////////////////////
                                    TEST CONTRACTS
     //////////////////////////////////////////////////////////////////////////*/
 
-    PRBProxy internal proxy;
     Targets internal targets;
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -49,7 +54,8 @@ contract PRBProxy_Test is BaseTest {
     function setUp() public virtual override {
         BaseTest.setUp();
 
-        proxy = new PRBProxy();
+        owner = users.alice;
+
         targets = Targets({
             changeOwner: new TargetChangeOwner(),
             dummy: new TargetDummy(),

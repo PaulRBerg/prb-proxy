@@ -13,7 +13,7 @@ contract TransferOwnership_Test is PRBProxy_Test {
 
         // Run the test.
         address newOwner = users.eve;
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, users.owner, caller));
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, owner, caller));
         proxy.transferOwnership(newOwner);
     }
 
@@ -35,7 +35,7 @@ contract TransferOwnership_Test is PRBProxy_Test {
 
     /// @dev it should transfer the ownership.
     function test_TransferOwnership() external callerOwner toNonZeroAddress {
-        address newOwner = users.alice;
+        address newOwner = users.bob;
         proxy.transferOwnership(newOwner);
         address actualOwner = proxy.owner();
         address expectedOwner = newOwner;
@@ -44,8 +44,8 @@ contract TransferOwnership_Test is PRBProxy_Test {
 
     /// @dev it should emit a TransferOwnership event.
     function test_TransferOwnership_Event() external callerOwner toNonZeroAddress {
-        address oldOwner = users.owner;
-        address newOwner = users.alice;
+        address oldOwner = owner;
+        address newOwner = users.bob;
         vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: false, checkData: false });
         emit TransferOwnership(oldOwner, newOwner);
         proxy.transferOwnership(newOwner);

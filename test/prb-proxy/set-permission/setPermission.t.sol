@@ -15,7 +15,7 @@ contract SetPermission_Test is PRBProxy_Test {
         changePrank(caller);
 
         // Run the test.
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, users.owner, caller));
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, owner, caller));
         proxy.setPermission(caller, address(targets.dummy), selector, true);
     }
 

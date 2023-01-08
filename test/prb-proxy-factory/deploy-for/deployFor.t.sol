@@ -13,16 +13,14 @@ contract DeployFor_Test is PRBProxyFactory_Test {
 
     function setUp() public override {
         BaseTest.setUp();
-        deployer = users.owner;
+        deployer = users.alice;
     }
 
     /// @dev it should deploy the proxy.
     function test_DeployFor_TxOriginSameAsOwner() external {
         // Deploy the first proxy.
-        address factoryProxyAddress = address(factory.deployFor(owner));
-        bytes memory actualRuntimeBytecode = factoryProxyAddress.code;
-        address testProxyAddress = address(deployProxy());
-        bytes memory expectedRuntimeBytecode = testProxyAddress.code;
+        bytes memory actualRuntimeBytecode = address(factory.deployFor(deployer)).code;
+        bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
         assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
     }
 
@@ -32,17 +30,15 @@ contract DeployFor_Test is PRBProxyFactory_Test {
 
     /// @dev it should deploy the proxy.
     function test_DeployFor_FirstProxy() external txOriginNotSameAsOwner {
-        owner = users.alice;
-        address factoryProxyAddress = address(factory.deployFor(owner));
-        bytes memory actualRuntimeBytecode = factoryProxyAddress.code;
-        address testProxyAddress = address(deployProxy());
-        bytes memory expectedRuntimeBytecode = testProxyAddress.code;
+        owner = users.bob;
+        bytes memory actualRuntimeBytecode = address(factory.deployFor(owner)).code;
+        bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
         assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
     }
 
     modifier notFirstProxy() {
         // Deploy the first proxy.
-        owner = users.alice;
+        owner = users.bob;
         factory.deployFor(owner);
         _;
     }

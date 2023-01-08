@@ -1,5 +1,9 @@
 # Full reference https://github.com/foundry-rs/foundry/tree/master/config
 
+[etherscan]
+ethereum = { key = "${ETHERSCAN_API_KEY}" }
+goerli = { key = "${ETHERSCAN_API_KEY}" }
+
 [profile.default]
 auto_detect_solc = false
 bytecode_hash = "none"
@@ -15,3 +19,7 @@ test = "test"
 
 [profile.ci]
 fuzz = { runs = 10_000 }
+
+[rpc_endpoints]
+localhost="http://localhost:8545"
+goerli="https://goerli.infura.io/v3/${INFURA_API_KEY}"

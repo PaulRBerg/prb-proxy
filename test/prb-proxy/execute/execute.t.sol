@@ -21,7 +21,7 @@ contract Execute_Test is PRBProxy_Test {
         vm.expectRevert(
             abi.encodeWithSelector(
                 IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
-                users.owner,
+                owner,
                 users.eve,
                 address(targets.dummy),
                 targets.dummy.foo.selector
@@ -43,7 +43,7 @@ contract Execute_Test is PRBProxy_Test {
         vm.expectRevert(
             abi.encodeWithSelector(
                 IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
-                users.owner,
+                owner,
                 users.envoy,
                 address(targets.dummy),
                 targets.dummy.foo.selector
@@ -61,7 +61,7 @@ contract Execute_Test is PRBProxy_Test {
         vm.expectRevert(
             abi.encodeWithSelector(
                 IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
-                users.owner,
+                owner,
                 users.envoy,
                 address(targets.dummy),
                 targets.dummy.foo.selector
@@ -112,7 +112,7 @@ contract Execute_Test is PRBProxy_Test {
         gasStipendCalculationDoesNotUnderflow
     {
         bytes memory data = bytes.concat(targets.changeOwner.changeOwner.selector);
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, users.owner, address(0)));
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(0)));
         proxy.execute(address(targets.changeOwner), data);
     }
 
@@ -284,16 +284,16 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
     {
-        uint256 previousAliceBalance = users.alice.balance;
+        uint256 previousAliceBalance = users.bob.balance;
         uint256 contractBalance = 3.14 ether;
         vm.deal({ account: address(proxy), newBalance: contractBalance });
 
-        bytes memory data = abi.encodeCall(targets.selfDestruct.destroyMe, (users.alice));
+        bytes memory data = abi.encodeCall(targets.selfDestruct.destroyMe, (users.bob));
         bytes memory actualResponse = proxy.execute(address(targets.selfDestruct), data);
         bytes memory expectedResponse = "";
         assertEq(actualResponse, expectedResponse);
 
-        uint256 actualAliceBalance = users.alice.balance;
+        uint256 actualAliceBalance = users.bob.balance;
         uint256 expectedAliceBalance = previousAliceBalance + contractBalance;
         assertEq(actualAliceBalance, expectedAliceBalance);
     }
