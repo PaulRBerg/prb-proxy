@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
-import { IPRBProxy } from "./IPRBProxy.sol";
-import { IPRBProxyFactory } from "./IPRBProxyFactory.sol";
+import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
+import { IPRBProxyFactory } from "./interfaces/IPRBProxyFactory.sol";
 import { PRBProxy } from "./PRBProxy.sol";
 
 /// @title PRBProxyFactory
@@ -20,7 +20,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev Internal mapping to track all deployed proxies.
-    mapping(address => bool) internal proxies;
+    mapping(IPRBProxy => bool) internal proxies;
 
     /// @dev Internal mapping to track the next seed to be used by an EOA.
     mapping(address => bytes32) internal nextSeeds;
@@ -35,7 +35,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
     }
 
     /// @inheritdoc IPRBProxyFactory
-    function isProxy(address proxy) external view override returns (bool result) {
+    function isProxy(IPRBProxy proxy) external view override returns (bool result) {
         result = proxies[proxy];
     }
 
@@ -44,19 +44,19 @@ contract PRBProxyFactory is IPRBProxyFactory {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyFactory
-    function deploy() external override returns (address payable proxy) {
+    function deploy() external override returns (IPRBProxy proxy) {
         proxy = deployFor(msg.sender);
     }
 
     /// @inheritdoc IPRBProxyFactory
-    function deployFor(address owner) public override returns (address payable proxy) {
+    function deployFor(address owner) public override returns (IPRBProxy proxy) {
         bytes32 seed = nextSeeds[tx.origin];
 
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
         bytes32 salt = keccak256(abi.encode(tx.origin, seed));
 
         // Deploy the proxy with CREATE2.
-        proxy = payable(new PRBProxy{ salt: salt }());
+        proxy = new PRBProxy{ salt: salt }();
 
         // Transfer the ownership from this factory contract to the specified owner.
         IPRBProxy(proxy).transferOwnership(owner);
@@ -71,6 +71,13 @@ contract PRBProxyFactory is IPRBProxyFactory {
         }
 
         // Log the proxy via en event.
-        emit DeployProxy(tx.origin, msg.sender, owner, seed, salt, address(proxy));
+        emit DeployProxy({
+            origin: tx.origin,
+            deployer: msg.sender,
+            owner: owner,
+            seed: seed,
+            salt: salt,
+            proxy: proxy
+        });
     }
 }

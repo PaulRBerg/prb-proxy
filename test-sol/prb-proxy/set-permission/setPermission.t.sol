@@ -1,23 +1,22 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.4;
+pragma solidity >=0.8.4 <=0.9.0;
 
-import { IPRBProxy } from "src/IPRBProxy.sol";
-import { PRBProxyTest } from "../PRBProxyTest.t.sol";
-import { TargetDummy } from "../../shared/TargetDummy.t.sol";
+import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
+import { PRBProxy_Test } from "../PRBProxy.t.sol";
+import { TargetDummy } from "../../helpers/targets/TargetDummy.t.sol";
 
-contract PRBProxy__SetPermission is PRBProxyTest {
-    bool internal constant permission = true;
+contract SetPermission_Test is PRBProxy_Test {
     bytes4 internal constant selector = TargetDummy.foo.selector;
 
     /// @dev it should revert.
-    function testCannotSetPermission__CallerNotOwner() external {
+    function test_RevertWhen_CallerNotOwner() external {
         // Make Eve the caller in this test.
         address caller = users.eve;
         changePrank(caller);
 
         // Run the test.
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy__NotOwner.selector, owner, caller));
-        prbProxy.setPermission(caller, address(targets.dummy), selector, permission);
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, owner, caller));
+        proxy.setPermission(caller, address(targets.dummy), selector, true);
     }
 
     modifier CallerOwner() {
@@ -25,32 +24,28 @@ contract PRBProxy__SetPermission is PRBProxyTest {
     }
 
     /// @dev it should set the permission.
-    function testSetPermission__PermissionNotSet() external CallerOwner {
-        prbProxy.setPermission(envoy, address(targets.dummy), selector, permission);
-        bool actualPermission = prbProxy.getPermission(envoy, address(targets.dummy), selector);
-        bool expectedPermission = permission;
-        assertEq(actualPermission, expectedPermission);
+    function test_SetPermission_PermissionNotSet() external CallerOwner {
+        proxy.setPermission(envoy, address(targets.dummy), selector, true);
+        bool permission = proxy.getPermission(envoy, address(targets.dummy), selector);
+        assertTrue(permission);
     }
 
     modifier PermissionSet() {
-        prbProxy.setPermission(envoy, address(targets.dummy), selector, permission);
+        proxy.setPermission(envoy, address(targets.dummy), selector, true);
         _;
     }
 
     /// @dev it should do nothing when re-setting the permission.
-    function testSetPermission__PermissionSet__ResetPermission() external CallerOwner PermissionSet {
-        prbProxy.setPermission(envoy, address(targets.dummy), selector, permission);
-        bool actualPermission = prbProxy.getPermission(envoy, address(targets.dummy), selector);
-        bool expectedPermission = permission;
-        assertEq(actualPermission, expectedPermission);
+    function test_SetPermission_PermissionSet_ResetPermission() external CallerOwner PermissionSet {
+        proxy.setPermission(envoy, address(targets.dummy), selector, true);
+        bool permission = proxy.getPermission(envoy, address(targets.dummy), selector);
+        assertTrue(permission);
     }
 
     /// @dev it should unset the permission.
-    function testSetPermission__PermissionSet__UnsetPermission() external CallerOwner PermissionSet {
-        bool newPermission = false;
-        prbProxy.setPermission(envoy, address(targets.dummy), selector, newPermission);
-        bool actualPermission = prbProxy.getPermission(envoy, address(targets.dummy), selector);
-        bool expectedPermission = newPermission;
-        assertEq(actualPermission, expectedPermission);
+    function test_SetPermission_PermissionSet_UnsetPermission() external CallerOwner PermissionSet {
+        proxy.setPermission(envoy, address(targets.dummy), selector, false);
+        bool permission = proxy.getPermission(envoy, address(targets.dummy), selector);
+        assertFalse(permission);
     }
 }

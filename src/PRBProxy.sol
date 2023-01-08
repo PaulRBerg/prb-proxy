@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
-import { IPRBProxy } from "./IPRBProxy.sol";
+import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 
 /// @title PRBProxy
 /// @author Paul Razvan Berg
@@ -62,13 +62,13 @@ contract PRBProxy is IPRBProxy {
                 selector := calldataload(data.offset)
             }
             if (!permissions[msg.sender][target][selector]) {
-                revert PRBProxy__ExecutionUnauthorized(owner, msg.sender, target, selector);
+                revert PRBProxy_ExecutionUnauthorized(owner, msg.sender, target, selector);
             }
         }
 
         // Check that the target is a valid contract.
         if (target.code.length == 0) {
-            revert PRBProxy__TargetNotContract(target);
+            revert PRBProxy_TargetNotContract(target);
         }
 
         // Save the owner address in memory. This local variable cannot be modified during the DELEGATECALL.
@@ -83,7 +83,7 @@ contract PRBProxy is IPRBProxy {
 
         // Check that the owner has not been changed.
         if (owner_ != owner) {
-            revert PRBProxy__OwnerChanged(owner_, owner);
+            revert PRBProxy_OwnerChanged(owner_, owner);
         }
 
         // Log the execution.
@@ -98,7 +98,7 @@ contract PRBProxy is IPRBProxy {
                     revert(add(32, response), returndata_size)
                 }
             } else {
-                revert PRBProxy__ExecutionReverted();
+                revert PRBProxy_ExecutionReverted();
             }
         }
     }
@@ -106,7 +106,7 @@ contract PRBProxy is IPRBProxy {
     /// @inheritdoc IPRBProxy
     function setPermission(address envoy, address target, bytes4 selector, bool permission) external override {
         if (owner != msg.sender) {
-            revert PRBProxy__NotOwner(owner, msg.sender);
+            revert PRBProxy_NotOwner(owner, msg.sender);
         }
         permissions[envoy][target][selector] = permission;
     }
@@ -115,7 +115,7 @@ contract PRBProxy is IPRBProxy {
     function transferOwnership(address newOwner) external override {
         address oldOwner = owner;
         if (oldOwner != msg.sender) {
-            revert PRBProxy__NotOwner(oldOwner, msg.sender);
+            revert PRBProxy_NotOwner(oldOwner, msg.sender);
         }
         owner = newOwner;
         emit TransferOwnership(oldOwner, newOwner);

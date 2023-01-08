@@ -10,19 +10,19 @@ interface IPRBProxy {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Emitted when the caller is not the owner.
-    error PRBProxy__ExecutionUnauthorized(address owner, address caller, address target, bytes4 selector);
+    error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target, bytes4 selector);
 
     /// @notice Emitted when execution reverted with no reason.
-    error PRBProxy__ExecutionReverted();
+    error PRBProxy_ExecutionReverted();
 
     /// @notice Emitted when the caller is not the owner.
-    error PRBProxy__NotOwner(address owner, address caller);
+    error PRBProxy_NotOwner(address owner, address caller);
 
     /// @notice Emitted when the owner is changed during the DELEGATECALL.
-    error PRBProxy__OwnerChanged(address originalOwner, address newOwner);
+    error PRBProxy_OwnerChanged(address originalOwner, address newOwner);
 
     /// @notice Emitted when passing an EOA or an undeployed contract as the target.
-    error PRBProxy__TargetNotContract(address target);
+    error PRBProxy_TargetNotContract(address target);
 
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS

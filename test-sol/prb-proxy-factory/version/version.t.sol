@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.4;
+pragma solidity >=0.8.4 <=0.9.0;
 
-import { PRBProxyFactoryTest } from "../PRBProxyFactoryTest.t.sol";
+import { PRBProxyFactory_Test } from "../PRBProxyFactory.t.sol";
 
-contract PRBProxyFactory__Version is PRBProxyFactoryTest {
+contract Version_Test is PRBProxyFactory_Test {
     /// @dev it should return the version.
-    function testVersion() external {
-        uint256 actualVersion = prbProxyFactory.version();
+    function test_Version() external {
+        uint256 actualVersion = factory.version();
         uint256 expectedVersion = 3;
         assertEq(actualVersion, expectedVersion);
     }

@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.4;
 
-import { IPRBProxy } from "./IPRBProxy.sol";
-import { IPRBProxyFactory } from "./IPRBProxyFactory.sol";
-import { IPRBProxyRegistry } from "./IPRBProxyRegistry.sol";
+import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
+import { IPRBProxyFactory } from "./interfaces/IPRBProxyFactory.sol";
+import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
 
 /// @notice Emitted when a proxy already exists for the given owner.
-error PRBProxyRegistry__ProxyAlreadyExists(address owner);
+error PRBProxyRegistry_ProxyAlreadyExists(address owner);
 
 /// @title PRBProxyRegistry
 /// @author Paul Razvan Berg
@@ -47,23 +47,23 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
-    function deploy() external override returns (address payable proxy) {
+    function deploy() external override returns (IPRBProxy proxy) {
         proxy = deployFor(msg.sender);
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner) public override returns (address payable proxy) {
+    function deployFor(address owner) public override returns (IPRBProxy proxy) {
         IPRBProxy currentProxy = currentProxies[owner];
 
         // Do not deploy if the proxy already exists and the owner is the same.
         if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {
-            revert PRBProxyRegistry__ProxyAlreadyExists(owner);
+            revert PRBProxyRegistry_ProxyAlreadyExists(owner);
         }
 
         // Deploy the proxy via the factory.
         proxy = factory.deployFor(owner);
 
         // Set or override the current proxy for the owner.
-        currentProxies[owner] = IPRBProxy(proxy);
+        currentProxies[owner] = proxy;
     }
 }

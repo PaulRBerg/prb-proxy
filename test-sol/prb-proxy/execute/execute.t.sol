@@ -1,74 +1,71 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.4;
+pragma solidity >=0.8.4 <=0.9.0;
 
-import { console2 } from "forge-std/console2.sol";
 import { stdError } from "forge-std/StdError.sol";
-import { IPRBProxy } from "src/IPRBProxy.sol";
-import { PRBProxyTest } from "../PRBProxyTest.t.sol";
-import { TargetChangeOwner } from "../../shared/TargetChangeOwner.t.sol";
-import { TargetDummy } from "../../shared/TargetDummy.t.sol";
-import { TargetEcho } from "../../shared/TargetEcho.t.sol";
-import { TargetMinGasReserve } from "../../shared/TargetMinGasReserve.t.sol";
 
-contract PRBProxy__Execute is PRBProxyTest {
-    function setUp() public virtual override {
-        super.setUp();
-    }
+import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
+import { PRBProxy_Test } from "../PRBProxy.t.sol";
+import { TargetChangeOwner } from "../../helpers/targets/TargetChangeOwner.t.sol";
+import { TargetDummy } from "../../helpers/targets/TargetDummy.t.sol";
+import { TargetEcho } from "../../helpers/targets/TargetEcho.t.sol";
+import { TargetMinGasReserve } from "../../helpers/targets/TargetMinGasReserve.t.sol";
+
+contract Execute_Test is PRBProxy_Test {
     modifier CallerUnauthorized() {
         _;
     }
 
     /// @dev it should revert.
-    function testCannotExecute__NoPermission() external CallerUnauthorized {
+    function test_RevertWhen_NoPermission() external CallerUnauthorized {
         changePrank(users.eve);
         bytes memory data = bytes.concat(TargetDummy.foo.selector);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IPRBProxy.PRBProxy__ExecutionUnauthorized.selector,
+                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
                 owner,
                 users.eve,
                 address(targets.dummy),
                 TargetDummy.foo.selector
             )
         );
-        prbProxy.execute(address(targets.dummy), data);
+        proxy.execute(address(targets.dummy), data);
     }
 
     /// @dev it should revert.
-    function testCannotExecute__PermissionDifferentTarget() external CallerUnauthorized {
-        prbProxy.setPermission(envoy, address(targets.echo), TargetDummy.foo.selector, true);
+    function test_RevertWhen_PermissionDifferentTarget() external CallerUnauthorized {
+        proxy.setPermission(envoy, address(targets.echo), TargetDummy.foo.selector, true);
         changePrank(envoy);
 
         bytes memory data = bytes.concat(TargetDummy.foo.selector);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IPRBProxy.PRBProxy__ExecutionUnauthorized.selector,
+                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
                 owner,
                 envoy,
                 address(targets.dummy),
                 TargetDummy.foo.selector
             )
         );
-        prbProxy.execute(address(targets.dummy), data);
+        proxy.execute(address(targets.dummy), data);
     }
 
     /// @dev it should revert.
-    function testCannotExecute__PermissionDifferentFunction() external CallerUnauthorized {
-        prbProxy.setPermission(envoy, address(targets.dummy), TargetDummy.bar.selector, true);
+    function test_RevertWhen_PermissionDifferentFunction() external CallerUnauthorized {
+        proxy.setPermission(envoy, address(targets.dummy), TargetDummy.bar.selector, true);
         changePrank(envoy);
 
         bytes memory data = bytes.concat(TargetDummy.foo.selector);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IPRBProxy.PRBProxy__ExecutionUnauthorized.selector,
+                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
                 owner,
                 envoy,
                 address(targets.dummy),
                 TargetDummy.foo.selector
             )
         );
-        prbProxy.execute(address(targets.dummy), data);
+        proxy.execute(address(targets.dummy), data);
     }
 
     modifier CallerAuthorized() {
@@ -76,10 +73,10 @@ contract PRBProxy__Execute is PRBProxyTest {
     }
 
     /// @dev it should revert.
-    function testCannotExecute__TargetNotContract(address nonContract) external CallerAuthorized {
+    function test_RevertWhen_TargetNotContract(address nonContract) external CallerAuthorized {
         vm.assume(nonContract.code.length == 0);
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy__TargetNotContract.selector, nonContract));
-        prbProxy.execute(nonContract, bytes(""));
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_TargetNotContract.selector, nonContract));
+        proxy.execute(nonContract, bytes(""));
     }
 
     modifier TargetContract() {
@@ -87,19 +84,18 @@ contract PRBProxy__Execute is PRBProxyTest {
     }
 
     /// @dev it should revert.
-    function testCannotExecute__GasStipendCalculationUnderflows() external CallerAuthorized TargetContract {
+    function test_RevertWhen_GasStipendCalculationUnderflows() external CallerAuthorized TargetContract {
         // Set the min gas reserve.
         uint256 gasLimit = 10_000;
-        prbProxy.execute(
+        proxy.execute(
             address(targets.minGasReserve),
             abi.encodeWithSelector(TargetMinGasReserve.setMinGasReserve.selector, gasLimit + 1)
         );
 
         // Run the test.
         bytes memory data = abi.encode(TargetEcho.echoUint256.selector, 0);
-        console2.logBytes(data);
         vm.expectRevert(stdError.arithmeticError);
-        prbProxy.execute{ gas: gasLimit }(address(targets.echo), data);
+        proxy.execute{ gas: gasLimit }(address(targets.echo), data);
     }
 
     modifier GasStipendCalculationDoesNotUnderflow() {
@@ -107,14 +103,14 @@ contract PRBProxy__Execute is PRBProxyTest {
     }
 
     /// @dev it should revert.
-    function testCannotExecute__OwnerChangedDuringDelegateCall()
+    function test_RevertWhen_OwnerChangedDuringDelegateCall()
         external
         CallerAuthorized
         TargetContract
         GasStipendCalculationDoesNotUnderflow
     {
         bytes memory data = bytes.concat(TargetChangeOwner.changeOwner.selector);
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy__OwnerChanged.selector, owner, address(0)));
-        prbProxy.execute(address(targets.changeOwner), data);
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(0)));
+        proxy.execute(address(targets.changeOwner), data);
     }
 }

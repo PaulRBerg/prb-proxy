@@ -31,7 +31,7 @@ interface IPRBProxyRegistry {
     /// - All from "deployFor".
     ///
     /// @return proxy The address of the newly deployed proxy contract.
-    function deploy() external returns (address payable proxy);
+    function deploy() external returns (IPRBProxy proxy);
 
     /// @notice Deploys a new proxy instance via the proxy factory, for the given owner.
     ///
@@ -40,5 +40,5 @@ interface IPRBProxyRegistry {
     ///
     /// @param owner The owner of the proxy.
     /// @return proxy The address of the newly deployed proxy contract.
-    function deployFor(address owner) external returns (address payable proxy);
+    function deployFor(address owner) external returns (IPRBProxy proxy);
 }

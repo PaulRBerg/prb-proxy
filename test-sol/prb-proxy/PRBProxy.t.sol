@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.4;
+pragma solidity >=0.8.4 <=0.9.0;
 
 import { PRBProxy } from "src/PRBProxy.sol";
-import { BaseTest } from "../BaseTest.t.sol";
-import { TargetChangeOwner } from "../shared/TargetChangeOwner.t.sol";
-import { TargetDummy } from "../shared/TargetDummy.t.sol";
-import { TargetEcho } from "../shared/TargetEcho.t.sol";
-import { TargetMinGasReserve } from "../shared/TargetMinGasReserve.t.sol";
 
-contract PRBProxyTest is BaseTest {
+import { BaseTest } from "../BaseTest.t.sol";
+import { TargetChangeOwner } from "../helpers/targets/TargetChangeOwner.t.sol";
+import { TargetDummy } from "../helpers/targets/TargetDummy.t.sol";
+import { TargetEcho } from "../helpers/targets/TargetEcho.t.sol";
+import { TargetMinGasReserve } from "../helpers/targets/TargetMinGasReserve.t.sol";
+
+contract PRBProxy_Test is BaseTest {
     /*//////////////////////////////////////////////////////////////////////////
                                        STRUCTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -29,12 +30,17 @@ contract PRBProxyTest is BaseTest {
     event TransferOwnership(address indexed oldOwner, address indexed newOwner);
 
     /*//////////////////////////////////////////////////////////////////////////
-                                  TESTING VARIABLES
+                                      STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
     address internal envoy;
     address internal owner;
-    PRBProxy internal prbProxy;
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                   TEST CONTRACTS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    PRBProxy internal proxy;
     Targets internal targets;
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -42,11 +48,11 @@ contract PRBProxyTest is BaseTest {
     //////////////////////////////////////////////////////////////////////////*/
 
     function setUp() public virtual override {
-        super.setUp();
+        BaseTest.setUp();
         envoy = users.bob;
         owner = users.alice;
 
-        prbProxy = new PRBProxy();
+        proxy = new PRBProxy();
         targets = Targets({
             changeOwner: new TargetChangeOwner(),
             dummy: new TargetDummy(),
