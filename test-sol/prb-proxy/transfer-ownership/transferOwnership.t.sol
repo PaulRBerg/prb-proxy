@@ -13,30 +13,29 @@ contract TransferOwnership_Test is PRBProxy_Test {
 
         // Run the test.
         address newOwner = users.eve;
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, owner, caller));
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, users.owner, caller));
         proxy.transferOwnership(newOwner);
     }
 
-    modifier CallerOwner() {
+    modifier callerOwner() {
         _;
     }
 
     /// @dev it should transfer the ownership.
-    function test_TransferOwnership_ToZeroAddress() external CallerOwner {
-        address newOwner = address(0);
-        proxy.transferOwnership(newOwner);
+    function test_TransferOwnership_ToZeroAddress() external callerOwner {
+        proxy.transferOwnership(address(0));
         address actualOwner = proxy.owner();
-        address expectedOwner = newOwner;
+        address expectedOwner = address(0);
         assertEq(actualOwner, expectedOwner);
     }
 
-    modifier ToNonZeroAddress() {
+    modifier toNonZeroAddress() {
         _;
     }
 
     /// @dev it should transfer the ownership.
-    function test_TransferOwnership() external CallerOwner ToNonZeroAddress {
-        address newOwner = users.bob;
+    function test_TransferOwnership() external callerOwner toNonZeroAddress {
+        address newOwner = users.alice;
         proxy.transferOwnership(newOwner);
         address actualOwner = proxy.owner();
         address expectedOwner = newOwner;
@@ -44,9 +43,9 @@ contract TransferOwnership_Test is PRBProxy_Test {
     }
 
     /// @dev it should emit a TransferOwnership event.
-    function test_TransferOwnership_Event() external CallerOwner ToNonZeroAddress {
-        address oldOwner = owner;
-        address newOwner = users.bob;
+    function test_TransferOwnership_Event() external callerOwner toNonZeroAddress {
+        address oldOwner = users.owner;
+        address newOwner = users.alice;
         vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: false, checkData: false });
         emit TransferOwnership(oldOwner, newOwner);
         proxy.transferOwnership(newOwner);

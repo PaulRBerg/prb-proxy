@@ -12,12 +12,12 @@ contract Receive_Test is PRBProxy_Test {
         assertFalse(condition);
     }
 
-    modifier CallDataEmpty() {
+    modifier callDataEmpty() {
         _;
     }
 
     /// @dev it should receive the ETH.
-    function test_Receive() external CallDataEmpty {
+    function test_Receive() external callDataEmpty {
         uint256 value = 1 ether;
         (bool condition, ) = address(proxy).call{ value: value }("");
         assertTrue(condition);

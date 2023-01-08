@@ -8,6 +8,9 @@ import { TargetChangeOwner } from "../helpers/targets/TargetChangeOwner.t.sol";
 import { TargetDummy } from "../helpers/targets/TargetDummy.t.sol";
 import { TargetEcho } from "../helpers/targets/TargetEcho.t.sol";
 import { TargetMinGasReserve } from "../helpers/targets/TargetMinGasReserve.t.sol";
+import { TargetPanic } from "../helpers/targets/TargetPanic.t.sol";
+import { TargetRevert } from "../helpers/targets/TargetRevert.t.sol";
+import { TargetSelfDestruct } from "../helpers/targets/TargetSelfDestruct.t.sol";
 
 contract PRBProxy_Test is BaseTest {
     /*//////////////////////////////////////////////////////////////////////////
@@ -19,6 +22,9 @@ contract PRBProxy_Test is BaseTest {
         TargetDummy dummy;
         TargetEcho echo;
         TargetMinGasReserve minGasReserve;
+        TargetPanic panic;
+        TargetRevert revert;
+        TargetSelfDestruct selfDestruct;
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -28,13 +34,6 @@ contract PRBProxy_Test is BaseTest {
     event Execute(address indexed target, bytes data, bytes response);
 
     event TransferOwnership(address indexed oldOwner, address indexed newOwner);
-
-    /*//////////////////////////////////////////////////////////////////////////
-                                      STORAGE
-    //////////////////////////////////////////////////////////////////////////*/
-
-    address internal envoy;
-    address internal owner;
 
     /*//////////////////////////////////////////////////////////////////////////
                                    TEST CONTRACTS
@@ -49,15 +48,16 @@ contract PRBProxy_Test is BaseTest {
 
     function setUp() public virtual override {
         BaseTest.setUp();
-        envoy = users.bob;
-        owner = users.alice;
 
         proxy = new PRBProxy();
         targets = Targets({
             changeOwner: new TargetChangeOwner(),
             dummy: new TargetDummy(),
             echo: new TargetEcho(),
-            minGasReserve: new TargetMinGasReserve()
+            minGasReserve: new TargetMinGasReserve(),
+            panic: new TargetPanic(),
+            revert: new TargetRevert(),
+            selfDestruct: new TargetSelfDestruct()
         });
     }
 }

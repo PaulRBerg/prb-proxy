@@ -13,7 +13,7 @@ contract DeployFor_Test is PRBProxyFactory_Test {
 
     function setUp() public override {
         BaseTest.setUp();
-        deployer = users.alice;
+        deployer = users.owner;
     }
 
     /// @dev it should deploy the proxy.
@@ -26,13 +26,13 @@ contract DeployFor_Test is PRBProxyFactory_Test {
         assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
     }
 
-    modifier TxOriginNotSameAsOwner() {
+    modifier txOriginNotSameAsOwner() {
         _;
     }
 
     /// @dev it should deploy the proxy.
-    function test_DeployFor_FirstProxy() external TxOriginNotSameAsOwner {
-        owner = users.bob;
+    function test_DeployFor_FirstProxy() external txOriginNotSameAsOwner {
+        owner = users.alice;
         address factoryProxyAddress = address(factory.deployFor(owner));
         bytes memory actualRuntimeBytecode = factoryProxyAddress.code;
         address testProxyAddress = address(deployProxy());
@@ -40,15 +40,15 @@ contract DeployFor_Test is PRBProxyFactory_Test {
         assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
     }
 
-    modifier NotFirstProxy() {
+    modifier notFirstProxy() {
         // Deploy the first proxy.
-        owner = users.bob;
+        owner = users.alice;
         factory.deployFor(owner);
         _;
     }
 
     /// @dev it should deploy the proxy.
-    function test_DeployFor_TxOriginNotSameAsOwner_NotFirstProxy() external TxOriginNotSameAsOwner NotFirstProxy {
+    function test_DeployFor_TxOriginNotSameAsOwner_NotFirstProxy() external txOriginNotSameAsOwner notFirstProxy {
         address factoryProxyAddress = address(factory.deployFor(owner));
         bytes memory actualRuntimeBytecode = factoryProxyAddress.code;
         address testProxyAddress = address(deployProxy());
@@ -59,8 +59,8 @@ contract DeployFor_Test is PRBProxyFactory_Test {
     /// @dev it should update the next seeds mapping.
     function test_DeployFor_TxOriginNotSameAsOwner_NotFirstProxy_UpdateNextSeeds()
         external
-        TxOriginNotSameAsOwner
-        NotFirstProxy
+        txOriginNotSameAsOwner
+        notFirstProxy
     {
         factory.deployFor(owner);
         bytes32 actualNextSeed = factory.getNextSeed(deployer);
@@ -69,14 +69,14 @@ contract DeployFor_Test is PRBProxyFactory_Test {
     }
 
     /// @dev it should update the proxies mapping.
-    function test_DeployFor_UpdateProxies() external TxOriginNotSameAsOwner NotFirstProxy {
+    function test_DeployFor_UpdateProxies() external txOriginNotSameAsOwner notFirstProxy {
         IPRBProxy proxy = factory.deployFor(owner);
         bool isProxy = factory.isProxy(proxy);
         assertTrue(isProxy);
     }
 
     /// @dev it should emit a DeployProxy event.
-    function test_DeployFor_Event() external TxOriginNotSameAsOwner NotFirstProxy {
+    function test_DeployFor_Event() external txOriginNotSameAsOwner notFirstProxy {
         vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
         bytes32 salt = keccak256(abi.encode(deployer, SEED_ONE));
         bytes memory deploymentBytecode = type(PRBProxy).creationCode;

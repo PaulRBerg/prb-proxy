@@ -20,8 +20,9 @@ abstract contract BaseTest is PRBTest, StdCheats, StdUtils {
 
     struct Users {
         address payable alice;
-        address payable bob;
+        address payable envoy;
         address payable eve;
+        address payable owner;
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -43,10 +44,15 @@ abstract contract BaseTest is PRBTest, StdCheats, StdUtils {
 
     function setUp() public virtual {
         // Create users for testing.
-        users = Users({ alice: createUser("Alice"), bob: createUser("Bob"), eve: createUser("Eve") });
+        users = Users({
+            alice: createUser("Alice"),
+            envoy: createUser("Envoy"),
+            eve: createUser("Eve"),
+            owner: createUser("Owner")
+        });
 
-        // Make Alice both the caller and the origin for all subsequent calls.
-        vm.startPrank({ msgSender: users.alice, txOrigin: users.alice });
+        // Make the owner both the caller and the origin for all subsequent calls.
+        vm.startPrank({ msgSender: users.owner, txOrigin: users.owner });
     }
 
     /*//////////////////////////////////////////////////////////////////////////

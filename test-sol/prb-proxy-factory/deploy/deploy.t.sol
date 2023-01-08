@@ -12,7 +12,7 @@ contract Deploy_Test is PRBProxyFactory_Test {
 
     function setUp() public override {
         BaseTest.setUp();
-        deployer = users.alice;
+        deployer = users.owner;
     }
 
     /// @dev it should deploy the proxy.
@@ -46,7 +46,14 @@ contract Deploy_Test is PRBProxyFactory_Test {
         bytes memory deploymentBytecode = type(PRBProxy).creationCode;
         bytes32 deploymentBytecodeHash = keccak256(deploymentBytecode);
         address proxyAddress = computeCreate2Address(salt, deploymentBytecodeHash, address(factory));
-        emit DeployProxy(deployer, deployer, deployer, SEED_ZERO, salt, IPRBProxy(proxyAddress));
+        emit DeployProxy({
+            origin: deployer,
+            deployer: deployer,
+            owner: deployer,
+            seed: SEED_ZERO,
+            salt: salt,
+            proxy: IPRBProxy(proxyAddress)
+        });
         factory.deploy();
     }
 }

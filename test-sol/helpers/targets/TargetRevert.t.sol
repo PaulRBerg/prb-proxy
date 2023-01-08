@@ -4,23 +4,23 @@ pragma solidity >=0.8.4 <=0.9.0;
 contract TargetRevert {
     error TargetError();
 
-    function revertWithNothing() external pure {
+    function withNothing() external pure {
         revert();
     }
 
-    function revertWithCustomError() external pure {
+    function withCustomError() external pure {
         revert TargetError();
     }
 
-    function revertLackPayableModifier() external pure returns (uint256) {
-        return 0;
-    }
-
-    function revertWithReason() external pure {
-        revert("This is a reason");
-    }
-
-    function revertWithRequire() external pure {
+    function withRequire() external pure {
         require(false);
+    }
+
+    function withReasonString() external pure {
+        revert("You shall not pass");
+    }
+
+    function dueToNoPayableModifier() external pure returns (uint256) {
+        return 0;
     }
 }
