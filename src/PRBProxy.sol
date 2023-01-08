@@ -5,6 +5,7 @@ import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 
 /// @title PRBProxy
 /// @author Paul Razvan Berg
+/// @dev This contract implements the IPRBProxy interface.
 contract PRBProxy is IPRBProxy {
     /*//////////////////////////////////////////////////////////////////////////
                                    PUBLIC STORAGE

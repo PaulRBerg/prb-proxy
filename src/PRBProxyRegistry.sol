@@ -5,11 +5,9 @@ import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyFactory } from "./interfaces/IPRBProxyFactory.sol";
 import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
 
-/// @notice Emitted when a proxy already exists for the given owner.
-error PRBProxyRegistry_ProxyAlreadyExists(address owner);
-
 /// @title PRBProxyRegistry
 /// @author Paul Razvan Berg
+/// @dev This contract implements the IPRBProxyRegistry interface.
 contract PRBProxyRegistry is IPRBProxyRegistry {
     /*//////////////////////////////////////////////////////////////////////////
                                    PUBLIC STORAGE
