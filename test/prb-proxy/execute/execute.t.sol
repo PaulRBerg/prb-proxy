@@ -312,7 +312,7 @@ contract Execute_Test is PRBProxy_Test {
     }
 
     /// @dev This modifier runs the test twice, once with the owner as the caller, and once with the envoy.
-    modifier callerOwnerAndEnvoy() {
+    modifier callerOwnerOrEnvoy() {
         _;
         changePrank(users.envoy);
         _;
@@ -330,7 +330,7 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
         targetDoesNotSelfDestruct
-        callerOwnerAndEnvoy
+        callerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoAddress, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -350,7 +350,7 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
         targetDoesNotSelfDestruct
-        callerOwnerAndEnvoy
+        callerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoBytesArray, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -370,7 +370,7 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
         targetDoesNotSelfDestruct
-        callerOwnerAndEnvoy
+        callerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoBytes32, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -390,7 +390,7 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
         targetDoesNotSelfDestruct
-        callerOwnerAndEnvoy
+        callerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoString, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -410,7 +410,7 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
         targetDoesNotSelfDestruct
-        callerOwnerAndEnvoy
+        callerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoStruct, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -430,7 +430,7 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
         targetDoesNotSelfDestruct
-        callerOwnerAndEnvoy
+        callerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoUint8, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -450,7 +450,7 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
         targetDoesNotSelfDestruct
-        callerOwnerAndEnvoy
+        callerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoUint256, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -470,7 +470,7 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
         targetDoesNotSelfDestruct
-        callerOwnerAndEnvoy
+        callerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoUint256Array, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
