@@ -14,10 +14,10 @@ import { PRBProxy } from "src/PRBProxy.sol";
 import { PRBProxyFactory } from "src/PRBProxyFactory.sol";
 import { PRBProxyRegistry } from "src/PRBProxyRegistry.sol";
 
-/// @title BaseTest
+/// @title Base_Test
 /// @author Paul Razvan Berg
 /// @notice Common contract members needed across test contracts.
-abstract contract BaseTest is PRBTest, StdCheats, StdUtils {
+abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     /*//////////////////////////////////////////////////////////////////////////
                                        STRUCTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -80,9 +80,10 @@ abstract contract BaseTest is PRBTest, StdCheats, StdUtils {
     /// @dev Computes the proxy address without deploying it.
     function computeProxyAddress(address deployer, bytes32 seed) internal view returns (address proxyAddress) {
         bytes32 salt = keccak256(abi.encode(deployer, seed));
-        bytes memory deploymentBytecode = type(PRBProxy).creationCode;
-        bytes32 deploymentBytecodeHash = keccak256(deploymentBytecode);
-        proxyAddress = computeCreate2Address(salt, deploymentBytecodeHash, address(factory));
+        bytes memory creationBytecode = type(PRBProxy).creationCode;
+        bytes32 creationBytecodeHash = keccak256(creationBytecode);
+        // Uses the create2 utility from forge-std.
+        proxyAddress = computeCreate2Address(salt, creationBytecodeHash, address(factory));
     }
 
     /// @dev Generates an address by hashing the name, labels the address and funds it with 100 ETH, 1 million DAI,

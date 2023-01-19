@@ -3,9 +3,9 @@ pragma solidity >=0.8.4 <=0.9.0;
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
-import { BaseTest } from "../BaseTest.t.sol";
+import { Base_Test } from "../Base.t.sol";
 
-abstract contract PRBProxyFactory_Test is BaseTest {
+abstract contract PRBProxyFactory_Test is Base_Test {
     event DeployProxy(
         address indexed origin,
         address indexed deployer,

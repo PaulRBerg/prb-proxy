@@ -4,7 +4,7 @@ pragma solidity >=0.8.4 <=0.9.0;
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 import { PRBProxy } from "src/PRBProxy.sol";
 
-import { BaseTest } from "../../BaseTest.t.sol";
+import { Base_Test } from "../../Base.t.sol";
 import { PRBProxyFactory_Test } from "../PRBProxyFactory.t.sol";
 
 contract DeployFor_Test is PRBProxyFactory_Test {
@@ -12,7 +12,7 @@ contract DeployFor_Test is PRBProxyFactory_Test {
     address internal owner;
 
     function setUp() public override {
-        BaseTest.setUp();
+        Base_Test.setUp();
         deployer = users.alice;
     }
 
@@ -75,9 +75,9 @@ contract DeployFor_Test is PRBProxyFactory_Test {
     function test_DeployFor_Event() external txOriginNotSameAsOwner notFirstProxy {
         vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
         bytes32 salt = keccak256(abi.encode(deployer, SEED_ONE));
-        bytes memory deploymentBytecode = type(PRBProxy).creationCode;
-        bytes32 deploymentBytecodeHash = keccak256(deploymentBytecode);
-        address proxyAddress = computeCreate2Address(salt, deploymentBytecodeHash, address(factory));
+        bytes memory creationBytecode = type(PRBProxy).creationCode;
+        bytes32 creationBytecodeHash = keccak256(creationBytecode);
+        address proxyAddress = computeCreate2Address(salt, creationBytecodeHash, address(factory));
         emit DeployProxy({
             origin: deployer,
             deployer: deployer,

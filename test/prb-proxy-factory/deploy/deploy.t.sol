@@ -2,14 +2,14 @@
 pragma solidity >=0.8.4 <=0.9.0;
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
-import { BaseTest } from "../../BaseTest.t.sol";
+import { Base_Test } from "../../Base.t.sol";
 import { PRBProxyFactory_Test } from "../PRBProxyFactory.t.sol";
 
 contract Deploy_Test is PRBProxyFactory_Test {
     address internal deployer;
 
     function setUp() public override {
-        BaseTest.setUp();
+        Base_Test.setUp();
         deployer = users.alice;
     }
 

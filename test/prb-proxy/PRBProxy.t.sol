@@ -3,7 +3,7 @@ pragma solidity >=0.8.4 <=0.9.0;
 
 import { PRBProxy } from "src/PRBProxy.sol";
 
-import { BaseTest } from "../BaseTest.t.sol";
+import { Base_Test } from "../Base.t.sol";
 import { TargetChangeOwner } from "../helpers/targets/TargetChangeOwner.t.sol";
 import { TargetDummy } from "../helpers/targets/TargetDummy.t.sol";
 import { TargetEcho } from "../helpers/targets/TargetEcho.t.sol";
@@ -12,7 +12,7 @@ import { TargetPanic } from "../helpers/targets/TargetPanic.t.sol";
 import { TargetRevert } from "../helpers/targets/TargetRevert.t.sol";
 import { TargetSelfDestruct } from "../helpers/targets/TargetSelfDestruct.t.sol";
 
-abstract contract PRBProxy_Test is BaseTest {
+abstract contract PRBProxy_Test is Base_Test {
     /*//////////////////////////////////////////////////////////////////////////
                                        STRUCTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -52,7 +52,7 @@ abstract contract PRBProxy_Test is BaseTest {
     //////////////////////////////////////////////////////////////////////////*/
 
     function setUp() public virtual override {
-        BaseTest.setUp();
+        Base_Test.setUp();
 
         owner = users.alice;
 
