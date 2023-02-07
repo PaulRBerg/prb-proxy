@@ -1,7 +1,7 @@
 # PRBProxy [![Github Actions][gha-badge]][gha] [![Foundry][foundry-badge]][foundry] [![Styled with Prettier][prettier-badge]][prettier] [![License: MIT][license-badge]][license]
 
-[gha]: https://github.com/paulrberg/prb-proxy/actions
-[gha-badge]: https://github.com/paulrberg/prb-proxy/actions/workflows/ci.yml/badge.svg
+[gha]: https://github.com/PaulRBerg/prb-proxy/actions
+[gha-badge]: https://github.com/PaulRBerg/prb-proxy/actions/workflows/ci.yml/badge.svg
 [foundry]: https://getfoundry.sh/
 [foundry-badge]: https://img.shields.io/badge/Built%20with-Foundry-FFDB1C.svg
 [prettier]: https://prettier.io
@@ -110,7 +110,7 @@ All snippets are written in TypeScript. It is assumed that you run them in a loc
 Familiarity with [Ethers](https://github.com/ethers-io/ethers.js) and
 [TypeChain](https://github.com/ethereum-ts/TypeChain/tree/master/packages/hardhat) is also requisite.
 
-Check out my [solidity-template](https://github.com/paulrberg/solidity-template) for a boilerplate that combines
+Check out my [hardhat-template](https://github.com/PaulRBerg/hardhat-template) for a Hardhat-based boilerplate that combines
 Hardhat, Ethers and TypeChain.
 
 ### Target Contract
@@ -299,7 +299,7 @@ will not be liable for any loss, direct or indirect through continued use of thi
 
 ### Contact
 
-If you discover any security issues, you can report them via [Keybase](https://keybase.io/paulrberg).
+If you discover any security issues, you can report them via [Keybase](https://keybase.io/PaulRBerg).
 
 ## Related Efforts
 
@@ -309,8 +309,8 @@ If you discover any security issues, you can report them via [Keybase](https://k
 
 ## Contributing
 
-Feel free to dive in! [Open](https://github.com/paulrberg/prb-proxy/issues/new) an issue,
-[start](https://github.com/paulrberg/prb-proxy/discussions/new) a discussion or submit a PR.
+Feel free to dive in! [Open](https://github.com/PaulRBerg/prb-proxy/issues/new) an issue,
+[start](https://github.com/PaulRBerg/prb-proxy/discussions/new) a discussion or submit a PR.
 
 ### Pre Requisites
 

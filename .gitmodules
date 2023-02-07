@@ -1,12 +1,12 @@
 [submodule "lib/forge-std"]
-  branch = "master"
-	path = "lib/forge-std"
-	url = "https://github.com/foundry-rs/forge-std"
+  branch = "v1"
+  path = "lib/forge-std"
+  url = "https://github.com/foundry-rs/forge-std"
 [submodule "lib/prb-contracts"]
-  branch = "main"
+  branch = "v5"
   path = "lib/prb-contracts"
-  url = "https://github.com/paulrberg/prb-contracts"
+  url = "https://github.com/PaulRBerg/prb-contracts"
 [submodule "lib/prb-test"]
   branch = "0.3.1"
   path = "lib/prb-test"
-  url = "https://github.com/paulrberg/prb-test"
+  url = "https://github.com/PaulRBerg/prb-test"
