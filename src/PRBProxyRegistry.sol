@@ -46,7 +46,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     /// @inheritdoc IPRBProxyRegistry
     function deploy() external override returns (IPRBProxy proxy) {
-        proxy = deployFor(msg.sender);
+        proxy = deployFor({ owner: msg.sender });
     }
 
     /// @inheritdoc IPRBProxyRegistry

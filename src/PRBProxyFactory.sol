@@ -46,7 +46,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
 
     /// @inheritdoc IPRBProxyFactory
     function deploy() external override returns (IPRBProxy proxy) {
-        proxy = deployFor(msg.sender);
+        proxy = deployFor({ owner: msg.sender });
     }
 
     /// @inheritdoc IPRBProxyFactory
