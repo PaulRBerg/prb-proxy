@@ -26,7 +26,7 @@ contract TransferOwnership_Test is PRBProxy_Test {
         proxy.transferOwnership(address(0));
         address actualOwner = proxy.owner();
         address expectedOwner = address(0);
-        assertEq(actualOwner, expectedOwner);
+        assertEq(actualOwner, expectedOwner, "proxy owner");
     }
 
     modifier toNonZeroAddress() {
@@ -39,7 +39,7 @@ contract TransferOwnership_Test is PRBProxy_Test {
         proxy.transferOwnership(newOwner);
         address actualOwner = proxy.owner();
         address expectedOwner = newOwner;
-        assertEq(actualOwner, expectedOwner);
+        assertEq(actualOwner, expectedOwner, "proxy owner");
     }
 
     /// @dev it should emit a TransferOwnership event.

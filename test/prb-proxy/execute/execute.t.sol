@@ -267,7 +267,7 @@ contract Execute_Test is PRBProxy_Test {
         bytes memory data = bytes.concat(targets.echo.echoMsgValue.selector);
         bytes memory actualResponse = proxy.execute{ value: amount }(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(amount);
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "echo.echoMsgValue response");
     }
 
     modifier noEtherSent() {
@@ -284,18 +284,18 @@ contract Execute_Test is PRBProxy_Test {
         delegateCallDoesNotRevert
         noEtherSent
     {
-        uint256 previousAliceBalance = users.bob.balance;
-        uint256 contractBalance = 3.14 ether;
-        vm.deal({ account: address(proxy), newBalance: contractBalance });
+        uint256 initialBobBalance = users.bob.balance;
+        uint256 proxyBalance = 3.14 ether;
+        vm.deal({ account: address(proxy), newBalance: proxyBalance });
 
         bytes memory data = abi.encodeCall(targets.selfDestruct.destroyMe, (users.bob));
         bytes memory actualResponse = proxy.execute(address(targets.selfDestruct), data);
         bytes memory expectedResponse = "";
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "selfDestruct.destroyMe response");
 
-        uint256 actualAliceBalance = users.bob.balance;
-        uint256 expectedAliceBalance = previousAliceBalance + contractBalance;
-        assertEq(actualAliceBalance, expectedAliceBalance);
+        uint256 actualBobBalance = users.bob.balance;
+        uint256 expectedBobBalance = initialBobBalance + proxyBalance;
+        assertEq(actualBobBalance, expectedBobBalance, "Bob's balance");
     }
 
     modifier targetDoesNotSelfDestruct() {
@@ -335,7 +335,7 @@ contract Execute_Test is PRBProxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoAddress, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "echo.echoAddress response");
     }
 
     /// @dev it should return the bytes array.
@@ -355,7 +355,7 @@ contract Execute_Test is PRBProxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoBytesArray, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "echo.echoBytesArray response");
     }
 
     /// @dev it should return the bytes32.
@@ -375,7 +375,7 @@ contract Execute_Test is PRBProxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoBytes32, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "echo.echoBytes32 response");
     }
 
     /// @dev it should return the string.
@@ -395,7 +395,7 @@ contract Execute_Test is PRBProxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoString, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "echo.echoString response");
     }
 
     /// @dev it should return the string.
@@ -415,7 +415,7 @@ contract Execute_Test is PRBProxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoStruct, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "echo.echoStruct response");
     }
 
     /// @dev it should return the string.
@@ -435,7 +435,7 @@ contract Execute_Test is PRBProxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoUint8, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "echo.echoUint8 response");
     }
 
     /// @dev it should return the string.
@@ -455,7 +455,7 @@ contract Execute_Test is PRBProxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoUint256, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "echo.echoUint256 response");
     }
 
     /// @dev it should return the string.
@@ -475,6 +475,26 @@ contract Execute_Test is PRBProxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoUint256Array, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse);
+        assertEq(actualResponse, expectedResponse, "echo.echoUint256Array response");
+    }
+
+    /// @dev it should return the string.
+    function testFuzz_Execute_Event(
+        uint256 input
+    )
+        external
+        callerAuthorized
+        targetContract
+        gasStipendCalculationDoesNotUnderflow
+        ownerNotChangedDuringDelegateCall
+        delegateCallDoesNotRevert
+        noEtherSent
+        targetDoesNotSelfDestruct
+        callerOwnerOrEnvoy
+    {
+        vm.expectEmit({ checkTopic1: true, checkTopic2: false, checkTopic3: false, checkData: true });
+        bytes memory data = abi.encodeCall(targets.echo.echoUint256, (input));
+        emit Execute({ target: address(targets.echo), data: data, response: abi.encode(input) });
+        proxy.execute(address(targets.echo), data);
     }
 }

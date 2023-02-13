@@ -15,7 +15,7 @@ contract Deploy_Test is PRBProxyRegistry_Test {
     function test_Deploy() external {
         bytes memory actualRuntimeBytecode = address(registry.deploy()).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     /// @dev it should update the current proxies mapping.
@@ -23,6 +23,6 @@ contract Deploy_Test is PRBProxyRegistry_Test {
         registry.deploy();
         address actualProxyAddress = address(registry.getCurrentProxy(deployer));
         address expectedProxyAddress = computeProxyAddress(deployer, SEED_ZERO);
-        assertEq(actualProxyAddress, expectedProxyAddress);
+        assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
     }
 }

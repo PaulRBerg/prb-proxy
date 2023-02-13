@@ -17,7 +17,7 @@ contract Deploy_Test is PRBProxyFactory_Test {
     function test_Deploy() external {
         bytes memory actualRuntimeBytecode = address(factory.deploy()).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     /// @dev it should update the next seeds mapping.
@@ -25,7 +25,7 @@ contract Deploy_Test is PRBProxyFactory_Test {
         factory.deploy();
         bytes32 actualNextSeed = factory.getNextSeed(deployer);
         bytes32 expectedNextSeed = SEED_ONE;
-        assertEq(actualNextSeed, expectedNextSeed);
+        assertEq(actualNextSeed, expectedNextSeed, "nextSeed");
     }
 
     /// @dev it should update the proxies mapping.

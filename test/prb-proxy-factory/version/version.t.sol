@@ -8,6 +8,6 @@ contract Version_Test is PRBProxyFactory_Test {
     function test_Version() external {
         uint256 actualVersion = factory.version();
         uint256 expectedVersion = 3;
-        assertEq(actualVersion, expectedVersion);
+        assertEq(actualVersion, expectedVersion, "version");
     }
 }

@@ -35,7 +35,7 @@ contract DeployFor_Test is PRBProxyRegistry_Test {
         proxy.transferOwnership(address(1729));
         bytes memory actualRuntimeBytecode = address(registry.deployFor(deployer)).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     modifier ownerDoesNotHaveProxyInRegistry() {
@@ -46,7 +46,7 @@ contract DeployFor_Test is PRBProxyRegistry_Test {
     function test_DeployFor_DeployerSameAsOwner() external ownerDoesNotHaveProxyInRegistry {
         bytes memory actualRuntimeBytecode = address(registry.deployFor(deployer)).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     modifier deployerNotSameAsOwner() {
@@ -61,7 +61,7 @@ contract DeployFor_Test is PRBProxyRegistry_Test {
     {
         bytes memory actualRuntimeBytecode = address(registry.deployFor(owner)).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     modifier deployerDeployedAnotherProxyForTheOwnerViaFactory() {
@@ -78,7 +78,7 @@ contract DeployFor_Test is PRBProxyRegistry_Test {
     {
         bytes memory actualRuntimeBytecode = address(registry.deployFor(owner)).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     modifier deployerDeployedAnotherProxyForHimselfViaFactory() {
@@ -96,7 +96,7 @@ contract DeployFor_Test is PRBProxyRegistry_Test {
     {
         bytes memory actualRuntimeBytecode = address(registry.deployFor(owner)).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     /// @dev it should update the current proxies mapping.
@@ -110,6 +110,6 @@ contract DeployFor_Test is PRBProxyRegistry_Test {
         registry.deployFor(owner);
         address actualProxyAddress = address(registry.getCurrentProxy(owner));
         address expectedProxyAddress = computeProxyAddress(deployer, SEED_TWO);
-        assertEq(actualProxyAddress, expectedProxyAddress);
+        assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
     }
 }

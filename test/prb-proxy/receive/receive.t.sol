@@ -24,6 +24,6 @@ contract Receive_Test is PRBProxy_Test {
 
         uint256 actualBalance = address(proxy).balance;
         uint256 expectedBalance = value;
-        assertEq(actualBalance, expectedBalance);
+        assertEq(actualBalance, expectedBalance, "proxy balance");
     }
 }

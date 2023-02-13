@@ -21,7 +21,7 @@ contract DeployFor_Test is PRBProxyFactory_Test {
         // Deploy the first proxy.
         bytes memory actualRuntimeBytecode = address(factory.deployFor(deployer)).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     modifier txOriginNotSameAsOwner() {
@@ -33,7 +33,7 @@ contract DeployFor_Test is PRBProxyFactory_Test {
         owner = users.bob;
         bytes memory actualRuntimeBytecode = address(factory.deployFor(owner)).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     modifier notFirstProxy() {
@@ -49,7 +49,7 @@ contract DeployFor_Test is PRBProxyFactory_Test {
         bytes memory actualRuntimeBytecode = factoryProxyAddress.code;
         address testProxyAddress = address(deployProxy());
         bytes memory expectedRuntimeBytecode = testProxyAddress.code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode);
+        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
     /// @dev it should update the next seeds mapping.
@@ -61,7 +61,7 @@ contract DeployFor_Test is PRBProxyFactory_Test {
         factory.deployFor(owner);
         bytes32 actualNextSeed = factory.getNextSeed(deployer);
         bytes32 expectedNextSeed = SEED_TWO;
-        assertEq(actualNextSeed, expectedNextSeed);
+        assertEq(actualNextSeed, expectedNextSeed, "nextSeed");
     }
 
     /// @dev it should update the proxies mapping.
