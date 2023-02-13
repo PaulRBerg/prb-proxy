@@ -5,5 +5,9 @@ setPermission.t.sol
    ├── when the permission was not set
    │  └── it should set the permission
    └── when the permission was set
-      ├── it should do nothing when re-setting the permission
-      └── it should unset the permission
+      ├── when resetting the permission
+      │  ├── it should reset the permission
+      │  └── it should emit a {SetPermission} event
+      └── when unsetting the permission
+         ├── it should unset the permission
+         └── it should emit a {SetPermission} event

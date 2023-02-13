@@ -6,8 +6,6 @@ import { PRBProxy_Test } from "../PRBProxy.t.sol";
 import { TargetDummy } from "../../helpers/targets/TargetDummy.t.sol";
 
 contract SetPermission_Test is PRBProxy_Test {
-    bytes4 internal constant selector = TargetDummy.foo.selector;
-
     /// @dev it should revert.
     function test_RevertWhen_CallerNotOwner() external {
         // Make Eve the caller in this test.
@@ -16,7 +14,12 @@ contract SetPermission_Test is PRBProxy_Test {
 
         // Run the test.
         vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, owner, caller));
-        proxy.setPermission(caller, address(targets.dummy), selector, true);
+        proxy.setPermission({
+            envoy: caller,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector,
+            permission: true
+        });
     }
 
     modifier callerOwner() {
@@ -25,27 +28,87 @@ contract SetPermission_Test is PRBProxy_Test {
 
     /// @dev it should set the permission.
     function test_SetPermission_PermissionNotSet() external callerOwner {
-        proxy.setPermission(users.envoy, address(targets.dummy), selector, true);
-        bool permission = proxy.getPermission(users.envoy, address(targets.dummy), selector);
+        proxy.setPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector,
+            permission: true
+        });
+        bool permission = proxy.getPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector
+        });
         assertTrue(permission);
     }
 
     modifier permissionSet() {
-        proxy.setPermission(users.envoy, address(targets.dummy), selector, true);
+        proxy.setPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector,
+            permission: true
+        });
         _;
     }
 
     /// @dev it should do nothing when re-setting the permission.
     function test_SetPermission_PermissionSet_ResetPermission() external callerOwner permissionSet {
-        proxy.setPermission(users.envoy, address(targets.dummy), selector, true);
-        bool permission = proxy.getPermission(users.envoy, address(targets.dummy), selector);
+        proxy.setPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector,
+            permission: true
+        });
+        bool permission = proxy.getPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector
+        });
         assertTrue(permission);
+    }
+
+    /// @dev it should do nothing when re-setting the permission.
+    function test_SetPermission_PermissionSet_ResetPermission_Event() external callerOwner permissionSet {
+        vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
+        emit SetPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector,
+            permission: true
+        });
+        proxy.setPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector,
+            permission: true
+        });
     }
 
     /// @dev it should unset the permission.
     function test_SetPermission_PermissionSet_UnsetPermission() external callerOwner permissionSet {
-        proxy.setPermission(users.envoy, address(targets.dummy), selector, false);
-        bool permission = proxy.getPermission(users.envoy, address(targets.dummy), selector);
-        assertFalse(permission);
+        proxy.setPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector,
+            permission: false
+        });
+    }
+
+    /// @dev it should unset the permission.
+    function test_SetPermission_PermissionSet_UnsetPermission_Event() external callerOwner permissionSet {
+        vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
+        emit SetPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector,
+            permission: false
+        });
+        proxy.setPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: TargetDummy.foo.selector,
+            permission: false
+        });
     }
 }

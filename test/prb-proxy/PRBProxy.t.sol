@@ -33,6 +33,8 @@ abstract contract PRBProxy_Test is Base_Test {
 
     event Execute(address indexed target, bytes data, bytes response);
 
+    event SetPermission(address indexed envoy, address indexed target, bytes4 indexed selector, bool permission);
+
     event TransferOwnership(address indexed oldOwner, address indexed newOwner);
 
     /*//////////////////////////////////////////////////////////////////////////

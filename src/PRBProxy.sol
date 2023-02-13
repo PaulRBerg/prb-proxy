@@ -132,6 +132,7 @@ contract PRBProxy is IPRBProxy {
         bool permission
     ) external override onlyOwner {
         permissions[envoy][target][selector] = permission;
+        emit SetPermission(envoy, target, selector, permission);
     }
 
     /// @inheritdoc IPRBProxy
