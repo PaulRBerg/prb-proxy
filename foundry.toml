@@ -21,6 +21,10 @@
 [profile.ci]
   fuzz = { runs = 10_000 }
 
+[profile.lite]
+  fuzz = { runs = 50 }
+  optimizer = false
+
 [etherscan]
   ethereum = { key = "${ETHERSCAN_API_KEY}" }
   goerli = { key = "${ETHERSCAN_API_KEY}" }
