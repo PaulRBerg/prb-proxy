@@ -61,7 +61,6 @@
     "postpublish": "pinst --enable",
     "prepublishOnly": "pinst --disable",
     "prettier:check": "prettier --check \"**/*.{json,md,sol,yml}\"",
-    "prettier:write": "prettier --write \"**/*.{json,md,sol,yml}\"",
-    "test": "forge test --ignored-error-codes 5159"
+    "prettier:write": "prettier --write \"**/*.{json,md,sol,yml}\""
   }
 }
