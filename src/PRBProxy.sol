@@ -31,14 +31,25 @@ contract PRBProxy is IPRBProxy {
     constructor() {
         minGasReserve = 5_000;
         owner = msg.sender;
-        emit TransferOwnership(address(0), msg.sender);
+        emit TransferOwnership({ oldOwner: address(0), newOwner: msg.sender });
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                     MODIFIERS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    modifier onlyOwner() {
+        if (owner != msg.sender) {
+            revert PRBProxy_NotOwner({ owner: owner, caller: msg.sender });
+        }
+        _;
     }
 
     /*//////////////////////////////////////////////////////////////////////////
                                   FALLBACK FUNCTION
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @dev Called when Ether is sent and the call data is empty.
+    /// @dev Called when the call data is empty.
     receive() external payable {}
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -46,8 +57,12 @@ contract PRBProxy is IPRBProxy {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxy
-    function getPermission(address envoy, address target, bytes4 selector) external view override returns (bool) {
-        return permissions[envoy][target][selector];
+    function getPermission(
+        address envoy,
+        address target,
+        bytes4 selector
+    ) external view override returns (bool permission) {
+        permission = permissions[envoy][target][selector];
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -63,7 +78,12 @@ contract PRBProxy is IPRBProxy {
                 selector := calldataload(data.offset)
             }
             if (!permissions[msg.sender][target][selector]) {
-                revert PRBProxy_ExecutionUnauthorized(owner, msg.sender, target, selector);
+                revert PRBProxy_ExecutionUnauthorized({
+                    owner: owner,
+                    caller: msg.sender,
+                    target: target,
+                    selector: selector
+                });
             }
         }
 
@@ -105,20 +125,24 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function setPermission(address envoy, address target, bytes4 selector, bool permission) external override {
-        if (owner != msg.sender) {
-            revert PRBProxy_NotOwner(owner, msg.sender);
-        }
+    function setPermission(
+        address envoy,
+        address target,
+        bytes4 selector,
+        bool permission
+    ) external override onlyOwner {
         permissions[envoy][target][selector] = permission;
     }
 
     /// @inheritdoc IPRBProxy
-    function transferOwnership(address newOwner) external override {
+    function transferOwnership(address newOwner) external override onlyOwner {
+        // Load the current admin in memory.
         address oldOwner = owner;
-        if (oldOwner != msg.sender) {
-            revert PRBProxy_NotOwner(oldOwner, msg.sender);
-        }
+
+        // Effects: update the owner.
         owner = newOwner;
+
+        // Log the transfer of the owner.
         emit TransferOwnership(oldOwner, newOwner);
     }
 }

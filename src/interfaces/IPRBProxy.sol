@@ -38,7 +38,7 @@ interface IPRBProxy {
 
     /// @notice Returns a boolean flag that indicates whether the envoy has permission to call the given target
     /// contract and function selector.
-    function getPermission(address envoy, address target, bytes4 selector) external view returns (bool);
+    function getPermission(address envoy, address target, bytes4 selector) external view returns (bool permission);
 
     /// @notice The address of the owner account or contract.
     function owner() external view returns (address);
