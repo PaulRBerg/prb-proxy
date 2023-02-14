@@ -66,10 +66,13 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
-      - name: "Run the tests"
-        run: "forge test"
+      - name: "Produce an optimized build with --via-ir"
+        run: "FOUNDRY_PROFILE=optimized forge build"
 
-      - name: "Add test summary"
+      - name: "Run the tests against the optimized build"
+        run: "FOUNDRY_PROFILE=test-optimized forge test"
+
+      - name: "Add build and test summary"
         run: |
           echo "## Tests result" >> $GITHUB_STEP_SUMMARY
           echo "✅ Passed" >> $GITHUB_STEP_SUMMARY

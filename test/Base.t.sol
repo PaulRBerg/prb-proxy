@@ -3,6 +3,7 @@ pragma solidity >=0.8.4 <=0.9.0;
 
 import { ERC20 } from "@prb/contracts/token/erc20/ERC20.sol";
 import { IERC20 } from "@prb/contracts/token/erc20/IERC20.sol";
+import { eqString } from "@prb/test/Helpers.sol";
 import { PRBTest } from "@prb/test/PRBTest.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 import { StdUtils } from "forge-std/StdUtils.sol";
@@ -78,9 +79,9 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev Computes the proxy address without deploying it.
-    function computeProxyAddress(address deployer, bytes32 seed) internal view returns (address proxyAddress) {
+    function computeProxyAddress(address deployer, bytes32 seed) internal returns (address proxyAddress) {
         bytes32 salt = keccak256(abi.encode(deployer, seed));
-        bytes memory creationBytecode = type(PRBProxy).creationCode;
+        bytes memory creationBytecode = getProxyBytecode();
         bytes32 creationBytecodeHash = keccak256(creationBytecode);
         // Uses the create2 utility from forge-std.
         proxyAddress = computeCreate2Address(salt, creationBytecodeHash, address(factory));
@@ -96,15 +97,53 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         deal({ token: address(usdc), to: addr, give: 1_000_000e6 });
     }
 
-    /// @dev Deploys the default proxy-related contracts.
+    /// @dev Conditionally the default contracts either normally or from precompiled source.
     function deployDefaultContracts() internal {
-        proxy = new PRBProxy();
-        factory = new PRBProxyFactory();
-        registry = new PRBProxyRegistry(factory);
+        // We deploy from precompiled source if the profile is "test-optimized".
+        if (isTestOptimizedProfile()) {
+            proxy = IPRBProxy(deployCode("optimized-out/PRBProxy.sol/PRBProxy.json"));
+            factory = IPRBProxyFactory(deployCode("optimized-out/PRBProxyFactory.sol/PRBProxyFactory.json"));
+            registry = IPRBProxyRegistry(
+                deployCode("optimized-out/PRBProxyRegistry.sol/PRBProxyRegistry.json", abi.encode(address(factory)))
+            );
+        }
+        // We deploy normally in all other cases.
+        else {
+            proxy = new PRBProxy();
+            factory = new PRBProxyFactory();
+            registry = new PRBProxyRegistry(factory);
+        }
+
+        // Finally, label all the contracts just deployed.
+        vm.label({ account: address(proxy), newLabel: "Proxy" });
+        vm.label({ account: address(factory), newLabel: "Factory" });
+        vm.label({ account: address(registry), newLabel: "Registry" });
     }
 
-    /// @dev Deploys the proxy.
+    /// @dev Conditionally deploy the proxy either normally or from precompiled source.
     function deployProxy() internal returns (IPRBProxy deployedProxy) {
-        deployedProxy = new PRBProxy();
+        if (isTestOptimizedProfile()) {
+            deployedProxy = IPRBProxy(deployCode("optimized-out/PRBProxy.sol/PRBProxy.json"));
+        } else {
+            deployedProxy = new PRBProxy();
+        }
+
+        // Label the proxy.
+        vm.label({ account: address(deployedProxy), newLabel: "Proxy" });
+    }
+
+    /// @dev Reads the bytecode either normally or from precompiled source.
+    function getProxyBytecode() internal returns (bytes memory bytecode) {
+        if (isTestOptimizedProfile()) {
+            bytecode = vm.getCode("optimized-out/PRBProxy.sol/PRBProxy.json");
+        } else {
+            bytecode = type(PRBProxy).creationCode;
+        }
+    }
+
+    /// @dev Checks if the Foundry profile is "test-optimized".
+    function isTestOptimizedProfile() internal returns (bool result) {
+        string memory profile = vm.envOr("FOUNDRY_PROFILE", string(""));
+        result = eqString(profile, "test-optimized");
     }
 }

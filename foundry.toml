@@ -4,7 +4,8 @@
   auto_detect_solc = false
   bytecode_hash = "none"
   cbor_metadata = false
-  gas_reports = ["*"]
+  fs_permissions = [{ access = "read", path = "./optimized-out" }]
+  gas_reports = ["PRBProxy", "PRBProxyFactory", "PRBProxyRegistry"]
   ignored_error_codes = [5159]
   libs = ["lib"]
   optimizer = true
@@ -15,15 +16,28 @@
   test = "test"
 
 [profile.default.fuzz]
-  max_test_rejects = 100_000
+  max_test_rejects = 1_000_000 # Number of times `vm.assume` can fail
   runs = 1_000
 
 [profile.ci]
   fuzz = { runs = 10_000 }
 
+# Speed up compilation and tests during development
 [profile.lite]
   fuzz = { runs = 50 }
   optimizer = false
+
+# Compile only the production code with IR
+[profile.optimized]
+  out = "optimized-out"
+  test = "src"
+  via_ir = true
+
+# Test the optimized contracts without re-compiling them
+[profile.test-optimized]
+  fuzz = { runs = 5_000 }
+  src = "test"
+  verbosity = 4
 
 [etherscan]
   ethereum = { key = "${ETHERSCAN_API_KEY}" }

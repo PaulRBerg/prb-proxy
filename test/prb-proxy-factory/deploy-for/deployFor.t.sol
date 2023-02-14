@@ -75,7 +75,7 @@ contract DeployFor_Test is PRBProxyFactory_Test {
     function test_DeployFor_Event() external txOriginNotSameAsOwner notFirstProxy {
         vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
         bytes32 salt = keccak256(abi.encode(deployer, SEED_ONE));
-        bytes memory creationBytecode = type(PRBProxy).creationCode;
+        bytes memory creationBytecode = getProxyBytecode();
         bytes32 creationBytecodeHash = keccak256(creationBytecode);
         address proxyAddress = computeCreate2Address(salt, creationBytecodeHash, address(factory));
         emit DeployProxy({
