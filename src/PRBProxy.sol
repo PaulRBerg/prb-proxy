@@ -192,7 +192,7 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-        function setPermission(
+    function setPermission(
         address envoy,
         address target,
         bytes4 selector,
