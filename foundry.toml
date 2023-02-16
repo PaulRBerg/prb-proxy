@@ -4,10 +4,9 @@
   auto_detect_solc = false
   bytecode_hash = "none"
   cbor_metadata = false
-  gas_reports = ["*"]
-  ignored_error_codes = [
-    5159, # ignore selfdestruct warning
-  ]
+  fs_permissions = [{ access = "read", path = "./optimized-out" }]
+  gas_reports = ["PRBProxy", "PRBProxyFactory", "PRBProxyRegistry"]
+  ignored_error_codes = [5159]
   libs = ["lib"]
   optimizer = true
   optimizer_runs = 10_000
