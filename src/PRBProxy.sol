@@ -126,8 +126,9 @@ contract PRBProxy is IPRBProxy {
             // If there is return data, the call reverted with a reason or a custom error.
             if (response.length > 0) {
                 assembly {
+                    // The length of the data is at `response`, while the actual data is at `response + 32`.
                     let returndata_size := mload(response)
-                    revert(add(32, response), returndata_size)
+                    revert(add(response, 32), returndata_size)
                 }
             } else {
                 revert PRBProxy_ExecutionReverted();
