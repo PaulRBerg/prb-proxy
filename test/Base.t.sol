@@ -92,8 +92,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     /// @dev Computes the proxy address without deploying it.
     function computeProxyAddress(address deployer, bytes32 seed) internal returns (address proxyAddress) {
         bytes32 salt = keccak256(abi.encode(deployer, seed));
-        bytes memory creationBytecode = getProxyBytecode();
-        bytes32 creationBytecodeHash = keccak256(creationBytecode);
+        bytes32 creationBytecodeHash = keccak256(getProxyBytecode());
         // Uses the create2 utility from forge-std.
         proxyAddress = computeCreate2Address(salt, creationBytecodeHash, address(factory));
     }

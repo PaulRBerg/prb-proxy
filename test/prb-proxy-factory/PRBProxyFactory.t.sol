@@ -14,4 +14,8 @@ abstract contract PRBProxyFactory_Test is Base_Test {
         bytes32 salt,
         IPRBProxy proxy
     );
+
+    function setUp() public virtual override {
+        Base_Test.setUp();
+    }
 }

@@ -16,6 +16,5 @@ deployFor.t.sol
          │  └── it should update the current proxies mapping
          └── when the deployer deployed another proxy for himself via the factory
             ├── it should deploy the proxy
-            └── it should update the current proxies mapping
-
-
+            ├── it should update the current proxies mapping
+            └── it should emit a {DeployProxy} event

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18 <=0.9.0;
 
+import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
+
 import { PRBProxyRegistry_Test } from "../PRBProxyRegistry.t.sol";
 
 contract Deploy_Test is PRBProxyRegistry_Test {
@@ -24,5 +26,21 @@ contract Deploy_Test is PRBProxyRegistry_Test {
         address actualProxyAddress = address(registry.getCurrentProxy(deployer));
         address expectedProxyAddress = computeProxyAddress(deployer, SEED_ZERO);
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
+    }
+
+    /// @dev it should emit a {DeployProxy} event.
+    function test_Deploy_Event() external {
+        expectEmit();
+        bytes32 salt = keccak256(abi.encode(deployer, SEED_ZERO));
+        address proxyAddress = computeProxyAddress(deployer, SEED_ZERO);
+        emit DeployProxy({
+            origin: deployer,
+            deployer: address(registry),
+            owner: deployer,
+            seed: SEED_ZERO,
+            salt: salt,
+            proxy: IPRBProxy(proxyAddress)
+        });
+        registry.deploy();
     }
 }
