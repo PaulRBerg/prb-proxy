@@ -537,7 +537,7 @@ contract Execute_Test is PRBProxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint256Array response");
     }
 
-    /// @dev it should return the string.
+    /// @dev it should emit an {Execute} event.
     function testFuzz_Execute_Event(
         uint256 input
     )
@@ -551,7 +551,7 @@ contract Execute_Test is PRBProxy_Test {
         targetDoesNotSelfDestruct
         callerOwnerOrEnvoy
     {
-        vm.expectEmit({ checkTopic1: true, checkTopic2: false, checkTopic3: false, checkData: true });
+        expectEmit();
         bytes memory data = abi.encodeCall(targets.echo.echoUint256, (input));
         emit Execute({ target: address(targets.echo), data: data, response: abi.encode(input) });
         proxy.execute(address(targets.echo), data);

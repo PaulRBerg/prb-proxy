@@ -71,8 +71,8 @@ contract InstallPlugin_Test is PRBProxy_Test {
 
     /// @dev it should emit an {InstallPlugin} event.
     function test_InstallPlugin_Event() external callerOwner pluginHasMethods pluginNotInstalled {
-        // Check install event is emitted
-        vm.expectEmit({ checkTopic1: true, checkTopic2: false, checkTopic3: false, checkData: false });
+        // Expect an {InstallPlugin} event.
+        expectEmit();
         emit InstallPlugin(plugins.dummy);
 
         // Install the dummy plugin.

@@ -279,7 +279,7 @@ contract RunPlugin_Test is PRBProxy_Test {
         pluginDoesNotSelfDestruct
     {
         proxy.installPlugin(plugins.dummy);
-        vm.expectEmit({ checkTopic1: true, checkTopic2: false, checkTopic3: false, checkData: true });
+        expectEmit();
         emit RunPlugin({
             plugin: plugins.dummy,
             data: abi.encodeWithSelector(TargetDummy.foo.selector),

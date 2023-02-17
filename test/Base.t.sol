@@ -79,12 +79,12 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
                            INTERNAL NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @dev Helper function to compare two `IPRBProxyPlugin` addresses.
+    /// @dev Helper function to compare two {IPRBProxyPlugin} addresses.
     function assertEq(IPRBProxyPlugin a, IPRBProxyPlugin b) internal {
         assertEq(address(a), address(b));
     }
 
-    /// @dev Helper function to compare two `IPRBProxyPlugin` addresses.
+    /// @dev Helper function to compare two {IPRBProxyPlugin} addresses.
     function assertEq(IPRBProxyPlugin a, IPRBProxyPlugin b, string memory err) internal {
         assertEq(address(a), address(b), err);
     }
@@ -141,6 +141,12 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
 
         // Label the proxy.
         vm.label({ account: address(deployedProxy), newLabel: "Proxy" });
+    }
+
+    /// @dev Expects an event to be emitted by checking all three topics and the data. As mentioned in the Foundry
+    /// Book, the extra `true` arguments don't hurt.
+    function expectEmit() internal {
+        vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
     }
 
     /// @dev Reads the bytecode either normally or from precompiled source.

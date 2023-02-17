@@ -71,7 +71,7 @@ contract UninstallPlugin_Test is PRBProxy_Test {
     /// @dev it should emit an {UninstallPlugin} event.
     function test_UninstallPlugin_Event() external callerOwner pluginHasMethods pluginInstalled {
         // Expect an {UninstallPlugin} event to be emitted.
-        vm.expectEmit({ checkTopic1: true, checkTopic2: false, checkTopic3: false, checkData: false });
+        expectEmit();
         emit UninstallPlugin(plugins.dummy);
 
         // Uninstall the dummy plugin.

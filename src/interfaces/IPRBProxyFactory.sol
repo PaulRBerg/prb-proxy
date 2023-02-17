@@ -33,7 +33,7 @@ interface IPRBProxyFactory {
     /// @param proxy The address of the proxy to make the query for.
     function isProxy(IPRBProxy proxy) external view returns (bool result);
 
-    /// @notice The release version of PRBProxy.
+    /// @notice The release version of {PRBProxy}.
     /// @dev This is stored in the factory rather than the proxy to save gas for end users.
     function version() external view returns (uint256);
 

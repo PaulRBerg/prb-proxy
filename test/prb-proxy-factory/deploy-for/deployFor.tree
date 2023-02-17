@@ -8,5 +8,5 @@ deployFor.t.sol
       ├── it should deploy the proxy
       ├── it should update the next seeds mapping
       ├── it should update the proxies mapping
-      └── it should emit a DeployProxy event
+      └── it should emit a {DeployProxy} event
 

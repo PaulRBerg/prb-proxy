@@ -42,11 +42,11 @@ contract TransferOwnership_Test is PRBProxy_Test {
         assertEq(actualOwner, expectedOwner, "proxy owner");
     }
 
-    /// @dev it should emit a TransferOwnership event.
+    /// @dev it should emit a {TransferOwnership} event.
     function test_TransferOwnership_Event() external callerOwner toNonZeroAddress {
         address oldOwner = owner;
         address newOwner = users.bob;
-        vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: false, checkData: false });
+        expectEmit();
         emit TransferOwnership(oldOwner, newOwner);
         proxy.transferOwnership(newOwner);
     }

@@ -25,7 +25,7 @@ import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
 
 /// @title PRBProxyRegistry
 /// @author Paul Razvan Berg
-/// @dev This contract implements the IPRBProxyRegistry interface.
+/// @dev This contract implements the {IPRBProxyRegistry} interface.
 contract PRBProxyRegistry is IPRBProxyRegistry {
     /*//////////////////////////////////////////////////////////////////////////
                                    PUBLIC STORAGE

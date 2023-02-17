@@ -35,9 +35,9 @@ contract Deploy_Test is PRBProxyFactory_Test {
         assertTrue(isProxy);
     }
 
-    /// @dev it should emit a DeployProxy event.
+    /// @dev it should emit a {DeployProxy} event.
     function test_Deploy_Event() external {
-        vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
+        expectEmit();
         bytes32 salt = keccak256(abi.encode(deployer, SEED_ZERO));
         address proxyAddress = computeProxyAddress(deployer, SEED_ZERO);
         emit DeployProxy({

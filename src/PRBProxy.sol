@@ -17,7 +17,7 @@ import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 
 /// @title PRBProxy
 /// @author Paul Razvan Berg
-/// @dev This contract implements the IPRBProxy interface.
+/// @dev This contract implements the {IPRBProxy} interface.
 contract PRBProxy is IPRBProxy {
     /*//////////////////////////////////////////////////////////////////////////
                                    PUBLIC STORAGE
@@ -244,7 +244,7 @@ contract PRBProxy is IPRBProxy {
                           INTERNAL NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Performs a delegatecall to the given address with the given data.
+    /// @notice Performs a DELEGATECALL to the given address with the given data.
     /// @dev Shared logic between the {execute} and the {fallback} functions.
     function _safeDelegateCall(address to, bytes memory data) internal returns (bool success, bytes memory response) {
         // Save the owner address in memory. This variable cannot be modified during the DELEGATECALL.

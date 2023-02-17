@@ -47,4 +47,4 @@ execute.t.sol
                      ├── it should return the uint8
                      ├── it should return the uint256
                      ├── it should return the uint256 array
-                     └── it should emit an Execute event
+                     └── it should emit an {Execute} event

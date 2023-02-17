@@ -68,9 +68,9 @@ contract SetPermission_Test is PRBProxy_Test {
         assertTrue(permission);
     }
 
-    /// @dev it should do nothing when re-setting the permission.
+    /// @dev it should emit a {SetPermission} event.
     function test_SetPermission_PermissionSet_ResetPermission_Event() external callerOwner permissionSet {
-        vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
+        expectEmit();
         emit SetPermission({
             envoy: users.envoy,
             target: address(targets.dummy),
@@ -95,9 +95,9 @@ contract SetPermission_Test is PRBProxy_Test {
         });
     }
 
-    /// @dev it should unset the permission.
+    /// @dev it should emit a {SetPermission} event.
     function test_SetPermission_PermissionSet_UnsetPermission_Event() external callerOwner permissionSet {
-        vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
+        expectEmit();
         emit SetPermission({
             envoy: users.envoy,
             target: address(targets.dummy),
