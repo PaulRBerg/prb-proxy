@@ -2,6 +2,7 @@
 pragma solidity >=0.8.18 <=0.9.0;
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
+
 import { PRBProxyFactory_Test } from "../PRBProxyFactory.t.sol";
 
 contract Deploy_Test is PRBProxyFactory_Test {
@@ -37,15 +38,13 @@ contract Deploy_Test is PRBProxyFactory_Test {
     /// @dev it should emit a {DeployProxy} event.
     function test_Deploy_Event() external {
         expectEmit();
-        bytes32 salt = keccak256(abi.encode(deployer, SEED_ZERO));
-        address proxyAddress = computeProxyAddress(deployer, SEED_ZERO);
         emit DeployProxy({
             origin: deployer,
             deployer: deployer,
             owner: deployer,
             seed: SEED_ZERO,
-            salt: salt,
-            proxy: IPRBProxy(proxyAddress)
+            salt: keccak256(abi.encode(deployer, SEED_ZERO)),
+            proxy: IPRBProxy(computeProxyAddress(deployer, SEED_ZERO))
         });
         factory.deploy();
     }

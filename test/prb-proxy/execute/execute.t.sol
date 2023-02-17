@@ -146,7 +146,7 @@ contract Execute_Test is PRBProxy_Test {
         );
 
         // Run the test.
-        bytes memory data = abi.encode(targets.echo.echoUint256.selector, 0);
+        bytes memory data = abi.encode(targets.echo.echoUint256.selector, 1729);
         vm.expectRevert(stdError.arithmeticError);
         proxy.execute{ gas: gasLimit }(address(targets.echo), data);
     }

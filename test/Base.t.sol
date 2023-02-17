@@ -16,6 +16,22 @@ import { PRBProxy } from "src/PRBProxy.sol";
 import { PRBProxyFactory } from "src/PRBProxyFactory.sol";
 import { PRBProxyRegistry } from "src/PRBProxyRegistry.sol";
 
+import { PluginChangeOwner } from "./helpers/plugins/PluginChangeOwner.t.sol";
+import { PluginDummy } from "./helpers/plugins/PluginDummy.t.sol";
+import { PluginEcho } from "./helpers/plugins/PluginEcho.t.sol";
+import { PluginEmpty } from "./helpers/plugins/PluginEmpty.t.sol";
+import { PluginPanic } from "./helpers/plugins/PluginPanic.t.sol";
+import { PluginReverter } from "./helpers/plugins/PluginReverter.t.sol";
+import { PluginSelfDestructer } from "./helpers/plugins/PluginSelfDestructer.t.sol";
+import { TargetChangeOwner } from "./helpers/targets/TargetChangeOwner.t.sol";
+import { TargetDummy } from "./helpers/targets/TargetDummy.t.sol";
+import { TargetDummyWithFallback } from "./helpers/targets/TargetDummyWithFallback.t.sol";
+import { TargetEcho } from "./helpers/targets/TargetEcho.t.sol";
+import { TargetMinGasReserve } from "./helpers/targets/TargetMinGasReserve.t.sol";
+import { TargetPanic } from "./helpers/targets/TargetPanic.t.sol";
+import { TargetReverter } from "./helpers/targets/TargetReverter.t.sol";
+import { TargetSelfDestructer } from "./helpers/targets/TargetSelfDestructer.t.sol";
+
 /// @title Base_Test
 /// @author Paul Razvan Berg
 /// @notice Common contract members needed across test contracts.
@@ -24,12 +40,48 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
                                        STRUCTS
     //////////////////////////////////////////////////////////////////////////*/
 
+    struct Plugins {
+        PluginChangeOwner changeOwner;
+        PluginDummy dummy;
+        PluginEcho echo;
+        PluginEmpty empty;
+        PluginPanic panic;
+        PluginReverter reverter;
+        PluginSelfDestructer selfDestructer;
+    }
+
+    struct Targets {
+        TargetChangeOwner changeOwner;
+        TargetDummy dummy;
+        TargetDummyWithFallback dummyWithFallback;
+        TargetEcho echo;
+        TargetMinGasReserve minGasReserve;
+        TargetPanic panic;
+        TargetReverter reverter;
+        TargetSelfDestructer selfDestructer;
+    }
+
     struct Users {
         address payable alice;
         address payable bob;
         address payable envoy;
         address payable eve;
     }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                       EVENTS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    event DeployProxy(
+        address indexed origin,
+        address indexed deployer,
+        address indexed owner,
+        bytes32 seed,
+        bytes32 salt,
+        IPRBProxy proxy
+    );
+
+    event Execute(address indexed target, bytes data, bytes response);
 
     /*//////////////////////////////////////////////////////////////////////////
                                       CONSTANTS
@@ -40,9 +92,11 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     bytes32 internal constant SEED_ZERO = bytes32(uint256(0x00));
 
     /*//////////////////////////////////////////////////////////////////////////
-                                      STORAGE
+                                   TEST VARIABLES
     //////////////////////////////////////////////////////////////////////////*/
 
+    Plugins internal plugins;
+    Targets internal targets;
     Users internal users;
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -53,7 +107,6 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     IPRBProxyFactory internal factory;
     IPRBProxy internal proxy;
     IPRBProxyRegistry internal registry;
-    ERC20 internal usdc = new ERC20("USD Coin", "USDC", 6);
 
     /*//////////////////////////////////////////////////////////////////////////
                                   SET-UP FUNCTION
@@ -66,6 +119,29 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
             bob: createUser("Bob"),
             envoy: createUser("Envoy"),
             eve: createUser("Eve")
+        });
+
+        // Create the plugins.
+        plugins = Plugins({
+            changeOwner: new PluginChangeOwner(),
+            dummy: new PluginDummy(),
+            echo: new PluginEcho(),
+            empty: new PluginEmpty(),
+            panic: new PluginPanic(),
+            reverter: new PluginReverter(),
+            selfDestructer: new PluginSelfDestructer()
+        });
+
+        // Create the targets.
+        targets = Targets({
+            changeOwner: new TargetChangeOwner(),
+            dummy: new TargetDummy(),
+            dummyWithFallback: new TargetDummyWithFallback(),
+            echo: new TargetEcho(),
+            minGasReserve: new TargetMinGasReserve(),
+            panic: new TargetPanic(),
+            reverter: new TargetReverter(),
+            selfDestructer: new TargetSelfDestructer()
         });
 
         // Make Alice both the caller and the origin for all subsequent calls.
@@ -104,7 +180,6 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         vm.label({ account: addr, newLabel: name });
         vm.deal({ account: addr, newBalance: 100 ether });
         deal({ token: address(dai), to: addr, give: 1_000_000e18 });
-        deal({ token: address(usdc), to: addr, give: 1_000_000e6 });
     }
 
     /// @dev Conditionally the default contracts either normally or from precompiled source.

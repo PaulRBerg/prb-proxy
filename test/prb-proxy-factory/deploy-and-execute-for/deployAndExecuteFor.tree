@@ -1,0 +1,5 @@
+deployAndExecuteFor.t.sol
+├── it should deploy the proxy
+├── it should delegate call to the target contract
+├── it should emit a {DeployProxy} event
+└── it should emit an {Execute} event

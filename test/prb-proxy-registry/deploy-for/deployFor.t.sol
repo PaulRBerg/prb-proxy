@@ -116,15 +116,13 @@ contract DeployFor_Test is PRBProxyRegistry_Test {
     /// @dev it should emit a {DeployProxy} event.
     function test_DeployFor_Event() external {
         expectEmit();
-        bytes32 salt = keccak256(abi.encode(deployer, SEED_ZERO));
-        address proxyAddress = computeProxyAddress(deployer, SEED_ZERO);
         emit DeployProxy({
             origin: deployer,
             deployer: address(registry),
             owner: owner,
             seed: SEED_ZERO,
-            salt: salt,
-            proxy: IPRBProxy(proxyAddress)
+            salt: keccak256(abi.encode(deployer, SEED_ZERO)),
+            proxy: IPRBProxy(computeProxyAddress(deployer, SEED_ZERO))
         });
         registry.deployFor(owner);
     }
