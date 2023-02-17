@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.4 <=0.9.0;
 
+import { console2 } from "forge-std/console2.sol";
 import { stdError } from "forge-std/StdError.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
@@ -36,7 +37,12 @@ contract Execute_Test is PRBProxy_Test {
 
     /// @dev it should revert.
     function test_RevertWhen_PermissionDifferentTarget() external callerUnauthorized callerHasPermission {
-        proxy.setPermission(users.envoy, address(targets.echo), targets.dummy.foo.selector, true);
+        proxy.setPermission({
+            envoy: users.envoy,
+            target: address(targets.echo),
+            selector: targets.dummy.foo.selector,
+            permission: true
+        });
         changePrank(users.envoy);
 
         bytes memory data = bytes.concat(targets.dummy.foo.selector);
@@ -52,22 +58,68 @@ contract Execute_Test is PRBProxy_Test {
         proxy.execute(address(targets.dummy), data);
     }
 
+    modifier callerPermissionSameTarget() {
+        _;
+    }
+
     /// @dev it should revert.
-    function test_RevertWhen_PermissionDifferentFunction() external callerUnauthorized callerHasPermission {
-        proxy.setPermission(users.envoy, address(targets.dummy), targets.dummy.bar.selector, true);
+    function test_RevertWhen_TargetDoesNotHaveFallbackFunction()
+        external
+        callerUnauthorized
+        callerHasPermission
+        callerPermissionSameTarget
+    {
+        proxy.setPermission({
+            envoy: users.envoy,
+            target: address(targets.dummy),
+            selector: targets.dummy.foo.selector,
+            permission: true
+        });
         changePrank(users.envoy);
 
-        bytes memory data = bytes.concat(targets.dummy.foo.selector);
+        bytes memory data = bytes.concat(targets.dummy.bar.selector);
         vm.expectRevert(
             abi.encodeWithSelector(
                 IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
                 owner,
                 users.envoy,
                 address(targets.dummy),
-                targets.dummy.foo.selector
+                targets.dummy.bar.selector
             )
         );
         proxy.execute(address(targets.dummy), data);
+    }
+
+    /// @dev it should revert.
+    function test_RevertWhen_TargetHasFallbackFunction()
+        external
+        callerUnauthorized
+        callerHasPermission
+        callerPermissionSameTarget
+    {
+        proxy.setPermission({
+            envoy: users.envoy,
+            target: address(targets.dummyWithFallback),
+            selector: targets.dummyWithFallback.foo.selector,
+            permission: true
+        });
+        changePrank(users.envoy);
+
+        // Fudge the calldata such that `data` is empty, but there is additional calldata after it. This will
+        // attempt to bypass the usual selector checks, and call the fallback function on the target.
+        bytes memory usualCalldata = abi.encodeWithSelector(
+            proxy.execute.selector,
+            address(targets.dummyWithFallback),
+            new bytes(0)
+        );
+        bytes memory data = abi.encodePacked(usualCalldata, targets.dummyWithFallback.foo.selector);
+        (bool success, bytes memory response) = address(proxy).call(data);
+
+        // Assert that the call failed.
+        assertFalse(success);
+
+        // Assert that the call reverted with no response.
+        assertEq(response.length, 0);
     }
 
     modifier callerAuthorized() {

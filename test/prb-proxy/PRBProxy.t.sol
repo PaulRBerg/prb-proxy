@@ -14,6 +14,7 @@ import { PluginReverter } from "../helpers/plugins/PluginReverter.t.sol";
 import { PluginSelfDestructer } from "../helpers/plugins/PluginSelfDestructer.t.sol";
 import { TargetChangeOwner } from "../helpers/targets/TargetChangeOwner.t.sol";
 import { TargetDummy } from "../helpers/targets/TargetDummy.t.sol";
+import { TargetDummyWithFallback } from "../helpers/targets/TargetDummyWithFallback.t.sol";
 import { TargetEcho } from "../helpers/targets/TargetEcho.t.sol";
 import { TargetMinGasReserve } from "../helpers/targets/TargetMinGasReserve.t.sol";
 import { TargetPanic } from "../helpers/targets/TargetPanic.t.sol";
@@ -38,6 +39,7 @@ contract PRBProxy_Test is Base_Test {
     struct Targets {
         TargetChangeOwner changeOwner;
         TargetDummy dummy;
+        TargetDummyWithFallback dummyWithFallback;
         TargetEcho echo;
         TargetMinGasReserve minGasReserve;
         TargetPanic panic;
@@ -89,6 +91,7 @@ contract PRBProxy_Test is Base_Test {
         targets = Targets({
             changeOwner: new TargetChangeOwner(),
             dummy: new TargetDummy(),
+            dummyWithFallback: new TargetDummyWithFallback(),
             echo: new TargetEcho(),
             minGasReserve: new TargetMinGasReserve(),
             panic: new TargetPanic(),

@@ -6,7 +6,9 @@
   cbor_metadata = false
   fs_permissions = [{ access = "read", path = "./optimized-out" }]
   gas_reports = ["PRBProxy", "PRBProxyFactory", "PRBProxyRegistry"]
-  ignored_error_codes = [5159]
+  ignored_error_codes = [
+    5159, # ignore selfdestruct warning
+  ]
   libs = ["lib"]
   optimizer = true
   optimizer_runs = 10_000
