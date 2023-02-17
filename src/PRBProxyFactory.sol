@@ -99,4 +99,52 @@ contract PRBProxyFactory is IPRBProxyFactory {
             proxy: proxy
         });
     }
+
+    /// @inheritdoc IPRBProxyFactory
+    function deployAndExecute(
+        address target,
+        bytes calldata data
+    ) external override returns (IPRBProxy proxy, bytes memory response) {
+        (proxy, response) = deployAndExecuteFor({ owner: msg.sender, target: target, data: data });
+    }
+
+    /// @inheritdoc IPRBProxyFactory
+    function deployAndExecuteFor(
+        address owner,
+        address target,
+        bytes calldata data
+    ) public override returns (IPRBProxy proxy, bytes memory response) {
+        bytes32 seed = nextSeeds[tx.origin];
+
+        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
+        bytes32 salt = keccak256(abi.encode(tx.origin, seed));
+
+        // Deploy the proxy with CREATE2.
+        proxy = new PRBProxy{ salt: salt }();
+
+        // Delegate call to the target contract.
+        response = proxy.execute(target, data);
+
+        // Transfer the ownership from this factory contract to the specified owner.
+        IPRBProxy(proxy).transferOwnership(owner);
+
+        // Mark the proxy as deployed.
+        proxies[proxy] = true;
+
+        // Increment the seed.
+        // We're using unchecked arithmetic here because this cannot realistically overflow, ever.
+        unchecked {
+            nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
+        }
+
+        // Log the proxy via en event.
+        emit DeployProxy({
+            origin: tx.origin,
+            deployer: msg.sender,
+            owner: owner,
+            seed: seed,
+            salt: salt,
+            proxy: proxy
+        });
+    }
 }

@@ -39,14 +39,19 @@ interface IPRBProxy {
                                        EVENTS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Emitted when the proxy executes a delegate call to a target contract.
     event Execute(address indexed target, bytes data, bytes response);
 
+    /// @notice Emitted when a plugin is installed.
     event InstallPlugin(IPRBProxyPlugin indexed plugin);
 
+    /// @notice Emitted when a plugin is run for a given method.
     event RunPlugin(IPRBProxyPlugin indexed plugin, bytes data, bytes response);
 
+    /// @notice Emitted when the owner sets the permission for an envoy.
     event SetPermission(address indexed envoy, address indexed target, bytes4 indexed selector, bool permission);
 
+    /// @notice Emitted when the owner changes the proxy's owner.
     event TransferOwnership(address indexed oldOwner, address indexed newOwner);
 
     event UninstallPlugin(IPRBProxyPlugin indexed plugin);
@@ -75,13 +80,13 @@ interface IPRBProxy {
                             PUBLIC NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Delegate calls to the target contract by forwarding the call data. Returns the data it gets back,
-    /// including when the contract call reverts with a reason or custom error.
+    /// @notice Delegate calls to the given target contract by forwarding the data. It then returns the data it
+    /// gets back, bubbling up any potential revert.
     ///
     /// @dev Emits an {Execute} event.
     ///
     /// Requirements:
-    /// - The caller must be either an owner or an envoy.
+    /// - The caller must be either an owner or an envoy with permission.
     /// - `target` must be a deployed contract.
     /// - The gas stipend must be greater than or equal to `minGasReserve`.
     /// - The owner must not be changed during the DELEGATECALL.
@@ -109,6 +114,7 @@ interface IPRBProxy {
 
     /// @notice Gives or takes a permission from an envoy to call the given target contract and function selector
     /// on behalf of the owner.
+    ///
     /// @dev It is not an error to reset a permission on the same (envoy,target,selector) tuple multiple types.
     ///
     /// Requirements:

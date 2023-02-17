@@ -11,6 +11,7 @@ interface IPRBProxyFactory {
                                        EVENTS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Emitted when a new proxy is deployed.
     event DeployProxy(
         address indexed origin,
         address indexed deployer,
@@ -40,13 +41,51 @@ interface IPRBProxyFactory {
                             PUBLIC NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Deploys a new proxy via CREATE2.
-    /// @dev Sets "msg.sender" as the owner of the proxy.
+    /// @notice Deploys a new proxy with CREATE2 by setting the caller as the owner.
+    /// @dev Emits a {DeployProxy} event.
     /// @return proxy The address of the newly deployed proxy contract.
     function deploy() external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy via CREATE2, for the given owner.
+    /// @notice Deploys a new proxy with CREATE2 for the given owner.
+    /// @dev Emits a {DeployProxy} event.
     /// @param owner The owner of the proxy.
     /// @return proxy The address of the newly deployed proxy contract.
     function deployFor(address owner) external returns (IPRBProxy proxy);
+
+    /// @notice Deploys a new proxy with CREATE2 by setting the caller as the owner, and delegate calls to the
+    /// given target contract by forwarding the data. It returns the data it gets back, bubbling up any potential
+    /// revert.
+    ///
+    /// @dev Emits a {DeployProxy} and an {Execute} event.
+    ///
+    /// Requirements:
+    /// - All from {PRBProxy-execute}.
+    ///
+    /// @param target The address of the target contract.
+    /// @param data Function selector plus ABI encoded data.
+    /// @return proxy The address of the newly deployed proxy contract.
+    /// @return response The response received from the target contract.
+    function deployAndExecute(
+        address target,
+        bytes calldata data
+    ) external returns (IPRBProxy proxy, bytes memory response);
+
+    /// @notice Deploys a new proxy with CREATE2 for the given owner, and delegate calls to the given target
+    /// contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
+    ///
+    /// @dev Emits a {DeployProxy} and an {Execute} event.
+    ///
+    /// Requirements:
+    /// - All from {PRBProxy-execute}.
+    ///
+    /// @param owner The owner of the proxy.
+    /// @param target The address of the target contract.
+    /// @param data Function selector plus ABI encoded data.
+    /// @return proxy The address of the newly deployed proxy contract.
+    /// @return response The response received from the target contract.
+    function deployAndExecuteFor(
+        address owner,
+        address target,
+        bytes calldata data
+    ) external returns (IPRBProxy proxy, bytes memory response);
 }

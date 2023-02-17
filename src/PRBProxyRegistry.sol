@@ -82,4 +82,32 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         // Set or override the current proxy for the owner.
         currentProxies[owner] = proxy;
     }
+
+    /// @inheritdoc IPRBProxyRegistry
+    function deployAndExecute(
+        address target,
+        bytes calldata data
+    ) external override returns (IPRBProxy proxy, bytes memory response) {
+        (proxy, response) = deployAndExecuteFor({ owner: msg.sender, target: target, data: data });
+    }
+
+    /// @inheritdoc IPRBProxyRegistry
+    function deployAndExecuteFor(
+        address owner,
+        address target,
+        bytes calldata data
+    ) public override returns (IPRBProxy proxy, bytes memory response) {
+        IPRBProxy currentProxy = currentProxies[owner];
+
+        // Do not deploy if the proxy already exists and the owner is the same.
+        if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {
+            revert PRBProxyRegistry_ProxyAlreadyExists(owner);
+        }
+
+        // Deploy the proxy via the factory, and delegate call to the target.
+        (proxy, response) = factory.deployAndExecuteFor(owner, target, data);
+
+        // Set or override the current proxy for the owner.
+        currentProxies[owner] = proxy;
+    }
 }
