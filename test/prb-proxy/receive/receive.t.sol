@@ -4,7 +4,7 @@ pragma solidity >=0.8.4 <=0.9.0;
 import { PRBProxy_Test } from "../PRBProxy.t.sol";
 
 contract Receive_Test is PRBProxy_Test {
-    /// @dev it should say that the call was not successful.
+    /// @dev it should say that the call has not been successful.
     function test_RevertWhen_CallDataNonEmpty() external {
         uint256 value = 1 ether;
         bytes memory data = bytes.concat("0xcafe");

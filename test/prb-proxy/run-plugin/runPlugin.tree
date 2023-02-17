@@ -5,9 +5,9 @@ runPlugin.t.sol
    ├── when the gas stipend calculation results into an underflow
    │  └── it should revert
    └── when the gas stipend calculation does not result into an underflow
-      ├── when the owner was changed during the delegate call
+      ├── when the owner has been changed during the delegate call
       │  └── it should revert
-      └── when the owner was not changed during the delegate call
+      └── when the owner has not been changed during the delegate call
          ├── when the delegate call reverts
          │  ├── when the exception is a panic
          │  │  ├── it should panic due to a failed assertion

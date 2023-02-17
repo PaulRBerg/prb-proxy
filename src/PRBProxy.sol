@@ -80,7 +80,7 @@ contract PRBProxy is IPRBProxy {
         // Log the plugin run.
         emit RunPlugin(plugin, data, response);
 
-        // Check if the call was successful or not.
+        // Check if the call has been successful or not.
         if (!success) {
             // If there is return data, the call reverted with a reason or a custom error.
             if (response.length > 0) {
@@ -146,7 +146,7 @@ contract PRBProxy is IPRBProxy {
         // Log the execution.
         emit Execute(target, data, response);
 
-        // Check if the call was successful or not.
+        // Check if the call has been successful or not.
         if (!success) {
             // If there is return data, the call reverted with a reason or a custom error.
             if (response.length > 0) {

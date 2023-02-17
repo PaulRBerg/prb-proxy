@@ -1,5 +1,5 @@
 receive.t.sol
 ├── when the call data is not empty
-│  └── it should say that the call was not successful
+│  └── it should say that the call has not been successful
 └── when the call data is empty
    └── it should receive the ETH
