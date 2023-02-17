@@ -4,7 +4,7 @@ pragma solidity >=0.8.4 <=0.9.0;
 contract TargetChangeOwner {
     address public owner;
 
-    function changeOwner() external {
-        owner = address(0);
+    function changeIt() external {
+        owner = address(1729);
     }
 }

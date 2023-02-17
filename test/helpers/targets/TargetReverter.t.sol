@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.4 <=0.9.0;
 
-contract TargetRevert {
-    error TargetError();
+contract TargetReverter {
+    error SomeError();
 
     function withNothing() external pure {
         revert();
     }
 
     function withCustomError() external pure {
-        revert TargetError();
+        revert SomeError();
     }
 
     function withRequire() external pure {

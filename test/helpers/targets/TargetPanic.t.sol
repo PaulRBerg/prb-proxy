@@ -2,8 +2,12 @@
 pragma solidity >=0.8.4 <=0.9.0;
 
 contract TargetPanic {
-    function assertion() external pure {
+    function failedAssertion() external pure {
         assert(false);
+    }
+
+    function arithmeticOverflow() external pure returns (uint256) {
+        return type(uint256).max + 1;
     }
 
     function divisionByZero() external pure returns (uint256) {
@@ -11,11 +15,8 @@ contract TargetPanic {
         return type(uint256).max / x;
     }
 
-    function arithmeticOverflow() external pure returns (uint256) {
-        return type(uint256).max + 1;
-    }
-
-    function arithmeticUnderflow() external pure returns (uint256) {
-        return type(uint256).min - 1;
+    function indexOOB() external pure returns (uint256) {
+        uint256[] memory x = new uint256[](1);
+        return x[5];
     }
 }

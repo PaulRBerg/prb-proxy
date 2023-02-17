@@ -1,0 +1,31 @@
+runPlugin.t.sol
+├── when the plugin is not installed
+│  └── it should revert
+└── when the plugin is installed
+   ├── when the gas stipend calculation results into an underflow
+   │  └── it should revert
+   └── when the gas stipend calculation does not result into an underflow
+      ├── when the owner was changed during the delegate call
+      │  └── it should revert
+      └── when the owner was not changed during the delegate call
+         ├── when the delegate call reverts
+         │  ├── when the exception is a panic
+         │  │  ├── it should panic due to a failed assertion
+         │  │  ├── it should panic due to an arithmetic overflow
+         │  │  ├── it should panic due to an index out of bounds
+         │  │  └── it should panic due to a division by zero
+         │  └── when the exception is an error
+         │     ├── it should revert with an empty revert statement
+         │     ├── it should revert with a custom error
+         │     ├── it should revert with a require
+         │     └── it should revert with a reason string
+         └── when the delegate call does not revert
+            ├── when Ether is sent
+            │  └── it should return the Ether amount
+            └── when no Ether is sent
+               ├── when the plugin self-destructs
+               │  └── it should return an empty response and send the ETH to the SELFDESTRUCT recipient
+               └── when the plugin does not self-destruct
+                  ├── it should run the plugin
+                  └── it should emit a {RunPlugin} event
+

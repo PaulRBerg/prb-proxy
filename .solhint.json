@@ -12,6 +12,7 @@
     "func-name-mixedcase": "off",
     "func-visibility": ["error", { "ignoreConstructors": true }],
     "max-line-length": ["error", 120],
+    "no-complex-fallback": "off",
     "no-empty-blocks": "off",
     "no-inline-assembly": "off",
     "not-rely-on-time": "off",
