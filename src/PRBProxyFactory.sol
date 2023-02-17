@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.4;
+pragma solidity >=0.8.18;
 
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyFactory } from "./interfaces/IPRBProxyFactory.sol";
@@ -39,10 +39,10 @@ contract PRBProxyFactory is IPRBProxyFactory {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev Internal mapping to track all deployed proxies.
-    mapping(IPRBProxy => bool) internal proxies;
+    mapping(IPRBProxy proxy => bool deployed) internal proxies;
 
     /// @dev Internal mapping to track the next seed to be used by an EOA.
-    mapping(address => bytes32) internal nextSeeds;
+    mapping(address eoa => bytes32 seed) internal nextSeeds;
 
     /*//////////////////////////////////////////////////////////////////////////
                               PUBLIC CONSTANT FUNCTIONS

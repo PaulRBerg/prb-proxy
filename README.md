@@ -126,7 +126,7 @@ protocol.
 
 ```solidity
 // SPDX-License-Identifier: Unlicense
-pragma solidity >=0.8.4 <=0.9.0;
+pragma solidity >=0.8.18 <=0.9.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -139,7 +139,6 @@ contract TargetERC20Transfer {
     token.transfer(recipient, amount);
   }
 }
-
 ```
 
 </details>

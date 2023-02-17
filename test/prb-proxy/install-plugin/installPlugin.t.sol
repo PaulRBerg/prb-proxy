@@ -65,7 +65,7 @@ contract InstallPlugin_Test is PRBProxy_Test {
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
             IPRBProxyPlugin actualPlugin = proxy.getPluginForMethod(pluginMethods[i]);
             IPRBProxyPlugin expectedPlugin = plugins.dummy;
-            assertEq(actualPlugin, expectedPlugin, "PLugin method not installed");
+            assertEq(actualPlugin, expectedPlugin, "Plugin method not installed");
         }
     }
 

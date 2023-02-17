@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.4;
+pragma solidity >=0.8.18;
 
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
@@ -34,10 +34,11 @@ contract PRBProxy is IPRBProxy {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev Maps plugin methods to plugin implementation.
-    mapping(bytes4 => IPRBProxyPlugin) internal plugins;
+    mapping(bytes4 method => IPRBProxyPlugin plugin) internal plugins;
 
     /// @dev Maps envoys to target contracts to function selectors to boolean flags.
-    mapping(address => mapping(address => mapping(bytes4 => bool))) internal permissions;
+    mapping(address envoy => mapping(address target => mapping(bytes4 selector => bool permission)))
+        internal permissions;
 
     /*//////////////////////////////////////////////////////////////////////////
                                      CONSTRUCTOR

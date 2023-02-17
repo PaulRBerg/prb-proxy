@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18 <0.9.0;
 
-import { console2 } from "forge-std/console2.sol";
 import { stdError } from "forge-std/StdError.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";

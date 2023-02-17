@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.4;
+pragma solidity >=0.8.18;
 
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyFactory } from "./interfaces/IPRBProxyFactory.sol";
@@ -39,7 +39,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Internal mapping of owners to current proxies.
-    mapping(address => IPRBProxy) internal currentProxies;
+    mapping(address owner => IPRBProxy currentProxy) internal currentProxies;
 
     /*//////////////////////////////////////////////////////////////////////////
                                      CONSTRUCTOR
