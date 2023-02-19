@@ -16,21 +16,21 @@ import { PRBProxy } from "src/PRBProxy.sol";
 import { PRBProxyFactory } from "src/PRBProxyFactory.sol";
 import { PRBProxyRegistry } from "src/PRBProxyRegistry.sol";
 
-import { PluginChangeOwner } from "./helpers/plugins/PluginChangeOwner.t.sol";
-import { PluginDummy } from "./helpers/plugins/PluginDummy.t.sol";
-import { PluginEcho } from "./helpers/plugins/PluginEcho.t.sol";
-import { PluginEmpty } from "./helpers/plugins/PluginEmpty.t.sol";
-import { PluginPanic } from "./helpers/plugins/PluginPanic.t.sol";
-import { PluginReverter } from "./helpers/plugins/PluginReverter.t.sol";
-import { PluginSelfDestructer } from "./helpers/plugins/PluginSelfDestructer.t.sol";
-import { TargetChangeOwner } from "./helpers/targets/TargetChangeOwner.t.sol";
-import { TargetDummy } from "./helpers/targets/TargetDummy.t.sol";
-import { TargetDummyWithFallback } from "./helpers/targets/TargetDummyWithFallback.t.sol";
-import { TargetEcho } from "./helpers/targets/TargetEcho.t.sol";
-import { TargetMinGasReserve } from "./helpers/targets/TargetMinGasReserve.t.sol";
-import { TargetPanic } from "./helpers/targets/TargetPanic.t.sol";
-import { TargetReverter } from "./helpers/targets/TargetReverter.t.sol";
-import { TargetSelfDestructer } from "./helpers/targets/TargetSelfDestructer.t.sol";
+import { PluginChangeOwner } from "./shared/plugins/PluginChangeOwner.t.sol";
+import { PluginDummy } from "./shared/plugins/PluginDummy.t.sol";
+import { PluginEcho } from "./shared/plugins/PluginEcho.t.sol";
+import { PluginEmpty } from "./shared/plugins/PluginEmpty.t.sol";
+import { PluginPanic } from "./shared/plugins/PluginPanic.t.sol";
+import { PluginReverter } from "./shared/plugins/PluginReverter.t.sol";
+import { PluginSelfDestructer } from "./shared/plugins/PluginSelfDestructer.t.sol";
+import { TargetChangeOwner } from "./shared/targets/TargetChangeOwner.t.sol";
+import { TargetDummy } from "./shared/targets/TargetDummy.t.sol";
+import { TargetDummyWithFallback } from "./shared/targets/TargetDummyWithFallback.t.sol";
+import { TargetEcho } from "./shared/targets/TargetEcho.t.sol";
+import { TargetMinGasReserve } from "./shared/targets/TargetMinGasReserve.t.sol";
+import { TargetPanic } from "./shared/targets/TargetPanic.t.sol";
+import { TargetReverter } from "./shared/targets/TargetReverter.t.sol";
+import { TargetSelfDestructer } from "./shared/targets/TargetSelfDestructer.t.sol";
 
 /// @title Base_Test
 /// @author Paul Razvan Berg

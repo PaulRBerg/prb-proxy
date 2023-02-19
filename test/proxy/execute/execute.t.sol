@@ -6,8 +6,8 @@ import { stdError } from "forge-std/StdError.sol";
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
 import { PRBProxy_Test } from "../PRBProxy.t.sol";
-import { TargetEcho } from "../../helpers/targets/TargetEcho.t.sol";
-import { TargetReverter } from "../../helpers/targets/TargetReverter.t.sol";
+import { TargetEcho } from "../../shared/targets/TargetEcho.t.sol";
+import { TargetReverter } from "../../shared/targets/TargetReverter.t.sol";
 
 contract Execute_Test is PRBProxy_Test {
     modifier callerUnauthorized() {

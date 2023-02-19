@@ -3,7 +3,7 @@ pragma solidity >=0.8.18 <=0.9.0;
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 import { PRBProxy_Test } from "../PRBProxy.t.sol";
-import { TargetDummy } from "../../helpers/targets/TargetDummy.t.sol";
+import { TargetDummy } from "../../shared/targets/TargetDummy.t.sol";
 
 contract SetPermission_Test is PRBProxy_Test {
     /// @dev it should revert.

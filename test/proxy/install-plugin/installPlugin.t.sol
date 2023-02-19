@@ -5,8 +5,8 @@ import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 
 import { PRBProxy_Test } from "../PRBProxy.t.sol";
-import { PluginDummy } from "../../helpers/plugins/PluginDummy.t.sol";
-import { PluginEmpty } from "../../helpers/plugins/PluginEmpty.t.sol";
+import { PluginDummy } from "../../shared/plugins/PluginDummy.t.sol";
+import { PluginEmpty } from "../../shared/plugins/PluginEmpty.t.sol";
 
 contract InstallPlugin_Test is PRBProxy_Test {
     /// @dev it should revert.

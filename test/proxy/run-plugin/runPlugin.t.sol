@@ -6,14 +6,14 @@ import { stdError } from "forge-std/StdError.sol";
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
 import { PRBProxy_Test } from "../PRBProxy.t.sol";
-import { PluginChangeOwner } from "../../helpers/plugins/PluginChangeOwner.t.sol";
-import { PluginEcho } from "../../helpers/plugins/PluginEcho.t.sol";
-import { PluginDummy } from "../../helpers/plugins/PluginDummy.t.sol";
-import { PluginPanic } from "../../helpers/plugins/PluginPanic.t.sol";
-import { PluginReverter } from "../../helpers/plugins/PluginReverter.t.sol";
-import { PluginSelfDestructer } from "../../helpers/plugins/PluginSelfDestructer.t.sol";
-import { TargetDummy } from "../../helpers/targets/TargetDummy.t.sol";
-import { TargetReverter } from "../../helpers/targets/TargetReverter.t.sol";
+import { PluginChangeOwner } from "../../shared/plugins/PluginChangeOwner.t.sol";
+import { PluginEcho } from "../../shared/plugins/PluginEcho.t.sol";
+import { PluginDummy } from "../../shared/plugins/PluginDummy.t.sol";
+import { PluginPanic } from "../../shared/plugins/PluginPanic.t.sol";
+import { PluginReverter } from "../../shared/plugins/PluginReverter.t.sol";
+import { PluginSelfDestructer } from "../../shared/plugins/PluginSelfDestructer.t.sol";
+import { TargetDummy } from "../../shared/targets/TargetDummy.t.sol";
+import { TargetReverter } from "../../shared/targets/TargetReverter.t.sol";
 
 contract RunPlugin_Test is PRBProxy_Test {
     /// @dev it should revert.
