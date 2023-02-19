@@ -50,6 +50,20 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
+                                     MODIFIERS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    modifier noCurrentProxy(address owner) {
+        IPRBProxy currentProxy = currentProxies[owner];
+
+        // Do not deploy if the proxy already exists and the owner is the same.
+        if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {
+            revert PRBProxyRegistry_ProxyAlreadyExists(owner);
+        }
+        _;
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
                               PUBLIC CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
@@ -68,14 +82,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner) public override returns (IPRBProxy proxy) {
-        IPRBProxy currentProxy = currentProxies[owner];
-
-        // Do not deploy if the proxy already exists and the owner is the same.
-        if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {
-            revert PRBProxyRegistry_ProxyAlreadyExists(owner);
-        }
-
+    function deployFor(address owner) public override noCurrentProxy(owner) returns (IPRBProxy proxy) {
         // Deploy the proxy via the factory.
         proxy = factory.deployFor(owner);
 
@@ -96,14 +103,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         address owner,
         address target,
         bytes calldata data
-    ) public override returns (IPRBProxy proxy, bytes memory response) {
-        IPRBProxy currentProxy = currentProxies[owner];
-
-        // Do not deploy if the proxy already exists and the owner is the same.
-        if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {
-            revert PRBProxyRegistry_ProxyAlreadyExists(owner);
-        }
-
+    ) public override noCurrentProxy(owner) returns (IPRBProxy proxy, bytes memory response) {
         // Deploy the proxy via the factory, and delegate call to the target.
         (proxy, response) = factory.deployAndExecuteFor(owner, target, data);
 

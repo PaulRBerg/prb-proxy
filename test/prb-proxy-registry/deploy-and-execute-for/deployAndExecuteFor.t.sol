@@ -29,6 +29,14 @@ contract DeployAndExecuteFor_Test is PRBProxyRegistry_Test {
         assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
     }
 
+    /// @dev it should update the current proxies mapping.
+    function test_DeployAndExecuteFor_UpdateCurrentProxies() external {
+        registry.deployAndExecuteFor(owner, target, data);
+        address actualProxyAddress = address(registry.getCurrentProxy(owner));
+        address expectedProxyAddress = computeProxyAddress(deployer, SEED_ZERO);
+        assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
+    }
+
     /// @dev it should delegate call to the target contract.
     function test_DeployAndExecuteFor_Execute() external {
         (, bytes memory actualResponse) = registry.deployAndExecute(target, data);

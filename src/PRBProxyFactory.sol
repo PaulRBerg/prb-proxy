@@ -69,35 +69,11 @@ contract PRBProxyFactory is IPRBProxyFactory {
 
     /// @inheritdoc IPRBProxyFactory
     function deployFor(address owner) public override returns (IPRBProxy proxy) {
-        bytes32 seed = nextSeeds[tx.origin];
-
-        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
-        bytes32 salt = keccak256(abi.encode(tx.origin, seed));
-
-        // Deploy the proxy with CREATE2.
-        proxy = new PRBProxy{ salt: salt }();
+        // Deploy the proxy.
+        proxy = _deploy(owner);
 
         // Transfer the ownership from this factory contract to the specified owner.
-        IPRBProxy(proxy).transferOwnership(owner);
-
-        // Mark the proxy as deployed.
-        proxies[proxy] = true;
-
-        // Increment the seed.
-        // We're using unchecked arithmetic here because this cannot realistically overflow, ever.
-        unchecked {
-            nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
-        }
-
-        // Log the proxy via en event.
-        emit DeployProxy({
-            origin: tx.origin,
-            deployer: msg.sender,
-            owner: owner,
-            seed: seed,
-            salt: salt,
-            proxy: proxy
-        });
+        proxy.transferOwnership(owner);
     }
 
     /// @inheritdoc IPRBProxyFactory
@@ -114,6 +90,22 @@ contract PRBProxyFactory is IPRBProxyFactory {
         address target,
         bytes calldata data
     ) public override returns (IPRBProxy proxy, bytes memory response) {
+        // Deploy the proxy.
+        proxy = _deploy(owner);
+
+        // Delegate call to the target contract.
+        response = proxy.execute(target, data);
+
+        // Transfer the ownership from this factory contract to the specified owner.
+        IPRBProxy(proxy).transferOwnership(owner);
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                          INTERNAL NON-CONSTANT FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev See the documentation for the public functions that call this internal function.
+    function _deploy(address owner) internal returns (IPRBProxy proxy) {
         bytes32 seed = nextSeeds[tx.origin];
 
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
@@ -121,12 +113,6 @@ contract PRBProxyFactory is IPRBProxyFactory {
 
         // Deploy the proxy with CREATE2.
         proxy = new PRBProxy{ salt: salt }();
-
-        // Delegate call to the target contract.
-        response = proxy.execute(target, data);
-
-        // Transfer the ownership from this factory contract to the specified owner.
-        IPRBProxy(proxy).transferOwnership(owner);
 
         // Mark the proxy as deployed.
         proxies[proxy] = true;
