@@ -7,9 +7,12 @@ import { PRBProxy } from "src/PRBProxy.sol";
 
 import { BaseScript } from "../shared/Base.s.sol";
 
-/// @notice Deploys the {PRBProxy} contract.
+/// @notice Deploys the {PRBProxy} contract at a deterministic address across all chains. Reverts if the contract
+/// has already been deployed.
 contract DeployProxy is Script, BaseScript {
+    /// @dev The presence of the salt instructs Forge to deploy the contract via a deterministic CREATE2 factory.
+    /// https://github.com/Arachnid/deterministic-deployment-proxy
     function run() public virtual broadcaster returns (PRBProxy proxy) {
-        proxy = new PRBProxy();
+        proxy = new PRBProxy{ salt: ZERO_SALT }();
     }
 }
