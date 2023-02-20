@@ -147,7 +147,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         // Make Alice both the caller and the origin for all subsequent calls.
         vm.startPrank({ msgSender: users.alice, txOrigin: users.alice });
 
-        /// Deploy the default proxy-related contracts.
+        // Deploy the default proxy-related contracts.
         deployDefaultContracts();
     }
 
@@ -223,7 +223,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
     }
 
-    /// @dev Reads the bytecode either normally or from precompiled source.
+    /// @dev Reads the proxy bytecode either normally or from precompiled source.
     function getProxyBytecode() internal returns (bytes memory bytecode) {
         if (isTestOptimizedProfile()) {
             bytecode = vm.getCode("optimized-out/PRBProxy.sol/PRBProxy.json");

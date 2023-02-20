@@ -8,6 +8,7 @@ import { TargetEcho } from "../targets/TargetEcho.t.sol";
 contract PluginEcho is IPRBProxyPlugin, TargetEcho {
     function methodList() external pure override returns (bytes4[] memory) {
         bytes4[] memory methods = new bytes4[](9);
+
         methods[0] = this.echoAddress.selector;
         methods[1] = this.echoBytesArray.selector;
         methods[2] = this.echoBytes32.selector;
@@ -17,6 +18,7 @@ contract PluginEcho is IPRBProxyPlugin, TargetEcho {
         methods[6] = this.echoUint8.selector;
         methods[7] = this.echoUint256.selector;
         methods[8] = this.echoUint256Array.selector;
+
         return methods;
     }
 }
