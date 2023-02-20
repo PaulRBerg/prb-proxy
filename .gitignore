@@ -5,6 +5,7 @@
 !.yarn/plugins
 !.yarn/sdks
 !.yarn/versions
+**/broadcast
 **/cache
 **/node_modules
 **/optimized-out
@@ -15,8 +16,6 @@
 *.log
 .DS_Store
 .pnp.*
-npm-debug.log*
-src/CHANGELOG.md
-src/README.md
+lcov.info
 yarn-debug.log*
 yarn-error.log*
