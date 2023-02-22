@@ -32,7 +32,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
-    IPRBProxyFactory public override factory;
+    IPRBProxyFactory public immutable override factory;
 
     /*//////////////////////////////////////////////////////////////////////////
                                   INTERNAL STORAGE
@@ -53,10 +53,9 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
                                      MODIFIERS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Check that no proxy is currently registered for the owner.
     modifier noCurrentProxy(address owner) {
         IPRBProxy currentProxy = currentProxies[owner];
-
-        // Do not deploy if the proxy already exists and the owner is the same.
         if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {
             revert PRBProxyRegistry_ProxyAlreadyExists(owner);
         }
