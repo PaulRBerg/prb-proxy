@@ -31,6 +31,7 @@
 
 # Compile only the production code with IR
 [profile.optimized]
+  ignored_error_codes = []
   out = "optimized-out"
   test = "src"
   via_ir = true
