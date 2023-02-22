@@ -2,7 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [2.0.0] - 2022-03-10
 
@@ -16,12 +17,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Change the extension for types from `.d.ts` to `.ts`.
 - Upgrade to latest versions of `ethers`.
 - Upgrade to Solidity v0.8.12.
-- Use modern Solidity `create2` instead of inline assembly (see [pull request #20](https://github.com/PaulRBerg/prb-proxy/pull/20)).
-- Use modern Solidity `target.code.length` instead of inline assembly (see pull request [pull request #19](https://github.com/PaulRBerg/prb-proxy/pull/19)).
+- Use modern Solidity `create2` instead of inline assembly (see
+  [pull request #20](https://github.com/PaulRBerg/prb-proxy/pull/20)).
+- Use modern Solidity `target.code.length` instead of inline assembly (see pull request
+  [pull request #19](https://github.com/PaulRBerg/prb-proxy/pull/19)).
 
 ### Fixed
 
-- Old owner address in `TransferOwnership` (see pull request [pull request #29](https://github.com/PaulRBerg/prb-proxy/pull/29).
+- Old owner address in `TransferOwnership` (see pull request
+  [pull request #29](https://github.com/PaulRBerg/prb-proxy/pull/29).
 
 ### Removed
 
