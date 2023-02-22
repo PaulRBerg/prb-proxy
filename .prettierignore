@@ -3,6 +3,7 @@
 **/broadcast
 **/cache
 **/lib
+**/optimized-out
 **/out
 **/node_modules
 
