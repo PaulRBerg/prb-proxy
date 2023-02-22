@@ -122,3 +122,8 @@ jobs:
         uses: "github/codeql-action/upload-sarif@v2"
         with:
           sarif_file: "${{ steps.slither-run.outputs.sarif }}"
+
+      - name: "Add Slither summary"
+        run: |
+          echo "## Slither result" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
