@@ -3,7 +3,7 @@ pragma solidity >=0.8.18 <0.9.0;
 
 import { Script } from "forge-std/Script.sol";
 
-import { PRBProxy } from "src/PRBProxy.sol";
+import { PRBProxy } from "../../src/PRBProxy.sol";
 
 import { BaseScript } from "../shared/Base.s.sol";
 
