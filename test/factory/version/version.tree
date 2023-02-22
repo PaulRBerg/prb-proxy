@@ -1,2 +1,2 @@
-version.tree
-└── it should return the version
+version.t.sol
+└── it should return the release version

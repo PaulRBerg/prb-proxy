@@ -25,6 +25,10 @@ interface IPRBProxyFactory {
                               PUBLIC CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice The release version of the {PRBProxy} protocol.
+    /// @dev This is stored in the factory rather than the proxy to save gas for end users.
+    function VERSION() external view returns (uint256);
+
     /// @notice Gets the next seed that will be used to deploy the proxy.
     /// @param eoa The externally owned account that will own the proxy.
     function getNextSeed(address eoa) external view returns (bytes32 result);
@@ -32,10 +36,6 @@ interface IPRBProxyFactory {
     /// @notice Checks if the given address is a deployed proxy.
     /// @param proxy The address of the proxy to make the query for.
     function isProxy(IPRBProxy proxy) external view returns (bool result);
-
-    /// @notice The release version of {PRBProxy}.
-    /// @dev This is stored in the factory rather than the proxy to save gas for end users.
-    function version() external view returns (uint256);
 
     /*//////////////////////////////////////////////////////////////////////////
                             PUBLIC NON-CONSTANT FUNCTIONS
