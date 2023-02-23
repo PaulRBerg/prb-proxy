@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18 <=0.9.0;
 
-import { PRBProxyFactory_Test } from "../PRBProxyFactory.t.sol";
+import { Factory_Test } from "../Factory.t.sol";
 
-contract Version_Test is PRBProxyFactory_Test {
+contract Version_Test is Factory_Test {
     /// @dev it should return the release version.
     function test_Version() external {
         uint256 actualVersion = factory.VERSION();

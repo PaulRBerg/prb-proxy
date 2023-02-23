@@ -1,21 +1,23 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18;
 
-import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 
 /// @notice Abstract contract with the storage layout of the {PRBProxy} contract.
-/// @dev This is kept separate so that developers can inherit it in their own target contracts.
-abstract contract PRBProxyStorage is IPRBProxy {
+/// @dev This contract is an exact copy of the storage layout of {PRBProxy}, and it exists so that it can
+/// be inherited in target contracts. However, to avoid overcomplicating the inheritance structure, this is
+/// not inherited by the {PRBProxy} contract itself.
+abstract contract PRBProxyStorage {
     /*//////////////////////////////////////////////////////////////////////////
                                    PUBLIC STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IPRBProxy
-    address public override owner;
+    /// @notice The address of the owner account or contract.
+    address public owner;
 
-    /// @inheritdoc IPRBProxy
-    uint256 public override minGasReserve;
+    /// @notice How much gas to reserve for running the remainder of the "execute" function after the DELEGATECALL.
+    /// @dev This prevents the proxy from becoming unusable if EVM opcode gas costs change in the future.
+    uint256 public minGasReserve;
 
     /*//////////////////////////////////////////////////////////////////////////
                                   INTERNAL STORAGE

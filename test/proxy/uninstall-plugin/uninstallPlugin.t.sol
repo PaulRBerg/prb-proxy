@@ -4,11 +4,11 @@ pragma solidity >=0.8.18 <0.9.0;
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 
-import { PRBProxy_Test } from "../PRBProxy.t.sol";
 import { PluginDummy } from "../../shared/plugins/PluginDummy.t.sol";
 import { PluginEmpty } from "../../shared/plugins/PluginEmpty.t.sol";
+import { Proxy_Test } from "../Proxy.t.sol";
 
-contract UninstallPlugin_Test is PRBProxy_Test {
+contract UninstallPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_CallerNotOwner() external {
         // Make Eve the caller in this test.

@@ -3,7 +3,6 @@ pragma solidity >=0.8.18;
 
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
-import { PRBProxyStorage } from "./PRBProxyStorage.sol";
 
 /*
 
@@ -19,7 +18,23 @@ import { PRBProxyStorage } from "./PRBProxyStorage.sol";
 /// @title PRBProxy
 /// @author Paul Razvan Berg
 /// @dev This contract implements the {IPRBProxy} interface.
-contract PRBProxy is IPRBProxy, PRBProxyStorage {
+contract PRBProxy is IPRBProxy {
+    /// @inheritdoc IPRBProxy
+    address public override owner;
+
+    /// @inheritdoc IPRBProxy
+    uint256 public override minGasReserve;
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                  INTERNAL STORAGE
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev Maps plugin methods to plugin implementation.
+    mapping(bytes4 method => IPRBProxyPlugin plugin) internal plugins;
+
+    /// @dev Maps envoys to target contracts to function selectors to boolean flags.
+    mapping(address envoy => mapping(address target => bool permission)) internal permissions;
+
     /*//////////////////////////////////////////////////////////////////////////
                                      CONSTRUCTOR
     //////////////////////////////////////////////////////////////////////////*/

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18 <=0.9.0;
 
-import { PRBProxy_Test } from "../PRBProxy.t.sol";
+import { Proxy_Test } from "../Proxy.t.sol";
 
-contract Receive_Test is PRBProxy_Test {
+contract Receive_Test is Proxy_Test {
     /// @dev it should say that the call has not been successful.
     function test_RevertWhen_CallDataNonEmpty() external {
         uint256 value = 1 ether;

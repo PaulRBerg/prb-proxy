@@ -3,16 +3,16 @@ pragma solidity >=0.8.18 <=0.9.0;
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
-import { PRBProxyFactory_Test } from "../PRBProxyFactory.t.sol";
+import { Factory_Test } from "../Factory.t.sol";
 
-contract DeployAndExecute_Test is PRBProxyFactory_Test {
+contract DeployAndExecute_Test is Factory_Test {
     bytes internal data;
     address internal deployer;
     uint256 internal input = 1729;
     address internal target;
 
     function setUp() public override {
-        PRBProxyFactory_Test.setUp();
+        Factory_Test.setUp();
         data = abi.encodeWithSelector(targets.echo.echoUint256.selector, input);
         deployer = users.alice;
         target = address(targets.echo);

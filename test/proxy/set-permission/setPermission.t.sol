@@ -2,10 +2,11 @@
 pragma solidity >=0.8.18 <=0.9.0;
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
-import { PRBProxy_Test } from "../PRBProxy.t.sol";
-import { TargetDummy } from "../../shared/targets/TargetDummy.t.sol";
 
-contract SetPermission_Test is PRBProxy_Test {
+import { TargetDummy } from "../../shared/targets/TargetDummy.t.sol";
+import { Proxy_Test } from "../Proxy.t.sol";
+
+contract SetPermission_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_CallerNotOwner() external {
         // Make Eve the caller in this test.

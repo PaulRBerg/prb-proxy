@@ -5,7 +5,6 @@ import { stdError } from "forge-std/StdError.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
-import { PRBProxy_Test } from "../PRBProxy.t.sol";
 import { PluginChangeOwner } from "../../shared/plugins/PluginChangeOwner.t.sol";
 import { PluginEcho } from "../../shared/plugins/PluginEcho.t.sol";
 import { PluginDummy } from "../../shared/plugins/PluginDummy.t.sol";
@@ -14,8 +13,9 @@ import { PluginReverter } from "../../shared/plugins/PluginReverter.t.sol";
 import { PluginSelfDestructer } from "../../shared/plugins/PluginSelfDestructer.t.sol";
 import { TargetDummy } from "../../shared/targets/TargetDummy.t.sol";
 import { TargetReverter } from "../../shared/targets/TargetReverter.t.sol";
+import { Proxy_Test } from "../Proxy.t.sol";
 
-contract RunPlugin_Test is PRBProxy_Test {
+contract RunPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_PluginNotInstalled() external {
         vm.expectRevert(

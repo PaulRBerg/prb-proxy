@@ -6,7 +6,7 @@ import { PRBProxy } from "src/PRBProxy.sol";
 
 import { Base_Test } from "../Base.t.sol";
 
-contract PRBProxy_Test is Base_Test {
+contract Proxy_Test is Base_Test {
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS
     //////////////////////////////////////////////////////////////////////////*/
