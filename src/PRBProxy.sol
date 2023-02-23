@@ -83,12 +83,8 @@ contract PRBProxy is IPRBProxy, PRBProxyStorage {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxy
-    function getPermission(
-        address envoy,
-        address target,
-        bytes4 selector
-    ) external view override returns (bool permission) {
-        permission = permissions[envoy][target][selector];
+    function getPermission(address envoy, address target) external view override returns (bool permission) {
+        permission = permissions[envoy][target];
     }
 
     /// @inheritdoc IPRBProxy
@@ -104,14 +100,8 @@ contract PRBProxy is IPRBProxy, PRBProxyStorage {
     function execute(address target, bytes calldata data) external payable override returns (bytes memory response) {
         // Check that the caller is either the owner or an envoy with permission.
         if (owner != msg.sender) {
-            bytes4 selector = bytes4(data[:4]);
-            if (!permissions[msg.sender][target][selector]) {
-                revert PRBProxy_ExecutionUnauthorized({
-                    owner: owner,
-                    caller: msg.sender,
-                    target: target,
-                    selector: selector
-                });
+            if (!permissions[msg.sender][target]) {
+                revert PRBProxy_ExecutionUnauthorized({ owner: owner, caller: msg.sender, target: target });
             }
         }
 
@@ -171,14 +161,9 @@ contract PRBProxy is IPRBProxy, PRBProxyStorage {
     }
 
     /// @inheritdoc IPRBProxy
-    function setPermission(
-        address envoy,
-        address target,
-        bytes4 selector,
-        bool permission
-    ) external override onlyOwner {
-        permissions[envoy][target][selector] = permission;
-        emit SetPermission(envoy, target, selector, permission);
+    function setPermission(address envoy, address target, bool permission) external override onlyOwner {
+        permissions[envoy][target] = permission;
+        emit SetPermission(envoy, target, permission);
     }
 
     /// @inheritdoc IPRBProxy
@@ -225,7 +210,7 @@ contract PRBProxy is IPRBProxy, PRBProxyStorage {
                           INTERNAL NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Performs a DELEGATECALL to the given address with the given data.
+    /// @notice Performs a DELEGATECALL to the provided address with the provided data.
     /// @dev Shared logic between the {execute} and the {fallback} functions.
     function _safeDelegateCall(address to, bytes memory data) internal returns (bool success, bytes memory response) {
         // Save the owner address in memory. This variable cannot be modified during the DELEGATECALL.
@@ -234,7 +219,7 @@ contract PRBProxy is IPRBProxy, PRBProxyStorage {
         // Reserve some gas to ensure that the function has enough to finish the execution.
         uint256 stipend = gasleft() - minGasReserve;
 
-        // Delegate call to the given contract.
+        // Delegate call to the provided contract.
         (success, response) = to.delegatecall{ gas: stipend }(data);
 
         // Check that the owner has not been changed.

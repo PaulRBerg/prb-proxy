@@ -23,25 +23,15 @@ contract Execute_Test is PRBProxy_Test {
                 IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
                 owner,
                 users.eve,
-                address(targets.dummy),
-                targets.dummy.foo.selector
+                address(targets.dummy)
             )
         );
         proxy.execute(address(targets.dummy), data);
     }
 
-    modifier callerHasPermission() {
-        _;
-    }
-
     /// @dev it should revert.
-    function test_RevertWhen_PermissionDifferentTarget() external callerUnauthorized callerHasPermission {
-        proxy.setPermission({
-            envoy: users.envoy,
-            target: address(targets.echo),
-            selector: targets.dummy.foo.selector,
-            permission: true
-        });
+    function test_RevertWhen_PermissionDifferentTarget() external callerUnauthorized {
+        proxy.setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
         changePrank(users.envoy);
 
         bytes memory data = bytes.concat(targets.dummy.foo.selector);
@@ -50,75 +40,10 @@ contract Execute_Test is PRBProxy_Test {
                 IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
                 owner,
                 users.envoy,
-                address(targets.dummy),
-                targets.dummy.foo.selector
+                address(targets.dummy)
             )
         );
         proxy.execute(address(targets.dummy), data);
-    }
-
-    modifier callerPermissionSameTarget() {
-        _;
-    }
-
-    /// @dev it should revert.
-    function test_RevertWhen_TargetDoesNotHaveFallbackFunction()
-        external
-        callerUnauthorized
-        callerHasPermission
-        callerPermissionSameTarget
-    {
-        proxy.setPermission({
-            envoy: users.envoy,
-            target: address(targets.dummy),
-            selector: targets.dummy.foo.selector,
-            permission: true
-        });
-        changePrank(users.envoy);
-
-        bytes memory data = bytes.concat(targets.dummy.bar.selector);
-        vm.expectRevert(
-            abi.encodeWithSelector(
-                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
-                owner,
-                users.envoy,
-                address(targets.dummy),
-                targets.dummy.bar.selector
-            )
-        );
-        proxy.execute(address(targets.dummy), data);
-    }
-
-    /// @dev it should revert.
-    function test_RevertWhen_TargetHasFallbackFunction()
-        external
-        callerUnauthorized
-        callerHasPermission
-        callerPermissionSameTarget
-    {
-        proxy.setPermission({
-            envoy: users.envoy,
-            target: address(targets.dummyWithFallback),
-            selector: targets.dummyWithFallback.foo.selector,
-            permission: true
-        });
-        changePrank(users.envoy);
-
-        // Fudge the calldata such that `data` is empty, but there is additional calldata after it. This will
-        // attempt to bypass the usual selector checks, and call the fallback function on the target.
-        bytes memory usualCalldata = abi.encodeWithSelector(
-            proxy.execute.selector,
-            address(targets.dummyWithFallback),
-            new bytes(0)
-        );
-        bytes memory data = abi.encodePacked(usualCalldata, targets.dummyWithFallback.foo.selector);
-        (bool success, bytes memory response) = address(proxy).call(data);
-
-        // Assert that the call failed.
-        assertFalse(success);
-
-        // Assert that the call reverted with no response.
-        assertEq(response.length, 0);
     }
 
     modifier callerAuthorized() {
@@ -357,15 +282,7 @@ contract Execute_Test is PRBProxy_Test {
     }
 
     modifier targetDoesNotSelfDestruct() {
-        proxy.setPermission(users.envoy, address(targets.echo), targets.echo.echoAddress.selector, true);
-        proxy.setPermission(users.envoy, address(targets.echo), targets.echo.echoBytesArray.selector, true);
-        proxy.setPermission(users.envoy, address(targets.echo), targets.echo.echoBytes32.selector, true);
-        proxy.setPermission(users.envoy, address(targets.echo), targets.echo.echoMsgValue.selector, true);
-        proxy.setPermission(users.envoy, address(targets.echo), targets.echo.echoString.selector, true);
-        proxy.setPermission(users.envoy, address(targets.echo), targets.echo.echoStruct.selector, true);
-        proxy.setPermission(users.envoy, address(targets.echo), targets.echo.echoUint8.selector, true);
-        proxy.setPermission(users.envoy, address(targets.echo), targets.echo.echoUint256.selector, true);
-        proxy.setPermission(users.envoy, address(targets.echo), targets.echo.echoUint256Array.selector, true);
+        proxy.setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
         _;
     }
 

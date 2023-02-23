@@ -15,7 +15,7 @@ interface IPRBProxy {
     error PRBProxy_ExecutionReverted();
 
     /// @notice Emitted when the caller is not the owner.
-    error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target, bytes4 selector);
+    error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target);
 
     /// @notice Emitted when the caller is not the owner.
     error PRBProxy_NotOwner(address owner, address caller);
@@ -45,42 +45,43 @@ interface IPRBProxy {
     /// @notice Emitted when a plugin is installed.
     event InstallPlugin(IPRBProxyPlugin indexed plugin);
 
-    /// @notice Emitted when a plugin is run for a given method.
+    /// @notice Emitted when a plugin is run for a provided method.
     event RunPlugin(IPRBProxyPlugin indexed plugin, bytes data, bytes response);
 
     /// @notice Emitted when the owner sets the permission for an envoy.
-    event SetPermission(address indexed envoy, address indexed target, bytes4 indexed selector, bool permission);
+    event SetPermission(address indexed envoy, address indexed target, bool permission);
 
     /// @notice Emitted when the owner changes the proxy's owner.
     event TransferOwnership(address indexed oldOwner, address indexed newOwner);
 
+    /// @notice Emitted when a plugin is uninstalled.
     event UninstallPlugin(IPRBProxyPlugin indexed plugin);
 
     /*//////////////////////////////////////////////////////////////////////////
                               PUBLIC CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Returns a boolean flag that indicates whether the envoy has permission to call the given target
-    /// contract and function selector.
-    function getPermission(address envoy, address target, bytes4 selector) external view returns (bool permission);
+    /// @notice Returns a boolean flag that indicates whether the envoy has permission to call the provided target
+    /// contract.
+    function getPermission(address envoy, address target) external view returns (bool permission);
 
-    /// @notice Returns the address of the plugin installed for the the given method.
+    /// @notice Returns the address of the plugin installed for the the provided method.
     /// @dev Returns the zero address if no plugin is installed.
     /// @param method The signature of the method to make the query for.
     function getPluginForMethod(bytes4 method) external view returns (IPRBProxyPlugin plugin);
-
-    /// @notice The address of the owner account or contract.
-    function owner() external view returns (address);
 
     /// @notice How much gas to reserve for running the remainder of the "execute" function after the DELEGATECALL.
     /// @dev This prevents the proxy from becoming unusable if EVM opcode gas costs change in the future.
     function minGasReserve() external view returns (uint256);
 
+    /// @notice The address of the owner account or contract.
+    function owner() external view returns (address);
+
     /*//////////////////////////////////////////////////////////////////////////
                             PUBLIC NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Delegate calls to the given target contract by forwarding the data. It then returns the data it
+    /// @notice Delegate calls to the provided target contract by forwarding the data. It then returns the data it
     /// gets back, bubbling up any potential revert.
     ///
     /// @dev Emits an {Execute} event.
@@ -112,23 +113,24 @@ interface IPRBProxy {
     /// @param plugin The address of the plugin to install.
     function installPlugin(IPRBProxyPlugin plugin) external;
 
-    /// @notice Gives or takes a permission from an envoy to call the given target contract and function selector
+    /// @notice Gives or takes a permission from an envoy to call the provided target contract and function selector
     /// on behalf of the owner.
     ///
-    /// @dev It is not an error to reset a permission on the same (envoy,target,selector) tuple multiple types.
+    /// @dev It is not an error to reset a permission on the same (envoy,target) tuple multiple types.
     ///
     /// Requirements:
     /// - The caller must be the owner.
     ///
     /// @param envoy The address of the envoy account.
     /// @param target The address of the target contract.
-    /// @param selector The 4 byte function selector on the target contract.
     /// @param permission The boolean permission to set.
-    function setPermission(address envoy, address target, bytes4 selector, bool permission) external;
+    function setPermission(address envoy, address target, bool permission) external;
 
     /// @notice Transfers the owner of the contract to a new account.
     ///
-    /// @dev Requirements:
+    /// @dev Emits a {TransferOwnership} event.
+    ///
+    /// Requirements:
     /// - The caller must be the owner.
     ///
     /// @param newOwner The address of the new owner account.

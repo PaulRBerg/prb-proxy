@@ -2,14 +2,8 @@ execute.t.sol
 ├── when the caller is not authorized
 │  ├── when the caller does not have permission for anything
 │  │  └── it should revert
-│  └── when the caller has permission for something
-│     ├── when the caller has permission for a different target
-│     │  └── it should revert
-│     └── when the caller has permission for the same target but a different function
-│        ├── when the target does not have a fallback function
-│        │  └── it should revert
-│        └── when the target has a fallback function
-│           └── it should revert
+│  └── when the caller has permission for another target
+│     └── it should revert
 └── when the caller is authorized
    ├── when the target is not a contract
    │  └── it should revert

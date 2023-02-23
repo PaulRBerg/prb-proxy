@@ -33,7 +33,7 @@ interface IPRBProxyFactory {
     /// @param eoa The externally owned account that will own the proxy.
     function getNextSeed(address eoa) external view returns (bytes32 result);
 
-    /// @notice Checks if the given address is a deployed proxy.
+    /// @notice Checks if the provided address is a deployed proxy.
     /// @param proxy The address of the proxy to make the query for.
     function isProxy(IPRBProxy proxy) external view returns (bool result);
 
@@ -46,14 +46,14 @@ interface IPRBProxyFactory {
     /// @return proxy The address of the newly deployed proxy contract.
     function deploy() external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy with CREATE2 for the given owner.
+    /// @notice Deploys a new proxy with CREATE2 for the provided owner.
     /// @dev Emits a {DeployProxy} event.
     /// @param owner The owner of the proxy.
     /// @return proxy The address of the newly deployed proxy contract.
     function deployFor(address owner) external returns (IPRBProxy proxy);
 
     /// @notice Deploys a new proxy with CREATE2 by setting the caller as the owner, and delegate calls to the
-    /// given target contract by forwarding the data. It returns the data it gets back, bubbling up any potential
+    /// provided target contract by forwarding the data. It returns the data it gets back, bubbling up any potential
     /// revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.
@@ -70,7 +70,7 @@ interface IPRBProxyFactory {
         bytes calldata data
     ) external returns (IPRBProxy proxy, bytes memory response);
 
-    /// @notice Deploys a new proxy with CREATE2 for the given owner, and delegate calls to the given target
+    /// @notice Deploys a new proxy with CREATE2 for the provided owner, and delegate calls to the provided target
     /// contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.

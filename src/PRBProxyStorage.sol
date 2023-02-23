@@ -25,6 +25,5 @@ abstract contract PRBProxyStorage is IPRBProxy {
     mapping(bytes4 method => IPRBProxyPlugin plugin) internal plugins;
 
     /// @dev Maps envoys to target contracts to function selectors to boolean flags.
-    mapping(address envoy => mapping(address target => mapping(bytes4 selector => bool permission)))
-        internal permissions;
+    mapping(address envoy => mapping(address target => bool permission)) internal permissions;
 }

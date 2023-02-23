@@ -13,7 +13,7 @@ interface IPRBProxyRegistry {
                                     CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Emitted when a proxy already exists for the given owner.
+    /// @notice Emitted when a proxy already exists for the provided owner.
     error PRBProxyRegistry_ProxyAlreadyExists(address owner);
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ interface IPRBProxyRegistry {
     /// @notice Address of the proxy factory contract.
     function factory() external view returns (IPRBProxyFactory proxyFactory);
 
-    /// @notice Gets the current proxy of the given owner.
+    /// @notice Gets the current proxy of the provided owner.
     /// @param owner The address of the owner of the current proxy.
     function getCurrentProxy(address owner) external view returns (IPRBProxy proxy);
 
@@ -41,7 +41,7 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy contract.
     function deploy() external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy via the proxy factory for the given owner.
+    /// @notice Deploys a new proxy via the proxy factory for the provided owner.
     ///
     /// @dev Emits a {DeployProxy} event.
     ///
@@ -53,7 +53,7 @@ interface IPRBProxyRegistry {
     function deployFor(address owner) external returns (IPRBProxy proxy);
 
     /// @notice Deploys a new proxy via the proxy factory by setting the caller as the owner, and delegate calls to the
-    /// given target contract by forwarding the data. It returns the data it gets back, bubbling up any potential
+    /// provided target contract by forwarding the data. It returns the data it gets back, bubbling up any potential
     /// revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.
@@ -70,8 +70,8 @@ interface IPRBProxyRegistry {
         bytes calldata data
     ) external returns (IPRBProxy proxy, bytes memory response);
 
-    /// @notice Deploys a new proxy via the proxy factor for the given owner, and delegate calls to the given target
-    /// contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
+    /// @notice Deploys a new proxy via the proxy factor for the provided owner, and delegate calls to the provided
+    /// target contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.
     ///
