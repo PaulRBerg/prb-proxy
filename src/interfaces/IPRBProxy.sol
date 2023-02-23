@@ -4,11 +4,10 @@ pragma solidity >=0.8.18;
 import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
 
 /// @title IPRBProxy
-/// @author Paul Razvan Berg
 /// @notice Proxy contract to compose transactions on owner's behalf.
 interface IPRBProxy {
     /*//////////////////////////////////////////////////////////////////////////
-                                    CUSTOM ERRORS
+                                       ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Emitted when execution reverted with no reason.
@@ -19,9 +18,6 @@ interface IPRBProxy {
 
     /// @notice Emitted when the caller is not the owner.
     error PRBProxy_NotOwner(address owner, address caller);
-
-    /// @notice Emitted when the plugin has no listed methods.
-    error PRBProxy_NoPluginMethods(IPRBProxyPlugin plugin);
 
     /// @notice Emitted when the owner is changed during the DELEGATECALL.
     error PRBProxy_OwnerChanged(address originalOwner, address newOwner);
@@ -42,9 +38,6 @@ interface IPRBProxy {
     /// @notice Emitted when the proxy executes a delegate call to a target contract.
     event Execute(address indexed target, bytes data, bytes response);
 
-    /// @notice Emitted when a plugin is installed.
-    event InstallPlugin(IPRBProxyPlugin indexed plugin);
-
     /// @notice Emitted when a plugin is run for a provided method.
     event RunPlugin(IPRBProxyPlugin indexed plugin, bytes data, bytes response);
 
@@ -53,9 +46,6 @@ interface IPRBProxy {
 
     /// @notice Emitted when the owner changes the proxy's owner.
     event TransferOwnership(address indexed oldOwner, address indexed newOwner);
-
-    /// @notice Emitted when a plugin is uninstalled.
-    event UninstallPlugin(IPRBProxyPlugin indexed plugin);
 
     /*//////////////////////////////////////////////////////////////////////////
                               PUBLIC CONSTANT FUNCTIONS
@@ -97,22 +87,6 @@ interface IPRBProxy {
     /// @return response The response received from the target contract.
     function execute(address target, bytes calldata data) external payable returns (bytes memory response);
 
-    /// @notice Installs a plugin contract, which provides a method list.
-    ///
-    /// @dev Emits an {InstallPlugin} event.
-    ///
-    /// Requirements:
-    /// - The caller must be the owner.
-    /// - The plugin must have at least one listed method.
-    /// - By design, the plugin cannot implement any method that is also implemented by the proxy itself.
-    ///
-    /// Notes:
-    /// - Does not revert if the plugin is already installed.
-    /// - Installing a plugin is a potentially dangerous operation, because anyone can call the plugin's methods.
-    ///
-    /// @param plugin The address of the plugin to install.
-    function installPlugin(IPRBProxyPlugin plugin) external;
-
     /// @notice Gives or takes a permission from an envoy to call the provided target contract and function selector
     /// on behalf of the owner.
     ///
@@ -135,18 +109,4 @@ interface IPRBProxy {
     ///
     /// @param newOwner The address of the new owner account.
     function transferOwnership(address newOwner) external;
-
-    /// @notice Uninstalls a plugin contract, which provides a method list.
-    ///
-    /// @dev Emits an {UninstallPlugin} event.
-    ///
-    /// Requirements:
-    /// - The caller must be the owner.
-    /// - The plugin must have at least one listed method.
-    ///
-    /// Notes:
-    /// - Does not revert if the plugin is not already installed.
-    ///
-    /// @param plugin The address of the plugin to uninstall.
-    function uninstallPlugin(IPRBProxyPlugin plugin) external;
 }

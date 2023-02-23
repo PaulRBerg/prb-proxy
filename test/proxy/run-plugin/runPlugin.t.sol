@@ -36,7 +36,7 @@ contract RunPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_GasStipendCalculationUnderflows() external pluginInstalled {
         // Install the dummy plugin.
-        proxy.installPlugin(plugins.dummy);
+        installPlugin(plugins.dummy);
 
         // Set the min gas reserve.
         uint256 gasLimit = 10_000;
@@ -63,7 +63,7 @@ contract RunPlugin_Test is Proxy_Test {
         pluginInstalled
         gasStipendCalculationDoesNotUnderflow
     {
-        proxy.installPlugin(plugins.changeOwner);
+        installPlugin(plugins.changeOwner);
         vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(1729)));
         (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.changeOwner.changeIt.selector));
         success;
@@ -85,7 +85,7 @@ contract RunPlugin_Test is Proxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        proxy.installPlugin(plugins.panic);
+        installPlugin(plugins.panic);
         vm.expectRevert(stdError.assertionError);
         (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.panic.failedAssertion.selector));
         success;
@@ -99,7 +99,7 @@ contract RunPlugin_Test is Proxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        proxy.installPlugin(plugins.panic);
+        installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
         (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.panic.arithmeticOverflow.selector));
         success;
@@ -113,7 +113,7 @@ contract RunPlugin_Test is Proxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        proxy.installPlugin(plugins.panic);
+        installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
         (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.panic.divisionByZero.selector));
         success;
@@ -127,7 +127,7 @@ contract RunPlugin_Test is Proxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        proxy.installPlugin(plugins.panic);
+        installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
         (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.panic.indexOOB.selector));
         success;
@@ -141,7 +141,7 @@ contract RunPlugin_Test is Proxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        proxy.installPlugin(plugins.reverter);
+        installPlugin(plugins.reverter);
         vm.expectRevert(IPRBProxy.PRBProxy_PluginReverted.selector);
         (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withNothing.selector));
         success;
@@ -155,7 +155,7 @@ contract RunPlugin_Test is Proxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        proxy.installPlugin(plugins.reverter);
+        installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
         (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withCustomError.selector));
         success;
@@ -169,7 +169,7 @@ contract RunPlugin_Test is Proxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        proxy.installPlugin(plugins.reverter);
+        installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
         (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withRequire.selector));
         success;
@@ -183,7 +183,7 @@ contract RunPlugin_Test is Proxy_Test {
         ownerNotChangedDuringDelegateCall
         delegateCallReverts
     {
-        proxy.installPlugin(plugins.reverter);
+        installPlugin(plugins.reverter);
         vm.expectRevert("You shall not pass");
         (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withReasonString.selector));
         success;
@@ -202,7 +202,7 @@ contract RunPlugin_Test is Proxy_Test {
         delegateCallReverts
         delegateCallDoesNotRevert
     {
-        proxy.installPlugin(plugins.echo);
+        installPlugin(plugins.echo);
         uint256 amount = 0.1 ether;
         (, bytes memory actualResponse) = address(proxy).call{ value: amount }(
             abi.encodeWithSelector(plugins.echo.echoMsgValue.selector)
@@ -233,7 +233,7 @@ contract RunPlugin_Test is Proxy_Test {
         vm.deal({ account: address(proxy), newBalance: proxyBalance });
 
         // Install the plugin and run it.
-        proxy.installPlugin(plugins.selfDestructer);
+        installPlugin(plugins.selfDestructer);
         (bool success, ) = address(proxy).call(
             abi.encodeWithSelector(plugins.selfDestructer.destroyMe.selector, users.bob)
         );
@@ -260,7 +260,7 @@ contract RunPlugin_Test is Proxy_Test {
         noEtherSent
         pluginDoesNotSelfDestruct
     {
-        proxy.installPlugin(plugins.dummy);
+        installPlugin(plugins.dummy);
         (, bytes memory actualResponse) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
         bytes memory expectedResponse = abi.encode(bytes("foo"));
         assertEq(actualResponse, expectedResponse, "dummy.foo response");
@@ -277,7 +277,7 @@ contract RunPlugin_Test is Proxy_Test {
         noEtherSent
         pluginDoesNotSelfDestruct
     {
-        proxy.installPlugin(plugins.dummy);
+        installPlugin(plugins.dummy);
         expectEmit();
         emit RunPlugin({
             plugin: plugins.dummy,

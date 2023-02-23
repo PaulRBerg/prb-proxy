@@ -11,7 +11,7 @@ contract Storage_Test is Base_Test {
 
     function setUp() public virtual override {
         Base_Test.setUp();
-        proxy.installPlugin(plugins.echo);
+        installPlugin(plugins.echo);
         proxy.setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
         storageMock = new StorageMock({
             owner_: proxy.owner(),

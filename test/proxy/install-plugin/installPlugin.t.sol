@@ -2,6 +2,7 @@
 pragma solidity >=0.8.18 <0.9.0;
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
+import { IPRBProxyHelpers } from "src/interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 
 import { PluginDummy } from "../../shared/plugins/PluginDummy.t.sol";
@@ -15,9 +16,11 @@ contract InstallPlugin_Test is Proxy_Test {
         address eve = users.eve;
         changePrank(eve);
 
-        // Should revert because Bob is not the owner.
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, owner, eve));
-        proxy.installPlugin(plugins.dummy);
+        // Expect a {ExecutionUnauthorized} error because Bob is not the owner.
+        vm.expectRevert(
+            abi.encodeWithSelector(IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, eve, targets.helpers)
+        );
+        installPlugin(plugins.dummy);
     }
 
     modifier callerOwner() {
@@ -26,8 +29,8 @@ contract InstallPlugin_Test is Proxy_Test {
 
     /// @dev it should revert.
     function test_RevertWhen_PluginHasNoMethods() external callerOwner {
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NoPluginMethods.selector, plugins.empty));
-        proxy.installPlugin(plugins.empty);
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxyHelpers.PRBProxy_NoPluginMethods.selector, plugins.empty));
+        installPlugin(plugins.empty);
     }
 
     modifier pluginHasMethods() {
@@ -37,10 +40,10 @@ contract InstallPlugin_Test is Proxy_Test {
     /// @dev it should re-install the plugin.
     function test_InstallPlugin_PluginInstalledBefore() external callerOwner pluginHasMethods pluginNotInstalled {
         // Install a dummy plugin that has some methods.
-        proxy.installPlugin(plugins.dummy);
+        installPlugin(plugins.dummy);
 
         // Install the same plugin again.
-        proxy.installPlugin(plugins.dummy);
+        installPlugin(plugins.dummy);
 
         // Assert that every plugin method has been installed.
         bytes4[] memory pluginMethods = plugins.dummy.methodList();
@@ -58,7 +61,7 @@ contract InstallPlugin_Test is Proxy_Test {
     /// @dev it should install the plugin.
     function test_InstallPlugin() external callerOwner pluginHasMethods pluginNotInstalled {
         // Install a dummy plugin that has some methods.
-        proxy.installPlugin(plugins.dummy);
+        installPlugin(plugins.dummy);
 
         // Assert that every plugin method has been installed.
         bytes4[] memory pluginMethods = plugins.dummy.methodList();
@@ -76,6 +79,6 @@ contract InstallPlugin_Test is Proxy_Test {
         emit InstallPlugin(plugins.dummy);
 
         // Install the dummy plugin.
-        proxy.installPlugin(plugins.dummy);
+        installPlugin(plugins.dummy);
     }
 }

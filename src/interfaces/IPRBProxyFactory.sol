@@ -4,7 +4,6 @@ pragma solidity >=0.8.18;
 import { IPRBProxy } from "./IPRBProxy.sol";
 
 /// @title IPRBProxyFactory
-/// @author Paul Razvan Berg
 /// @notice Deploys new proxies with CREATE2.
 interface IPRBProxyFactory {
     /*//////////////////////////////////////////////////////////////////////////

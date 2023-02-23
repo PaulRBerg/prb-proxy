@@ -14,6 +14,7 @@ import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 import { PRBProxy } from "src/PRBProxy.sol";
 import { PRBProxyFactory } from "src/PRBProxyFactory.sol";
+import { PRBProxyHelpers } from "src/PRBProxyHelpers.sol";
 import { PRBProxyRegistry } from "src/PRBProxyRegistry.sol";
 
 import { PluginChangeOwner } from "./shared/plugins/PluginChangeOwner.t.sol";
@@ -33,7 +34,6 @@ import { TargetReverter } from "./shared/targets/TargetReverter.t.sol";
 import { TargetSelfDestructer } from "./shared/targets/TargetSelfDestructer.t.sol";
 
 /// @title Base_Test
-/// @author Paul Razvan Berg
 /// @notice Common contract members needed across test contracts.
 abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     /*//////////////////////////////////////////////////////////////////////////
@@ -55,6 +55,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         TargetDummy dummy;
         TargetDummyWithFallback dummyWithFallback;
         TargetEcho echo;
+        PRBProxyHelpers helpers;
         TargetMinGasReserve minGasReserve;
         TargetPanic panic;
         TargetReverter reverter;
@@ -138,6 +139,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
             dummy: new TargetDummy(),
             dummyWithFallback: new TargetDummyWithFallback(),
             echo: new TargetEcho(),
+            helpers: new PRBProxyHelpers(),
             minGasReserve: new TargetMinGasReserve(),
             panic: new TargetPanic(),
             reverter: new TargetReverter(),
@@ -230,6 +232,18 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         } else {
             bytecode = type(PRBProxy).creationCode;
         }
+    }
+
+    /// @dev ABI encodes the arguments and calls the `installPlugin` function on the enshrined target.
+    function installPlugin(IPRBProxyPlugin plugin) internal {
+        bytes memory data = abi.encodeCall(targets.helpers.installPlugin, (plugin));
+        proxy.execute(address(targets.helpers), data);
+    }
+
+    /// @dev ABI encodes the arguments and calls the `uninstallPlugin` function on the enshrined target.
+    function uninstallPlugin(IPRBProxyPlugin plugin) internal {
+        bytes memory data = abi.encodeCall(targets.helpers.uninstallPlugin, (plugin));
+        proxy.execute(address(targets.helpers), data);
     }
 
     /// @dev Checks if the Foundry profile is "test-optimized".

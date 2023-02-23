@@ -5,12 +5,11 @@ import { IPRBProxy } from "./IPRBProxy.sol";
 import { IPRBProxyFactory } from "./IPRBProxyFactory.sol";
 
 /// @title IPRBProxyRegistry
-/// @author Paul Razvan Berg
 /// @notice Deploys new proxies via the factory and keeps a registry of owners to proxies. Owners can only
 /// have one proxy at a time.
 interface IPRBProxyRegistry {
     /*//////////////////////////////////////////////////////////////////////////
-                                    CUSTOM ERRORS
+                                       ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Emitted when a proxy already exists for the provided owner.

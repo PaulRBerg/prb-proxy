@@ -2,6 +2,7 @@
 pragma solidity >=0.8.18 <0.9.0;
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
+import { IPRBProxyHelpers } from "src/interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 
 import { PluginDummy } from "../../shared/plugins/PluginDummy.t.sol";
@@ -15,9 +16,11 @@ contract UninstallPlugin_Test is Proxy_Test {
         address eve = users.eve;
         changePrank(eve);
 
-        // Should revert because Bob is not the owner.
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, owner, eve));
-        proxy.uninstallPlugin(plugins.dummy);
+        // Expect a {ExecutionUnauthorized} error because Bob is not the owner.
+        vm.expectRevert(
+            abi.encodeWithSelector(IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, eve, targets.helpers)
+        );
+        uninstallPlugin(plugins.dummy);
     }
 
     modifier callerOwner() {
@@ -26,8 +29,8 @@ contract UninstallPlugin_Test is Proxy_Test {
 
     /// @dev it should revert.
     function test_RevertWhen_PluginHasNoMethods() external callerOwner {
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NoPluginMethods.selector, plugins.empty));
-        proxy.uninstallPlugin(plugins.empty);
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxyHelpers.PRBProxy_NoPluginMethods.selector, plugins.empty));
+        uninstallPlugin(plugins.empty);
     }
 
     modifier pluginHasMethods() {
@@ -37,7 +40,7 @@ contract UninstallPlugin_Test is Proxy_Test {
     /// @dev it should do nothing.
     function test_UninstallPlugin_PluginNotInstalledBefore() external callerOwner pluginHasMethods {
         // Uninstall the plugin.
-        proxy.uninstallPlugin(plugins.dummy);
+        uninstallPlugin(plugins.dummy);
 
         // Assert that every plugin method has been uninstalled.
         bytes4[] memory pluginMethods = plugins.dummy.methodList();
@@ -50,14 +53,14 @@ contract UninstallPlugin_Test is Proxy_Test {
 
     modifier pluginInstalled() {
         // Install the dummy plugin.
-        proxy.installPlugin(plugins.dummy);
+        installPlugin(plugins.dummy);
         _;
     }
 
     /// @dev it should uninstall the plugin.
     function test_UninstallPlugin() external callerOwner pluginHasMethods pluginInstalled {
         // Uninstall the plugin.
-        proxy.uninstallPlugin(plugins.dummy);
+        uninstallPlugin(plugins.dummy);
 
         // Assert that every plugin method has been uninstalled.
         bytes4[] memory pluginMethods = plugins.dummy.methodList();
@@ -75,6 +78,6 @@ contract UninstallPlugin_Test is Proxy_Test {
         emit UninstallPlugin(plugins.dummy);
 
         // Uninstall the dummy plugin.
-        proxy.uninstallPlugin(plugins.dummy);
+        uninstallPlugin(plugins.dummy);
     }
 }
