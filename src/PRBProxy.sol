@@ -114,10 +114,8 @@ contract PRBProxy is IPRBProxy {
     /// @inheritdoc IPRBProxy
     function execute(address target, bytes calldata data) external payable override returns (bytes memory response) {
         // Check that the caller is either the owner or an envoy with permission.
-        if (owner != msg.sender) {
-            if (!permissions[msg.sender][target]) {
-                revert PRBProxy_ExecutionUnauthorized({ owner: owner, caller: msg.sender, target: target });
-            }
+        if (owner != msg.sender && !permissions[msg.sender][target]) {
+            revert PRBProxy_ExecutionUnauthorized({ owner: owner, caller: msg.sender, target: target });
         }
 
         // Check that the target is a valid contract.
