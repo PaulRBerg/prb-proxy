@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.18;
+pragma solidity >=0.8.4;
 
 /// @title IPRBProxyPlugin
 /// @notice Interface for the plugins that can be installed on a proxy.
