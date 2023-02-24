@@ -45,17 +45,6 @@ contract PRBProxy is IPRBProxy {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                     MODIFIERS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    modifier onlyOwner() {
-        if (owner != msg.sender) {
-            revert PRBProxy_NotOwner({ owner: owner, caller: msg.sender });
-        }
-        _;
-    }
-
-    /*//////////////////////////////////////////////////////////////////////////
                                   FALLBACK FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
@@ -145,7 +134,12 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function transferOwnership(address newOwner) external override onlyOwner {
+    function transferOwnership(address newOwner) external override {
+        // Check that the caller is the owner.
+        if (owner != msg.sender) {
+            revert PRBProxy_NotOwner({ owner: owner, caller: msg.sender });
+        }
+
         // Load the current admin in memory.
         address oldOwner = owner;
 
