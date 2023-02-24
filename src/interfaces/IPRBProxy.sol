@@ -41,9 +41,6 @@ interface IPRBProxy {
     /// @notice Emitted when a plugin is run for a provided method.
     event RunPlugin(IPRBProxyPlugin indexed plugin, bytes data, bytes response);
 
-    /// @notice Emitted when the owner sets the permission for an envoy.
-    event SetPermission(address indexed envoy, address indexed target, bool permission);
-
     /// @notice Emitted when the owner changes the proxy's owner.
     event TransferOwnership(address indexed oldOwner, address indexed newOwner);
 
@@ -86,19 +83,6 @@ interface IPRBProxy {
     /// @param data Function selector plus ABI encoded data.
     /// @return response The response received from the target contract.
     function execute(address target, bytes calldata data) external payable returns (bytes memory response);
-
-    /// @notice Gives or takes a permission from an envoy to call the provided target contract and function selector
-    /// on behalf of the owner.
-    ///
-    /// @dev It is not an error to reset a permission on the same (envoy,target) tuple multiple types.
-    ///
-    /// Requirements:
-    /// - The caller must be the owner.
-    ///
-    /// @param envoy The address of the envoy account.
-    /// @param target The address of the target contract.
-    /// @param permission The boolean permission to set.
-    function setPermission(address envoy, address target, bool permission) external;
 
     /// @notice Transfers the owner of the contract to a new account.
     ///

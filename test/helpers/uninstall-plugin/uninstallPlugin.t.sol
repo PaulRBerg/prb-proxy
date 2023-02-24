@@ -7,9 +7,9 @@ import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 
 import { PluginDummy } from "../../shared/plugins/PluginDummy.t.sol";
 import { PluginEmpty } from "../../shared/plugins/PluginEmpty.t.sol";
-import { Proxy_Test } from "../Proxy.t.sol";
+import { Helpers_Test } from "../Helpers.t.sol";
 
-contract UninstallPlugin_Test is Proxy_Test {
+contract UninstallPlugin_Test is Helpers_Test {
     /// @dev it should revert.
     function test_RevertWhen_CallerNotOwner() external {
         // Make Eve the caller in this test.
@@ -17,9 +17,7 @@ contract UninstallPlugin_Test is Proxy_Test {
         changePrank(eve);
 
         // Expect a {ExecutionUnauthorized} error because Bob is not the owner.
-        vm.expectRevert(
-            abi.encodeWithSelector(IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, eve, targets.helpers)
-        );
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, eve, helpers));
         uninstallPlugin(plugins.dummy);
     }
 

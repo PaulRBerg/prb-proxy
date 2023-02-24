@@ -1,19 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.18 <0.9.0;
+pragma solidity >=0.8.18 <=0.9.0;
 
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
-import { PRBProxy } from "src/PRBProxy.sol";
 
 import { Base_Test } from "../Base.t.sol";
 
-contract Proxy_Test is Base_Test {
+contract Helpers_Test is Base_Test {
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS
     //////////////////////////////////////////////////////////////////////////*/
 
-    event RunPlugin(IPRBProxyPlugin indexed plugin, bytes data, bytes response);
+    event SetPermission(address indexed envoy, address indexed target, bool permission);
 
-    event TransferOwnership(address indexed oldOwner, address indexed newOwner);
+    event InstallPlugin(IPRBProxyPlugin indexed plugin);
+
+    event UninstallPlugin(IPRBProxyPlugin indexed plugin);
 
     /*//////////////////////////////////////////////////////////////////////////
                                   TESTING VARIABLES

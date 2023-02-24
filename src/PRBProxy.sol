@@ -145,12 +145,6 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @inheritdoc IPRBProxy
-    function setPermission(address envoy, address target, bool permission) external override onlyOwner {
-        permissions[envoy][target] = permission;
-        emit SetPermission(envoy, target, permission);
-    }
-
-    /// @inheritdoc IPRBProxy
     function transferOwnership(address newOwner) external override onlyOwner {
         // Load the current admin in memory.
         address oldOwner = owner;

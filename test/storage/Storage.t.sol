@@ -11,15 +11,15 @@ contract Storage_Test is Base_Test {
 
     function setUp() public virtual override {
         Base_Test.setUp();
-        installPlugin(plugins.echo);
-        proxy.setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
+        installPlugin(plugins.dummy);
+        setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
         storageMock = new StorageMock({
             owner_: proxy.owner(),
             minGasReserve_: proxy.minGasReserve(),
-            method_: targets.echo.echoUint256.selector,
-            plugin_: plugins.echo,
+            method_: targets.dummy.foo.selector,
+            plugin_: plugins.dummy,
             envoy_: users.envoy,
-            target_: address(targets.echo)
+            target_: address(targets.dummy)
         });
     }
 

@@ -10,6 +10,7 @@ import { StdUtils } from "forge-std/StdUtils.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 import { IPRBProxyFactory } from "src/interfaces/IPRBProxyFactory.sol";
+import { IPRBProxyHelpers } from "src/interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 import { PRBProxy } from "src/PRBProxy.sol";
@@ -55,7 +56,6 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         TargetDummy dummy;
         TargetDummyWithFallback dummyWithFallback;
         TargetEcho echo;
-        PRBProxyHelpers helpers;
         TargetMinGasReserve minGasReserve;
         TargetPanic panic;
         TargetReverter reverter;
@@ -106,6 +106,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
 
     ERC20 internal dai = new ERC20("Dai Stablecoin", "DAI", 18);
     IPRBProxyFactory internal factory;
+    IPRBProxyHelpers internal helpers;
     IPRBProxy internal proxy;
     IPRBProxyRegistry internal registry;
 
@@ -139,7 +140,6 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
             dummy: new TargetDummy(),
             dummyWithFallback: new TargetDummyWithFallback(),
             echo: new TargetEcho(),
-            helpers: new PRBProxyHelpers(),
             minGasReserve: new TargetMinGasReserve(),
             panic: new TargetPanic(),
             reverter: new TargetReverter(),
@@ -188,22 +188,25 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     function deployDefaultContracts() internal {
         // We deploy from precompiled source if the profile is "test-optimized".
         if (isTestOptimizedProfile()) {
-            proxy = IPRBProxy(deployCode("optimized-out/PRBProxy.sol/PRBProxy.json"));
             factory = IPRBProxyFactory(deployCode("optimized-out/PRBProxyFactory.sol/PRBProxyFactory.json"));
+            helpers = IPRBProxyHelpers(deployCode("optimized-out/PRBProxyHelpers.sol/PRBProxyHelpers.json"));
+            proxy = IPRBProxy(deployCode("optimized-out/PRBProxy.sol/PRBProxy.json"));
             registry = IPRBProxyRegistry(
                 deployCode("optimized-out/PRBProxyRegistry.sol/PRBProxyRegistry.json", abi.encode(address(factory)))
             );
         }
         // We deploy normally in all other cases.
         else {
-            proxy = new PRBProxy();
             factory = new PRBProxyFactory();
+            helpers = new PRBProxyHelpers();
+            proxy = new PRBProxy();
             registry = new PRBProxyRegistry(factory);
         }
 
         // Finally, label all the contracts just deployed.
-        vm.label({ account: address(proxy), newLabel: "Proxy" });
         vm.label({ account: address(factory), newLabel: "Factory" });
+        vm.label({ account: address(helpers), newLabel: "Helpers" });
+        vm.label({ account: address(proxy), newLabel: "Proxy" });
         vm.label({ account: address(registry), newLabel: "Registry" });
     }
 
@@ -234,16 +237,22 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         }
     }
 
-    /// @dev ABI encodes the arguments and calls the `installPlugin` function on the enshrined target.
+    /// @dev ABI encodes the arguments and calls the `installPlugin` helper on the enshrined target.
     function installPlugin(IPRBProxyPlugin plugin) internal {
-        bytes memory data = abi.encodeCall(targets.helpers.installPlugin, (plugin));
-        proxy.execute(address(targets.helpers), data);
+        bytes memory data = abi.encodeCall(helpers.installPlugin, (plugin));
+        proxy.execute(address(helpers), data);
     }
 
-    /// @dev ABI encodes the arguments and calls the `uninstallPlugin` function on the enshrined target.
+    /// @dev ABI encodes the arguments and calls the `setPermission` helper on the enshrined target.
+    function setPermission(address envoy, address target, bool permission) internal {
+        bytes memory data = abi.encodeCall(helpers.setPermission, (envoy, target, permission));
+        proxy.execute(address(helpers), data);
+    }
+
+    /// @dev ABI encodes the arguments and calls the `uninstallPlugin` helper on the enshrined target.
     function uninstallPlugin(IPRBProxyPlugin plugin) internal {
-        bytes memory data = abi.encodeCall(targets.helpers.uninstallPlugin, (plugin));
-        proxy.execute(address(targets.helpers), data);
+        bytes memory data = abi.encodeCall(helpers.uninstallPlugin, (plugin));
+        proxy.execute(address(helpers), data);
     }
 
     /// @dev Checks if the Foundry profile is "test-optimized".

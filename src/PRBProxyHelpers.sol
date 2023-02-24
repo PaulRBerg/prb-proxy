@@ -11,6 +11,17 @@ contract PRBProxyHelpers is
     IPRBProxyHelpers, // no dependencies
     PRBProxyStorage // no dependencies
 {
+    /*//////////////////////////////////////////////////////////////////////////
+                                   PUBLIC STORAGE
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @inheritdoc IPRBProxyHelpers
+    uint256 public constant override VERSION = 3;
+
+    /*//////////////////////////////////////////////////////////////////////////
+                               NON-CONSTANT FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
     /// @inheritdoc IPRBProxyHelpers
     function installPlugin(IPRBProxyPlugin plugin) external override {
         // Get the method list to install.
@@ -32,6 +43,12 @@ contract PRBProxyHelpers is
 
         // Log the plugin installation.
         emit InstallPlugin(plugin);
+    }
+
+    /// @inheritdoc IPRBProxyHelpers
+    function setPermission(address envoy, address target, bool permission) external override {
+        permissions[envoy][target] = permission;
+        emit SetPermission(envoy, target, permission);
     }
 
     /// @inheritdoc IPRBProxyHelpers
