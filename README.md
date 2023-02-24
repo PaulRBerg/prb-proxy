@@ -153,6 +153,15 @@ out the [Frontends][frontends] wiki. Additionally, Maker's developer guide, [Wor
 provides an in-depth exploration of the proxy concept that can also help you understand how to use PRBProxy. Just be
 sure to keep in mind the differences outlined throughout this document.
 
+## Gas Efficiency
+
+It costs 528,529 gas to deploy a PRBProxy, whereas a DSProxy costs 596,198 gas - a reduction in deployment costs of
+roughly 12%.
+
+The `execute` function in PRBProxy is slightly more expensive than in its counterpart, due to the safety checks in our
+implementation. However, the majority of gas costs when calling execute are instead related to the logic being executed
+in the target contract.
+
 ## Contributing
 
 Feel free to dive in! [Open](https://github.com/PaulRBerg/prb-proxy/issues/new) an issue,
