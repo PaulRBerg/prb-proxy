@@ -5,7 +5,12 @@
   bytecode_hash = "none"
   cbor_metadata = false
   fs_permissions = [{ access = "read", path = "./optimized-out" }]
-  gas_reports = ["PRBProxy", "PRBProxyFactory", "PRBProxyRegistry"]
+  gas_reports = [
+    "PRBProxy",
+    "PRBProxyHelpers",
+    "PRBProxyFactory",
+    "PRBProxyRegistry",
+  ]
   ignored_error_codes = [
     5159, # ignore selfdestruct warning
   ]
@@ -13,7 +18,7 @@
   optimizer = true
   optimizer_runs = 10_000
   out = "out"
-  solc = "0.8.18"
+  solc = "0.8.19"
   src = "src"
   test = "test"
 
