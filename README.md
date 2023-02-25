@@ -84,7 +84,12 @@ yarn add @prb/proxy
 
 ## Usage
 
-To deploy a proxy, you have two options: you can either call the `deploy` or the `deployFor` function in the `PRBProxyRegistry` contract.
+There are multiple ways to deploy a proxy:
+
+- Call the `deploy` function.
+- Call the `deployFor` function, which accepts the owner as an argument.
+- Call the `deployAndExecute` or the `deployAndExecuteFor` function, which would deploy the proxy and execute a delegate call to a target contract in
+  a single transaction.
 
 Once the proxy is deployed, you can start interacting with target contracts. PRBProxy ships with one "enshrined" target contract called
 `PRBProxyHelpers`. This contract provides several useful functions, including:
