@@ -88,7 +88,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
                                       CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
 
-    uint256 internal constant DEFAULT_MIN_GAS_RESERVE = 5_000;
+    uint256 internal constant DEFAULT_MIN_GAS_RESERVE = 5000;
     bytes32 internal constant SEED_ONE = bytes32(uint256(0x01));
     bytes32 internal constant SEED_TWO = bytes32(uint256(0x02));
     bytes32 internal constant SEED_ZERO = bytes32(uint256(0x00));

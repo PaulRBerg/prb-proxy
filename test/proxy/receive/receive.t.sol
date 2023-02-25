@@ -8,7 +8,7 @@ contract Receive_Test is Proxy_Test {
     function test_RevertWhen_CallDataNonEmpty() external {
         uint256 value = 1 ether;
         bytes memory data = bytes.concat("0xcafe");
-        (bool condition, ) = address(proxy).call{ value: value }(data);
+        (bool condition,) = address(proxy).call{ value: value }(data);
         assertFalse(condition);
     }
 
@@ -19,7 +19,7 @@ contract Receive_Test is Proxy_Test {
     /// @dev it should receive the ETH.
     function test_Receive() external callDataEmpty {
         uint256 value = 1 ether;
-        (bool condition, ) = address(proxy).call{ value: value }("");
+        (bool condition,) = address(proxy).call{ value: value }("");
         assertTrue(condition);
 
         uint256 actualBalance = address(proxy).balance;

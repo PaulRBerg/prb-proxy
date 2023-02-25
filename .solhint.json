@@ -1,6 +1,5 @@
 {
   "extends": "solhint:recommended",
-  "plugins": ["prettier"],
   "rules": {
     "avoid-low-level-calls": "off",
     "avoid-tx-origin": "off",
@@ -16,12 +15,6 @@
     "no-empty-blocks": "off",
     "no-inline-assembly": "off",
     "not-rely-on-time": "off",
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto"
-      }
-    ],
     "reason-string": "off"
   }
 }
