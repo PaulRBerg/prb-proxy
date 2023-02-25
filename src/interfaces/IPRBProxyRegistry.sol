@@ -67,7 +67,9 @@ interface IPRBProxyRegistry {
     function deployAndExecute(
         address target,
         bytes calldata data
-    ) external returns (IPRBProxy proxy, bytes memory response);
+    )
+        external
+        returns (IPRBProxy proxy, bytes memory response);
 
     /// @notice Deploys a new proxy via the proxy factor for the provided owner, and delegate calls to the provided
     /// target contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
@@ -87,5 +89,7 @@ interface IPRBProxyRegistry {
         address owner,
         address target,
         bytes calldata data
-    ) external returns (IPRBProxy proxy, bytes memory response);
+    )
+        external
+        returns (IPRBProxy proxy, bytes memory response);
 }

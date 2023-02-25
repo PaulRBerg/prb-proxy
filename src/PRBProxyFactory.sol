@@ -5,24 +5,6 @@ import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyFactory } from "./interfaces/IPRBProxyFactory.sol";
 import { PRBProxy } from "./PRBProxy.sol";
 
-/*
-
-██████╗ ██████╗ ██████╗ ██████╗ ██████╗  ██████╗ ██╗  ██╗██╗   ██╗
-██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝
-██████╔╝██████╔╝██████╔╝██████╔╝██████╔╝██║   ██║ ╚███╔╝  ╚████╔╝
-██╔═══╝ ██╔══██╗██╔══██╗██╔═══╝ ██╔══██╗██║   ██║ ██╔██╗   ╚██╔╝
-██║     ██║  ██║██████╔╝██║     ██║  ██║╚██████╔╝██╔╝ ██╗   ██║
-╚═╝     ╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝
-
-███████╗ █████╗  ██████╗████████╗ ██████╗ ██████╗ ██╗   ██╗
-██╔════╝██╔══██╗██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝
-█████╗  ███████║██║        ██║   ██║   ██║██████╔╝ ╚████╔╝
-██╔══╝  ██╔══██║██║        ██║   ██║   ██║██╔══██╗  ╚██╔╝
-██║     ██║  ██║╚██████╗   ██║   ╚██████╔╝██║  ██║   ██║
-╚═╝     ╚═╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝
-
- */
-
 /// @title PRBProxyFactory
 /// @dev This contract implements the {IPRBProxyFactory} interface.
 contract PRBProxyFactory is IPRBProxyFactory {
@@ -79,7 +61,11 @@ contract PRBProxyFactory is IPRBProxyFactory {
     function deployAndExecute(
         address target,
         bytes calldata data
-    ) external override returns (IPRBProxy proxy, bytes memory response) {
+    )
+        external
+        override
+        returns (IPRBProxy proxy, bytes memory response)
+    {
         (proxy, response) = deployAndExecuteFor({ owner: msg.sender, target: target, data: data });
     }
 
@@ -88,7 +74,11 @@ contract PRBProxyFactory is IPRBProxyFactory {
         address owner,
         address target,
         bytes calldata data
-    ) public override returns (IPRBProxy proxy, bytes memory response) {
+    )
+        public
+        override
+        returns (IPRBProxy proxy, bytes memory response)
+    {
         // Deploy the proxy.
         proxy = _deploy(owner);
 
@@ -123,6 +113,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
         }
 
         // Log the proxy via en event.
+        // forgefmt: disable-next-line
         emit DeployProxy({
             origin: tx.origin,
             deployer: msg.sender,

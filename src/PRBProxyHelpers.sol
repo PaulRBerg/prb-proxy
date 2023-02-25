@@ -34,7 +34,7 @@ contract PRBProxyHelpers is
         }
 
         // Enable every method in the list.
-        for (uint256 i = 0; i < length; ) {
+        for (uint256 i = 0; i < length;) {
             plugins[methodList[i]] = plugin;
             unchecked {
                 i += 1;
@@ -75,7 +75,7 @@ contract PRBProxyHelpers is
         }
 
         // Disable every method in the list.
-        for (uint256 i = 0; i < length; ) {
+        for (uint256 i = 0; i < length;) {
             delete plugins[methodList[i]];
             unchecked {
                 i += 1;

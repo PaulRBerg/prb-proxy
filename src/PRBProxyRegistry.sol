@@ -5,24 +5,6 @@ import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyFactory } from "./interfaces/IPRBProxyFactory.sol";
 import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
 
-/*
-
-██████╗ ██████╗ ██████╗ ██████╗ ██████╗  ██████╗ ██╗  ██╗██╗   ██╗
-██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝
-██████╔╝██████╔╝██████╔╝██████╔╝██████╔╝██║   ██║ ╚███╔╝  ╚████╔╝
-██╔═══╝ ██╔══██╗██╔══██╗██╔═══╝ ██╔══██╗██║   ██║ ██╔██╗   ╚██╔╝
-██║     ██║  ██║██████╔╝██║     ██║  ██║╚██████╔╝██╔╝ ██╗   ██║
-╚═╝     ╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝
-
-██████╗ ███████╗ ██████╗ ██╗███████╗████████╗██████╗ ██╗   ██╗
-██╔══██╗██╔════╝██╔════╝ ██║██╔════╝╚══██╔══╝██╔══██╗╚██╗ ██╔╝
-██████╔╝█████╗  ██║  ███╗██║███████╗   ██║   ██████╔╝ ╚████╔╝
-██╔══██╗██╔══╝  ██║   ██║██║╚════██║   ██║   ██╔══██╗  ╚██╔╝
-██║  ██║███████╗╚██████╔╝██║███████║   ██║   ██║  ██║   ██║
-╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝
-
- */
-
 /// @title PRBProxyRegistry
 /// @dev This contract implements the {IPRBProxyRegistry} interface.
 contract PRBProxyRegistry is IPRBProxyRegistry {
@@ -92,7 +74,11 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     function deployAndExecute(
         address target,
         bytes calldata data
-    ) external override returns (IPRBProxy proxy, bytes memory response) {
+    )
+        external
+        override
+        returns (IPRBProxy proxy, bytes memory response)
+    {
         (proxy, response) = deployAndExecuteFor({ owner: msg.sender, target: target, data: data });
     }
 
@@ -101,7 +87,12 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         address owner,
         address target,
         bytes calldata data
-    ) public override noCurrentProxy(owner) returns (IPRBProxy proxy, bytes memory response) {
+    )
+        public
+        override
+        noCurrentProxy(owner)
+        returns (IPRBProxy proxy, bytes memory response)
+    {
         // Deploy the proxy via the factory, and delegate call to the target.
         (proxy, response) = factory.deployAndExecuteFor(owner, target, data);
 

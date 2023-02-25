@@ -20,10 +20,7 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = bytes.concat(targets.dummy.foo.selector);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
-                owner,
-                users.eve,
-                address(targets.dummy)
+                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, users.eve, address(targets.dummy)
             )
         );
         proxy.execute(address(targets.dummy), data);
@@ -37,10 +34,7 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = bytes.concat(targets.dummy.foo.selector);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector,
-                owner,
-                users.envoy,
-                address(targets.dummy)
+                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, users.envoy, address(targets.dummy)
             )
         );
         proxy.execute(address(targets.dummy), data);
@@ -294,9 +288,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should return the address.
-    function testFuzz_Execute_ReturnAddress(
-        address input
-    )
+    function testFuzz_Execute_ReturnAddress(address input)
         external
         callerAuthorized
         targetContract
@@ -314,9 +306,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should return the bytes array.
-    function testFuzz_Execute_ReturnBytesArray(
-        bytes memory input
-    )
+    function testFuzz_Execute_ReturnBytesArray(bytes memory input)
         external
         callerAuthorized
         targetContract
@@ -334,9 +324,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should return the bytes32.
-    function testFuzz_Execute_ReturnBytes32(
-        bytes32 input
-    )
+    function testFuzz_Execute_ReturnBytes32(bytes32 input)
         external
         callerAuthorized
         targetContract
@@ -354,9 +342,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should return the string.
-    function testFuzz_Execute_ReturnString(
-        string memory input
-    )
+    function testFuzz_Execute_ReturnString(string memory input)
         external
         callerAuthorized
         targetContract
@@ -374,9 +360,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should return the struct.
-    function testFuzz_Execute_ReturnStruct(
-        TargetEcho.SomeStruct memory input
-    )
+    function testFuzz_Execute_ReturnStruct(TargetEcho.SomeStruct memory input)
         external
         callerAuthorized
         targetContract
@@ -394,9 +378,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should return the uint8.
-    function testFuzz_Execute_ReturnUint8(
-        uint8 input
-    )
+    function testFuzz_Execute_ReturnUint8(uint8 input)
         external
         callerAuthorized
         targetContract
@@ -414,9 +396,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should return the uint256.
-    function testFuzz_Execute_ReturnUint256(
-        uint256 input
-    )
+    function testFuzz_Execute_ReturnUint256(uint256 input)
         external
         callerAuthorized
         targetContract
@@ -434,9 +414,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should return the uint256 array.
-    function testFuzz_Execute_ReturnUint256Array(
-        uint256[] memory input
-    )
+    function testFuzz_Execute_ReturnUint256Array(uint256[] memory input)
         external
         callerAuthorized
         targetContract
@@ -454,9 +432,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should emit an {Execute} event.
-    function testFuzz_Execute_Event(
-        uint256 input
-    )
+    function testFuzz_Execute_Event(uint256 input)
         external
         callerAuthorized
         targetContract

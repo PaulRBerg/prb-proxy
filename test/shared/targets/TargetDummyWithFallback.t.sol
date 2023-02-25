@@ -8,7 +8,7 @@ contract TargetDummyWithFallback {
         emit LogFallback();
     }
 
-    receive() external payable {}
+    receive() external payable { }
 
     function foo() external pure returns (string memory) {
         return "foo";

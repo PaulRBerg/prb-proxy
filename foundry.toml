@@ -1,5 +1,3 @@
-# Full reference https://github.com/foundry-rs/foundry/tree/master/config
-
 [profile.default]
   auto_detect_solc = false
   bytecode_hash = "none"
@@ -51,6 +49,16 @@
 [etherscan]
   ethereum = { key = "${ETHERSCAN_API_KEY}" }
   goerli = { key = "${ETHERSCAN_API_KEY}" }
+
+[fmt]
+  bracket_spacing = true
+  int_types = "long"
+  line_length = 120
+  multiline_func_header = "all"
+  number_underscore = "thousands"
+  quote_style = "double"
+  tab_width = 4
+  wrap_comments = true
 
 [rpc_endpoints]
   ethereum = "https://mainnet.infura.io/v3/${INFURA_API_KEY}"

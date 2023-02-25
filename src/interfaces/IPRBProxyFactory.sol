@@ -67,7 +67,9 @@ interface IPRBProxyFactory {
     function deployAndExecute(
         address target,
         bytes calldata data
-    ) external returns (IPRBProxy proxy, bytes memory response);
+    )
+        external
+        returns (IPRBProxy proxy, bytes memory response);
 
     /// @notice Deploys a new proxy with CREATE2 for the provided owner, and delegate calls to the provided target
     /// contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
@@ -86,5 +88,7 @@ interface IPRBProxyFactory {
         address owner,
         address target,
         bytes calldata data
-    ) external returns (IPRBProxy proxy, bytes memory response);
+    )
+        external
+        returns (IPRBProxy proxy, bytes memory response);
 }

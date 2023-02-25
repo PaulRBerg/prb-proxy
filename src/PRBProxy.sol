@@ -4,17 +4,6 @@ pragma solidity >=0.8.18;
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 
-/*
-
-██████╗ ██████╗ ██████╗ ██████╗ ██████╗  ██████╗ ██╗  ██╗██╗   ██╗
-██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝
-██████╔╝██████╔╝██████╔╝██████╔╝██████╔╝██║   ██║ ╚███╔╝  ╚████╔╝
-██╔═══╝ ██╔══██╗██╔══██╗██╔═══╝ ██╔══██╗██║   ██║ ██╔██╗   ╚██╔╝
-██║     ██║  ██║██████╔╝██║     ██║  ██║╚██████╔╝██╔╝ ██╗   ██║
-╚═╝     ╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝
-
-*/
-
 /// @title PRBProxy
 /// @dev This contract implements the {IPRBProxy} interface.
 contract PRBProxy is IPRBProxy {
@@ -39,7 +28,7 @@ contract PRBProxy is IPRBProxy {
     //////////////////////////////////////////////////////////////////////////*/
 
     constructor() {
-        minGasReserve = 5_000;
+        minGasReserve = 5000;
         owner = msg.sender;
         emit TransferOwnership({ oldOwner: address(0), newOwner: msg.sender });
     }
@@ -79,7 +68,7 @@ contract PRBProxy is IPRBProxy {
     }
 
     /// @dev Called when the call data is empty.
-    receive() external payable {}
+    receive() external payable { }
 
     /*//////////////////////////////////////////////////////////////////////////
                               PUBLIC CONSTANT FUNCTIONS

@@ -20,7 +20,7 @@ contract DeployAndExecute_Test is Factory_Test {
 
     /// @dev it should deploy the proxy.
     function test_DeployAndExecute_Deploy() external {
-        (IPRBProxy proxy, ) = factory.deployAndExecute(target, data);
+        (IPRBProxy proxy,) = factory.deployAndExecute(target, data);
         bytes memory actualRuntimeBytecode = address(proxy).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
         assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");

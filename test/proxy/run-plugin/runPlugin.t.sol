@@ -20,12 +20,10 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_PluginNotInstalled() external {
         vm.expectRevert(
             abi.encodeWithSelector(
-                IPRBProxy.PRBProxy_PluginNotInstalledForMethod.selector,
-                address(owner),
-                plugins.dummy.foo.selector
+                IPRBProxy.PRBProxy_PluginNotInstalledForMethod.selector, address(owner), plugins.dummy.foo.selector
             )
         );
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
         success;
     }
 
@@ -49,7 +47,7 @@ contract RunPlugin_Test is Proxy_Test {
         vm.expectRevert(stdError.arithmeticError);
 
         // Run the plugin.
-        (bool success, ) = address(proxy).call{ gas: gasLimit }(abi.encodeWithSelector(plugins.dummy.foo.selector));
+        (bool success,) = address(proxy).call{ gas: gasLimit }(abi.encodeWithSelector(plugins.dummy.foo.selector));
         success;
     }
 
@@ -65,7 +63,7 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.changeOwner);
         vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(1729)));
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.changeOwner.changeIt.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.changeOwner.changeIt.selector));
         success;
     }
 
@@ -87,7 +85,7 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.assertionError);
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.panic.failedAssertion.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.failedAssertion.selector));
         success;
     }
 
@@ -101,7 +99,7 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.panic.arithmeticOverflow.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.arithmeticOverflow.selector));
         success;
     }
 
@@ -115,7 +113,7 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.panic.divisionByZero.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.divisionByZero.selector));
         success;
     }
 
@@ -129,7 +127,7 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.panic.indexOOB.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.indexOOB.selector));
         success;
     }
 
@@ -143,7 +141,7 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.reverter);
         vm.expectRevert(IPRBProxy.PRBProxy_PluginReverted.selector);
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withNothing.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withNothing.selector));
         success;
     }
 
@@ -157,7 +155,7 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withCustomError.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withCustomError.selector));
         success;
     }
 
@@ -171,7 +169,7 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withRequire.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withRequire.selector));
         success;
     }
 
@@ -185,7 +183,7 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.reverter);
         vm.expectRevert("You shall not pass");
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withReasonString.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withReasonString.selector));
         success;
     }
 
@@ -204,9 +202,8 @@ contract RunPlugin_Test is Proxy_Test {
     {
         installPlugin(plugins.echo);
         uint256 amount = 0.1 ether;
-        (, bytes memory actualResponse) = address(proxy).call{ value: amount }(
-            abi.encodeWithSelector(plugins.echo.echoMsgValue.selector)
-        );
+        (, bytes memory actualResponse) =
+            address(proxy).call{ value: amount }(abi.encodeWithSelector(plugins.echo.echoMsgValue.selector));
         bytes memory expectedResponse = abi.encode(amount);
         assertEq(actualResponse, expectedResponse, "echo.echoMsgValue response");
     }
@@ -234,9 +231,8 @@ contract RunPlugin_Test is Proxy_Test {
 
         // Install the plugin and run it.
         installPlugin(plugins.selfDestructer);
-        (bool success, ) = address(proxy).call(
-            abi.encodeWithSelector(plugins.selfDestructer.destroyMe.selector, users.bob)
-        );
+        (bool success,) =
+            address(proxy).call(abi.encodeWithSelector(plugins.selfDestructer.destroyMe.selector, users.bob));
         success;
 
         // Assert that Bob's balance has increased by the contract's balance.
@@ -284,7 +280,7 @@ contract RunPlugin_Test is Proxy_Test {
             data: abi.encodeWithSelector(TargetDummy.foo.selector),
             response: abi.encode(bytes("foo"))
         });
-        (bool success, ) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
         success;
     }
 }

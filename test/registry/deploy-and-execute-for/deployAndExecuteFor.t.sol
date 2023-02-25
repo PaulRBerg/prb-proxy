@@ -23,7 +23,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
 
     /// @dev it should deploy the proxy.
     function test_DeployAndExecuteFor_Deploy() external {
-        (IPRBProxy proxy, ) = registry.deployAndExecuteFor(owner, target, data);
+        (IPRBProxy proxy,) = registry.deployAndExecuteFor(owner, target, data);
         bytes memory actualRuntimeBytecode = address(proxy).code;
         bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
         assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
