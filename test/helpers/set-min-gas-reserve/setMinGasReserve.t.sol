@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <=0.9.0;
 
-import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
-
-import { TargetDummy } from "../../shared/targets/TargetDummy.t.sol";
 import { Helpers_Test } from "../Helpers.t.sol";
 
 contract SetMinGasReserve_Test is Helpers_Test {
