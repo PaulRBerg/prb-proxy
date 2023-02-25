@@ -10,6 +10,8 @@ contract Helpers_Test is Base_Test {
                                        EVENTS
     //////////////////////////////////////////////////////////////////////////*/
 
+    event SetMinGasReserve(uint256 oldMinGasReserve, uint256 newMinGasReserve);
+
     event SetPermission(address indexed envoy, address indexed target, bool permission);
 
     event InstallPlugin(IPRBProxyPlugin indexed plugin);

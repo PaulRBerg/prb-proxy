@@ -88,6 +88,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
                                       CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
 
+    uint256 internal constant DEFAULT_MIN_GAS_RESERVE = 5_000;
     bytes32 internal constant SEED_ONE = bytes32(uint256(0x01));
     bytes32 internal constant SEED_TWO = bytes32(uint256(0x02));
     bytes32 internal constant SEED_ZERO = bytes32(uint256(0x00));
@@ -240,6 +241,12 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     /// @dev ABI encodes the arguments and calls the `installPlugin` helper on the enshrined target.
     function installPlugin(IPRBProxyPlugin plugin) internal {
         bytes memory data = abi.encodeCall(helpers.installPlugin, (plugin));
+        proxy.execute(address(helpers), data);
+    }
+
+    /// @dev ABI encodes the arguments and calls the `setMinGasReserve` helper on the enshrined target.
+    function setMinGasReserve(uint256 newMinGasReserve) internal {
+        bytes memory data = abi.encodeCall(helpers.setMinGasReserve, (newMinGasReserve));
         proxy.execute(address(helpers), data);
     }
 
