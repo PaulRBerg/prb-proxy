@@ -42,7 +42,7 @@
     "build:optimized": "FOUNDRY_PROFILE=optimized forge build",
     "clean": "rimraf broadcast cache out",
     "lint": "yarn lint:sol && yarn prettier:check",
-    "lint:sol": "solhint \"{script,src,test}/**/*.sol\"",
+    "lint:sol": "forge fmt --check && yarn solhint \"{script,src,test}/**/*.sol\"",
     "gas:report": "forge test --gas-report --no-match-test \"test_RevertWhen_\"",
     "gas:snapshot": "forge snapshot --no-match-test \"test_RevertWhen_\"",
     "gas:snapshot:optimized": "yarn build:optimized && FOUNDRY_PROFILE=test-optimized forge snapshot --no-match-test \"test_RevertWhen_\"",
