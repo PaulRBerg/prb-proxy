@@ -7,6 +7,9 @@ trailingComma: "all"
 useTabs: false
 
 overrides:
+  - files: "*.md"
+    options:
+      printWidth: 150
   - files: "*.sol"
     options:
       compiler: "0.8.19"

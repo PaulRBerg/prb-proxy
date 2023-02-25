@@ -9,35 +9,32 @@
 [license]: https://opensource.org/licenses/MIT
 [license-badge]: https://img.shields.io/badge/License-MIT-blue.svg
 
-PRBProxy is a **proxy contract that allows for the composition of Ethereum transactions on behalf of the contract
-owner**, acting as a smart wallet that enables multiple contract calls within a single transaction. Externally owned
-accounts (EOAs) do not have this functionality; they are limited to interacting with only one contract per transaction.
+PRBProxy is a **proxy contract that allows for the composition of Ethereum transactions on behalf of the contract owner**, acting as a smart wallet
+that enables multiple contract calls within a single transaction. Externally owned accounts (EOAs) do not have this functionality; they are limited to
+interacting with only one contract per transaction.
 
 Some key features of PRBProxy include:
 
 - Forwarding calls with [`DELEGATECALL`][se-3667]
 - Use of [CREATE2][eip-1014] to deploy the proxies at deterministic addresses.
 - A unique registry system ensures that each user has a distinct proxy.
-- An access control system that permits third-party accounts (called "envoys") to call target contracts on behalf of the
-  owner.
+- An access control system that permits third-party accounts (called "envoys") to call target contracts on behalf of the owner.
 - A plugin system that enables the proxy to respond to callbacks
 - Reversion with custom errors rather than reason strings for improved error handling.
 - Comprehensive documentation via NatSpec comments.
 - Development and testing using Foundry.
 
-Overall, PRBProxy is a powerful tool for transaction composition, providing numerous features and benefits not available
-through EOAs.
+Overall, PRBProxy is a powerful tool for transaction composition, providing numerous features and benefits not available through EOAs.
 
 ## Background
 
-The concept of a proxy contract has gained popularity thanks to DappHub, the team responsible for creating the
-decentralized stablecoin [DAI](https://makerdao.com). DappHub created [DSProxy](https://github.com/dapphub/ds-proxy), a
-widely used tool that allows for the execution of multiple contract calls in a single transaction. Major DeFi players
-like Maker, Balancer, and DeFi Saver all rely on DSProxy.
+The concept of a proxy contract has gained popularity thanks to DappHub, the team responsible for creating the decentralized stablecoin
+[DAI](https://makerdao.com). DappHub created [DSProxy](https://github.com/dapphub/ds-proxy), a widely used tool that allows for the execution of
+multiple contract calls in a single transaction. Major DeFi players like Maker, Balancer, and DeFi Saver all rely on DSProxy.
 
-However, as the Ethereum ecosystem has evolved since DSProxy's launch in 2017, the tool has become outdated. With
-significant improvements to the Solidity compiler and new EVM OPCODES, as well as the introduction of more user-friendly
-development environments like [Foundry](https://book.getfoundry.sh/), it was time for an update.
+However, as the Ethereum ecosystem has evolved since DSProxy's launch in 2017, the tool has become outdated. With significant improvements to the
+Solidity compiler and new EVM OPCODES, as well as the introduction of more user-friendly development environments like
+[Foundry](https://book.getfoundry.sh/), it was time for an update.
 
 Enter PRBProxy, the modern successor to DSProxy; a "DSProxy 2.0", if you will. It improves upon DSProxy in several ways:
 
@@ -45,14 +42,12 @@ Enter PRBProxy, the modern successor to DSProxy; a "DSProxy 2.0", if you will. I
 2. `CREATE2` seeds are generated in a way that eliminates the risk of front-running.
 3. The proxy owner cannot be changed during the `DELEGATECALL` operation.
 4. PRBProxy uses high-level Solidity code that is easier to comprehend and less prone to errors.
-5. A minimum gas reserve is stored in the proxy to prevent it from becoming unusable if future EVM opcode gas costs
-   change.
+5. A minimum gas reserve is stored in the proxy to prevent it from becoming unusable if future EVM opcode gas costs change.
 6. PRBProxy offers more features than DSProxy.
 
-Using CREATE2 eliminates the risk of a [chain reorg](https://en.bitcoin.it/wiki/Chain_Reorganization) overriding the
-proxy contract owner, making PRBProxy a more secure alternative to DSProxy. With DSProxy, users must wait for several
-blocks to be mined before assuming the contract is secure. However, PRBProxy eliminates this risk entirely, allowing
-users to even safely send funds to the proxy before it is deployed.
+Using CREATE2 eliminates the risk of a [chain reorg](https://en.bitcoin.it/wiki/Chain_Reorganization) overriding the proxy contract owner, making
+PRBProxy a more secure alternative to DSProxy. With DSProxy, users must wait for several blocks to be mined before assuming the contract is secure.
+However, PRBProxy eliminates this risk entirely, allowing users to even safely send funds to the proxy before it is deployed.
 
 ## Install
 
@@ -89,19 +84,18 @@ yarn add @prb/proxy
 
 ## Usage
 
-To deploy a proxy, you have two options: you can either call the `deploy` or the `deployFor` function in the
-`PRBProxyRegistry` contract.
+To deploy a proxy, you have two options: you can either call the `deploy` or the `deployFor` function in the `PRBProxyRegistry` contract.
 
-Once the proxy is deployed, you can start interacting with target contracts. PRBProxy ships with one "enshrined" target
-contract called `PRBProxyHelpers`. This contract provides several useful functions, including:
+Once the proxy is deployed, you can start interacting with target contracts. PRBProxy ships with one "enshrined" target contract called
+`PRBProxyHelpers`. This contract provides several useful functions, including:
 
 - `installPlugin`
 - `setMinGasReserve`
 - `setPermission`
 - `uninstallPlugin`
 
-You call the functions above by ABI-encoding their calldata and calling `execute` on the proxy. The logic in
-`PRBProxyHelpers` is kept separate from the proxy itself to reduce deployment costs.
+You call the functions above by ABI-encoding their calldata and calling `execute` on the proxy. The logic in `PRBProxyHelpers` is kept separate from
+the proxy itself to reduce deployment costs.
 
 ### Addresses
 
@@ -114,11 +108,11 @@ The registry and the enshrined target are deployed at the same address on the fo
 
 ### Targets
 
-To make use of PRBProxy, you'll need a "target" contract. Targets consist of stateless scripts and are the key to
-leveraging PRBProxy for transaction composition.
+To make use of PRBProxy, you'll need a "target" contract. Targets consist of stateless scripts and are the key to leveraging PRBProxy for transaction
+composition.
 
-As an example, here's a target contract that wraps ETH into WETH (the ERC-20 version of ETH) and deposits the resulting
-WETH into a DeFi protocol called Acme:
+As an example, here's a target contract that wraps ETH into WETH (the ERC-20 version of ETH) and deposits the resulting WETH into a DeFi protocol
+called Acme:
 
 ```solidity
 // SPDX-License-Identifier: UNLICENSED
@@ -155,19 +149,16 @@ Integrating PRBProxy into a frontend app is a straightforward process:
 3. Interact with your desired target contract using the `execute` function.
 4. Going forward, treat the proxy address as the user of your system.
 
-However, this is just scratching the surface. For more examples of how to use PRBProxy in a frontend environment, check
-out the [Frontends][frontends] wiki. Additionally, Maker's developer guide, [Working with DSProxy][dsproxy-guide],
-provides an in-depth exploration of the proxy concept that can also help you understand how to use PRBProxy. Just be
-sure to keep in mind the differences outlined throughout this document.
+However, this is just scratching the surface. For more examples of how to use PRBProxy in a frontend environment, check out the [Frontends][frontends]
+wiki. Additionally, Maker's developer guide, [Working with DSProxy][dsproxy-guide], provides an in-depth exploration of the proxy concept that can
+also help you understand how to use PRBProxy. Just be sure to keep in mind the differences outlined throughout this document.
 
 ## Gas Efficiency
 
-It costs 528,529 gas to deploy a PRBProxy, whereas a DSProxy costs 596,198 gas - a reduction in deployment costs of
-roughly 12%.
+It costs 528,529 gas to deploy a PRBProxy, whereas a DSProxy costs 596,198 gas - a reduction in deployment costs of roughly 12%.
 
-The `execute` function in PRBProxy is slightly more expensive than in its counterpart, due to the safety checks in our
-implementation. However, the majority of gas costs when calling execute are instead related to the logic being executed
-in the target contract.
+The `execute` function in PRBProxy is slightly more expensive than in its counterpart, due to the safety checks in our implementation. However, the
+majority of gas costs when calling execute are instead related to the logic being executed in the target contract.
 
 ## Contributing
 
@@ -210,15 +201,13 @@ You will need the following VSCode extensions:
 
 ## Security
 
-While I have strict standards for code quality and test coverage, it's important to note that this project may not be
-entirely risk-free. Although I have taken measures to ensure the security of PRBProxy, it has not yet been audited by a
-third-party security researcher.
+While I have strict standards for code quality and test coverage, it's important to note that this project may not be entirely risk-free. Although I
+have taken measures to ensure the security of PRBProxy, it has not yet been audited by a third-party security researcher.
 
 ### Caveat Emptor
 
-Please be aware that this software is experimental and is provided on an "as is" and "as available" basis. I do not
-offer any warranties, and I cannot be held responsible for any direct or indirect loss resulting from the continued use
-of this codebase.
+Please be aware that this software is experimental and is provided on an "as is" and "as available" basis. I do not offer any warranties, and I cannot
+be held responsible for any direct or indirect loss resulting from the continued use of this codebase.
 
 ### Contact
 
@@ -227,8 +216,7 @@ If you discover any bugs or security issues, please report them via [Telegram](h
 ## Acknowledgments
 
 - [ds-proxy](https://github.com/dapphub/ds-proxy) - DappHub's proxy, which powers the Maker protocol.
-- [wand](https://github.com/nmushegian/wand) - attempt to build DSProxy 2.0, started by one of the original authors of
-  DSProxy.
+- [wand](https://github.com/nmushegian/wand) - attempt to build DSProxy 2.0, started by one of the original authors of DSProxy.
 - [dsa-contracts](https://github.com/Instadapp/dsa-contracts) - InstaDapp's DeFi Smart Accounts.
 
 ## License
