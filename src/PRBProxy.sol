@@ -129,14 +129,11 @@ contract PRBProxy is IPRBProxy {
             revert PRBProxy_NotOwner({ owner: owner, caller: msg.sender });
         }
 
-        // Load the current admin in memory.
-        address oldOwner = owner;
-
         // Effects: update the owner.
         owner = newOwner;
 
         // Log the transfer of the owner.
-        emit TransferOwnership(oldOwner, newOwner);
+        emit TransferOwnership({ oldOwner: msg.sender, newOwner: newOwner });
     }
 
     /*//////////////////////////////////////////////////////////////////////////
