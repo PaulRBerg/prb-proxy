@@ -23,7 +23,10 @@ interface IPRBProxyHelpers {
     /// @notice Emitted when a plugin is installed.
     event InstallPlugin(IPRBProxyPlugin indexed plugin);
 
-    /// @notice Emitted when the owner sets the permission for an envoy.
+    /// @notice Emitted when the minimum gas reserve is updated.
+    event SetMinGasReserve(uint256 oldMinGasReserve, uint256 newMinGasReserve);
+
+    /// @notice Emitted when the permission is set for an (envoy,target) tuple.
     event SetPermission(address indexed envoy, address indexed target, bool permission);
 
     /// @notice Emitted when a plugin is uninstalled.
@@ -56,13 +59,20 @@ interface IPRBProxyHelpers {
     /// @param plugin The address of the plugin to install.
     function installPlugin(IPRBProxyPlugin plugin) external;
 
+    /// @notice Sets a new value for the minimum gas reserve.
+    ///
+    /// @dev Emits a {SetMinGasReserve} event.
+    ///
+    /// @param newMinGasReserve The new minimum gas reserve.
+    function setMinGasReserve(uint256 newMinGasReserve) external;
+
     /// @notice Gives or takes a permission from an envoy to call the provided target contract and function selector
-    /// on behalf of the owner.
+    /// on behalf of the proxy owner.
     ///
-    /// @dev It is not an error to reset a permission on the same (envoy,target) tuple multiple types.
+    /// @dev Emits a {SetPermission} event.
     ///
-    /// Requirements:
-    /// - The caller must be the owner.
+    /// Notes:
+    /// - It is not an error to reset a permission on the same (envoy,target) tuple.
     ///
     /// @param envoy The address of the envoy account.
     /// @param target The address of the target contract.
