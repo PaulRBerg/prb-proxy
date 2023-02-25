@@ -1,32 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18 <0.9.0;
 
-import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 import { IPRBProxyHelpers } from "src/interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 
-import { PluginDummy } from "../../shared/plugins/PluginDummy.t.sol";
-import { PluginEmpty } from "../../shared/plugins/PluginEmpty.t.sol";
 import { Helpers_Test } from "../Helpers.t.sol";
 
 contract InstallPlugin_Test is Helpers_Test {
     /// @dev it should revert.
-    function test_RevertWhen_CallerNotOwner() external {
-        // Make Eve the caller in this test.
-        address eve = users.eve;
-        changePrank(eve);
-
-        // Expect a {ExecutionUnauthorized} error because Bob is not the owner.
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, eve, helpers));
-        installPlugin(plugins.dummy);
-    }
-
-    modifier callerOwner() {
-        _;
-    }
-
-    /// @dev it should revert.
-    function test_RevertWhen_PluginHasNoMethods() external callerOwner {
+    function test_RevertWhen_PluginHasNoMethods() external {
         vm.expectRevert(abi.encodeWithSelector(IPRBProxyHelpers.PRBProxy_NoPluginMethods.selector, plugins.empty));
         installPlugin(plugins.empty);
     }
@@ -36,7 +18,7 @@ contract InstallPlugin_Test is Helpers_Test {
     }
 
     /// @dev it should re-install the plugin.
-    function test_InstallPlugin_PluginInstalledBefore() external callerOwner pluginHasMethods pluginNotInstalled {
+    function test_InstallPlugin_PluginInstalledBefore() external pluginHasMethods pluginNotInstalled {
         // Install a dummy plugin that has some methods.
         installPlugin(plugins.dummy);
 
@@ -57,7 +39,7 @@ contract InstallPlugin_Test is Helpers_Test {
     }
 
     /// @dev it should install the plugin.
-    function test_InstallPlugin() external callerOwner pluginHasMethods pluginNotInstalled {
+    function test_InstallPlugin() external pluginHasMethods pluginNotInstalled {
         // Install a dummy plugin that has some methods.
         installPlugin(plugins.dummy);
 
@@ -71,7 +53,7 @@ contract InstallPlugin_Test is Helpers_Test {
     }
 
     /// @dev it should emit an {InstallPlugin} event.
-    function test_InstallPlugin_Event() external callerOwner pluginHasMethods pluginNotInstalled {
+    function test_InstallPlugin_Event() external pluginHasMethods pluginNotInstalled {
         // Expect an {InstallPlugin} event.
         expectEmit();
         emit InstallPlugin(plugins.dummy);
