@@ -4,7 +4,7 @@ pragma solidity >=0.8.18;
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 
 /// @notice Abstract contract with the storage layout of the {PRBProxy} contract.
-/// @dev This contract is an exact copy of the storage layout of {PRBProxy}, and it exists so that it can
+/// @dev This contract is an exact replica of the storage layout of {PRBProxy}, and it exists so that it can
 /// be inherited in target contracts. However, to avoid overcomplicating the inheritance structure, this is
 /// not inherited by the {PRBProxy} contract itself.
 abstract contract PRBProxyStorage {

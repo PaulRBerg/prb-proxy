@@ -1,4 +1,4 @@
-# PRBProxy [![Github Actions][gha-badge]][gha] [![Coverage][codecov-badge]][codecov] [![Foundry][foundry-badge]][foundry] [![Styled with Prettier][prettier-badge]][prettier] [![License: MIT][license-badge]][license]
+# PRBProxy [![Github Actions][gha-badge]][gha] [![Coverage][codecov-badge]][codecov] [![Foundry][foundry-badge]][foundry] [![License: MIT][license-badge]][license]
 
 [gha]: https://github.com/PaulRBerg/prb-proxy/actions
 [gha-badge]: https://github.com/PaulRBerg/prb-proxy/actions/workflows/ci.yml/badge.svg
@@ -6,8 +6,6 @@
 [codecov-badge]: https://codecov.io/gh/PaulRBerg/prb-proxy/branch/staging/graph/badge.svg?token=4YV6JCTO9R
 [foundry]: https://getfoundry.sh/
 [foundry-badge]: https://img.shields.io/badge/Built%20with-Foundry-FFDB1C.svg
-[prettier]: https://prettier.io
-[prettier-badge]: https://img.shields.io/badge/Code_Style-Prettier-ff69b4.svg
 [license]: https://opensource.org/licenses/MIT
 [license-badge]: https://img.shields.io/badge/License-MIT-blue.svg
 
@@ -63,10 +61,19 @@ users to even safely send funds to the proxy before it is deployed.
 First, run the install step:
 
 ```sh
-forge install PaulRBerg/prb-proxy
+forge install --no-commit PaulRBerg/prb-proxy@v4
 ```
 
-Then, add the following remapping:
+Your `.gitmodules` file should now contain the following entry:
+
+```toml
+[submodule "lib/prb-proxy"]
+  branch = "v4"
+  path = "lib/prb-proxy"
+  url = "https://github.com/PaulRBerg/prb-proxy"
+```
+
+Finally, add this to your `remappings.txt` file:
 
 ```text
 prb-proxy/=lib/prb-proxy/src/
