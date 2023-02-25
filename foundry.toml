@@ -49,6 +49,7 @@
 [etherscan]
   ethereum = { key = "${ETHERSCAN_API_KEY}" }
   goerli = { key = "${ETHERSCAN_API_KEY}" }
+  sepolia = { key = "${ETHERSCAN_API_KEY}" }
 
 [fmt]
   bracket_spacing = true
@@ -64,3 +65,4 @@
   ethereum = "https://mainnet.infura.io/v3/${INFURA_API_KEY}"
   goerli = "https://goerli.infura.io/v3/${INFURA_API_KEY}"
   localhost = "http://localhost:8545"
+  sepolia = "https://sepolia.infura.io/v3/${INFURA_API_KEY}"

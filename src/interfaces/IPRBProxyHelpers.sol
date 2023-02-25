@@ -5,8 +5,9 @@ import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
 
 /// @title IPRBProxyHelpers
 /// @notice The enshrined target contract, with essential helper functions for:
-/// - Permitting envoys to call target contracts on behalf of the proxy.
 /// - Installing plugins on the proxy.
+/// - Updating the minimum gas reserve.
+/// - Permitting envoys to call target contracts on behalf of the proxy.
 /// - Uninstalling plugins on the proxy.
 interface IPRBProxyHelpers {
     /*//////////////////////////////////////////////////////////////////////////

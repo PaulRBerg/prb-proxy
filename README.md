@@ -89,28 +89,28 @@ yarn add @prb/proxy
 
 ## Usage
 
-To deploy a proxy, you can call either the `deploy` or the `deployFor` function in the `PRBProxyRegistry` contract. The
-registry is deployed at the same address on the following chains:
+To deploy a proxy, you have two options: you can either call the `deploy` or the `deployFor` function in the
+`PRBProxyRegistry` contract.
 
-| Chain                    | [Chain ID](https://chainlist.org/) | Address                                                                                                                                               |
-| ------------------------ | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ethereum Mainnet         | 1                                  | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://etherscan.io/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                            |
-| Ethereum Goerli Testnet  | 5                                  | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://goerli.etherscan.io/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                     |
-| Ethereum Sepolia Testnet | 11155111                           | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://sepolia.etherscan.io/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                    |
-| Arbitrum                 | 42161                              | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://arbiscan.io/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                             |
-| Arbitrum Nova            | 42170                              | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://nova.arbiscan.io/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                        |
-| Arbitrum Goerli          | 421613                             | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://goerli-rollup-explorer.arbitrum.io/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63/contracts) |
-| Optimism                 | 10                                 | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://optimistic.etherscan.io/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                 |
-| Optimism Goerli          | 420                                | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://blockscout.com/optimism/goerli/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63/contracts)     |
-| Polygon                  | 137                                | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://polygonscan.com/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                         |
-| Polygon Mumbai           | 80001                              | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://mumbai.polygonscan.com/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                  |
-| Gnosis Chain             | 100                                | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://blockscout.com/xdai/mainnet/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63/contracts)        |
-| Avalanche                | 43114                              | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://snowtrace.io/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                            |
-| Avalanche Fuji           | 43113                              | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://testnet.snowtrace.io/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                    |
-| BNB Smart Chain          | 56                                 | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://bscscan.com/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                             |
-| BNB Smart Chain Testnet  | 97                                 | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://testnet.bscscan.com/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                     |
-| Fantom Testnet           | 4002                               | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://testnet.ftmscan.com/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                     |
-| Fantom Opera             | 250                                | [0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63](https://ftmscan.com/address/0x43fA1CFCacAe71492A36198EDAE602Fe80DdcA63#code)                             |
+Once the proxy is deployed, you can start interacting with target contracts. PRBProxy ships with one "enshrined" target
+contract called `PRBProxyHelpers`. This contract provides several useful functions, including:
+
+- `installPlugin`
+- `setMinGasReserve`
+- `setPermission`
+- `uninstallPlugin`
+
+You call the functions above by ABI-encoding their calldata and calling `execute` on the proxy. The logic in
+`PRBProxyHelpers` is kept separate from the proxy itself to reduce deployment costs.
+
+### Addresses
+
+The registry and the enshrined target are deployed at the same address on the following chains:
+
+| Contract | Chain                   | [Chain ID](https://chainlist.org/) | Address                                                                                                                           |
+| -------- | ----------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Registry | Ethereum Goerli Testnet | 5                                  | [0x7aE53f08B444D481d207e5F335Df017CE6E9d248](https://goerli.etherscan.io/address/0x7aE53f08B444D481d207e5F335Df017CE6E9d248#code) |
+| Helpers  | Ethereum Goerli Testnet | 5                                  | [0xDc608dFCc62E0e7756439270D09881EEDf7885EF](https://goerli.etherscan.io/address/0xDc608dFCc62E0e7756439270D09881EEDf7885EF#code) |
 
 ### Targets
 
