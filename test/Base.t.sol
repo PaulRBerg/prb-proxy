@@ -243,6 +243,12 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         proxy.execute(address(helpers), data);
     }
 
+    /// @dev Checks if the Foundry profile is "test-optimized".
+    function isTestOptimizedProfile() internal returns (bool result) {
+        string memory profile = vm.envOr("FOUNDRY_PROFILE", string(""));
+        result = eqString(profile, "test-optimized");
+    }
+
     /// @dev ABI encodes the arguments and calls the `setMinGasReserve` helper on the enshrined target.
     function setMinGasReserve(uint256 newMinGasReserve) internal {
         bytes memory data = abi.encodeCall(helpers.setMinGasReserve, (newMinGasReserve));
@@ -259,11 +265,5 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     function uninstallPlugin(IPRBProxyPlugin plugin) internal {
         bytes memory data = abi.encodeCall(helpers.uninstallPlugin, (plugin));
         proxy.execute(address(helpers), data);
-    }
-
-    /// @dev Checks if the Foundry profile is "test-optimized".
-    function isTestOptimizedProfile() internal returns (bool result) {
-        string memory profile = vm.envOr("FOUNDRY_PROFILE", string(""));
-        result = eqString(profile, "test-optimized");
     }
 }
