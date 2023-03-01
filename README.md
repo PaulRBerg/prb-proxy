@@ -3,7 +3,7 @@
 [gha]: https://github.com/PaulRBerg/prb-proxy/actions
 [gha-badge]: https://github.com/PaulRBerg/prb-proxy/actions/workflows/ci.yml/badge.svg
 [codecov]: https://codecov.io/gh/PaulRBerg/prb-proxy
-[codecov-badge]: https://codecov.io/gh/PaulRBerg/prb-proxy/branch/staging/graph/badge.svg?token=4YV6JCTO9R
+[codecov-badge]: https://codecov.io/gh/PaulRBerg/prb-proxy/branch/main/graph/badge.svg?token=4YV6JCTO9R
 [foundry]: https://getfoundry.sh/
 [foundry-badge]: https://img.shields.io/badge/Built%20with-Foundry-FFDB1C.svg
 [license]: https://opensource.org/licenses/MIT
