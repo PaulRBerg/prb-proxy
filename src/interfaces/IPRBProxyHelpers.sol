@@ -38,7 +38,7 @@ interface IPRBProxyHelpers {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice The release version of the {PRBProxy} protocol.
-    /// @dev This is stored in the factory rather than the proxy to save gas for end users.
+    /// @dev This version is mirrored here to serve as a link to the proxy registry.
     function VERSION() external view returns (uint256);
 
     /*//////////////////////////////////////////////////////////////////////////
