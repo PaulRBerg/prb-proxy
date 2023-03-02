@@ -56,7 +56,7 @@ However, PRBProxy eliminates this risk entirely, allowing users to even safely s
 First, run the install step:
 
 ```sh
-forge install --no-commit PaulRBerg/prb-proxy@v4
+forge install PaulRBerg/prb-proxy@v4
 ```
 
 Your `.gitmodules` file should now contain the following entry:
