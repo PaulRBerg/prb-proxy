@@ -16,7 +16,7 @@ contract PRBProxyHelpers is
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyHelpers
-    uint256 public constant override VERSION = 3;
+    uint256 public constant override VERSION = 4;
 
     /*//////////////////////////////////////////////////////////////////////////
                                NON-CONSTANT FUNCTIONS

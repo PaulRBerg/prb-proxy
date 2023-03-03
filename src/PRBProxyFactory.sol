@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
-import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
-import { IPRBProxyFactory } from "./interfaces/IPRBProxyFactory.sol";
-import { PRBProxy } from "./PRBProxy.sol";
+import {IPRBProxy} from "./interfaces/IPRBProxy.sol";
+import {IPRBProxyFactory} from "./interfaces/IPRBProxyFactory.sol";
+import {PRBProxy} from "./PRBProxy.sol";
 
 /// @title PRBProxyFactory
 /// @dev This contract implements the {IPRBProxyFactory} interface.
@@ -13,7 +13,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyFactory
-    uint256 public constant override VERSION = 3;
+    uint256 public constant override VERSION = 4;
 
     /*//////////////////////////////////////////////////////////////////////////
                                   INTERNAL STORAGE
@@ -45,7 +45,7 @@ contract PRBProxyFactory is IPRBProxyFactory {
 
     /// @inheritdoc IPRBProxyFactory
     function deploy() external override returns (IPRBProxy proxy) {
-        proxy = deployFor({ owner: msg.sender });
+        proxy = deployFor({owner: msg.sender});
     }
 
     /// @inheritdoc IPRBProxyFactory
@@ -58,23 +58,16 @@ contract PRBProxyFactory is IPRBProxyFactory {
     }
 
     /// @inheritdoc IPRBProxyFactory
-    function deployAndExecute(
-        address target,
-        bytes calldata data
-    )
+    function deployAndExecute(address target, bytes calldata data)
         external
         override
         returns (IPRBProxy proxy, bytes memory response)
     {
-        (proxy, response) = deployAndExecuteFor({ owner: msg.sender, target: target, data: data });
+        (proxy, response) = deployAndExecuteFor({owner: msg.sender, target: target, data: data});
     }
 
     /// @inheritdoc IPRBProxyFactory
-    function deployAndExecuteFor(
-        address owner,
-        address target,
-        bytes calldata data
-    )
+    function deployAndExecuteFor(address owner, address target, bytes calldata data)
         public
         override
         returns (IPRBProxy proxy, bytes memory response)

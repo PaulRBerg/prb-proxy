@@ -7,7 +7,7 @@ contract Version_Test is Factory_Test {
     /// @dev it should return the release version.
     function test_Version() external {
         uint256 actualVersion = factory.VERSION();
-        uint256 expectedVersion = 3;
+        uint256 expectedVersion = 4;
         assertEq(actualVersion, expectedVersion, "VERSION");
     }
 }
