@@ -2,10 +2,10 @@
   branch = "master"
   path = "lib/forge-std"
   url = "https://github.com/PaulRBerg/forge-std"
-[submodule "lib/prb-contracts"]
-  branch = "v5"
-  path = "lib/prb-contracts"
-  url = "https://github.com/PaulRBerg/prb-contracts"
+[submodule "lib/openzeppelin-contracts"]
+  branch = "release-v4.8"
+  path = "lib/openzeppelin-contracts"
+  url = "https://github.com/OpenZeppelin/openzeppelin-contracts"
 [submodule "lib/prb-test"]
   branch = "v0"
   path = "lib/prb-test"

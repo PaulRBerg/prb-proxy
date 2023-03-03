@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <=0.9.0;
 
-import { ERC20 } from "@prb/contracts/token/erc20/ERC20.sol";
-import { IERC20 } from "@prb/contracts/token/erc20/IERC20.sol";
+import { ERC20 } from "@openzeppelin/token/ERC20/ERC20.sol";
 import { eqString } from "@prb/test/Helpers.sol";
 import { PRBTest } from "@prb/test/PRBTest.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
@@ -105,7 +104,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
                                    TEST CONTRACTS
     //////////////////////////////////////////////////////////////////////////*/
 
-    ERC20 internal dai = new ERC20("Dai Stablecoin", "DAI", 18);
+    ERC20 internal dai = new ERC20("Dai Stablecoin", "DAI");
     IPRBProxyHelpers internal helpers;
     IPRBProxy internal proxy;
     IPRBProxyRegistry internal registry;
