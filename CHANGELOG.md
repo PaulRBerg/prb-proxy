@@ -5,10 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[4.0.0-beta.2]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.1...v4.0.0-beta.2
 [4.0.0-beta.1]: https://github.com/PaulRBerg/prb-proxy/compare/v2.0.0...v4.0.0-beta.1
 [2.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/PaulRBerg/prb-proxy/releases/tag/v1.0.0
+
+## [4.0.0-beta.2] - 2023-03-03
+
+### Changed
+
+- Merge the registry and the factory ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
+- Rename `deployer` to `operator` ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
+- Set the owner via the `transientProxyOwner` storage variable ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
+- Transfer ownership via the registry ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
+- Bump submodules (@PaulRBerg)
+- Improve documentation (@PaulRBerg)
+- Make `VERSION` a string ([699f76](https://github.com/PaulRBerg/prb-proxy/commit/699f76bd2e93c3ef3c1867b3e97190344f2fc4aa)) (@PaulRBerg)
+
+### Added
+
+- Add `OpenZeppelin/openzeppelin-contracts` submodule
+
+### Removed
+
+- **Breaking**: Remove `PRBProxyFactory` contract ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
+- Remove `PaulRBerg/prb-contracts` submodule
 
 ## [4.0.0-beta.1] - 2023-02-25
 
@@ -17,6 +39,7 @@ _Version 3 has been skipped to keep the package version in sync with the contrac
 ### Changed
 
 - Change license to MIT ([#49](https://github.com/PaulRBerg/prb-proxy/issues/49)) (@PaulRBerg)
+- Format contracts with Forge Formatter (@PaulRBerg)
 - Improve documentation (@PaulRBerg)
 - Improve formatting (@PaulRBerg)
 - Improve names of custom errors, events, and functions (@PaulRBerg)
