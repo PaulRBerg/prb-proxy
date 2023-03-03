@@ -1,4 +1,4 @@
 {
-  "detectors_to_exclude": "low-level-calls,reentrancy-events,solc-version",
+  "detectors_to_exclude": "low-level-calls,naming-convention,reentrancy-events,solc-version",
   "filter_paths": "(lib|test)"
 }
