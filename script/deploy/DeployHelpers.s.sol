@@ -7,7 +7,7 @@ import { PRBProxyHelpers } from "../../src/PRBProxyHelpers.sol";
 
 import { BaseScript } from "../shared/Base.s.sol";
 
-/// @notice Deploys the {DeployHelpers} contract at a deterministic address across all chains. Reverts if the contract
+/// @notice Deploys the {PRBProxyHelpers} contract at a deterministic address across all chains. Reverts if the contract
 /// has already been deployed.
 contract DeployHelpers is Script, BaseScript {
     /// @dev The presence of the salt instructs Forge to deploy the contract via a deterministic CREATE2 factory.

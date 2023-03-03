@@ -3,16 +3,15 @@ pragma solidity >=0.8.18 <0.9.0;
 
 import { Script } from "forge-std/Script.sol";
 
-import { PRBProxy } from "../../src/PRBProxy.sol";
+import { IPRBProxy } from "../../src/interfaces/IPRBProxy.sol";
+import { IPRBProxyRegistry } from "../../src/interfaces/IPRBProxyRegistry.sol";
+import { PRBProxyHelpers } from "../../src/PRBProxyHelpers.sol";
 
 import { BaseScript } from "../shared/Base.s.sol";
 
-/// @notice Deploys the {PRBProxy} contract at a deterministic address across all chains. Reverts if the contract
-/// has already been deployed.
+/// @notice Deploys the {PRBProxy} contract by calling the `deploy` function on the registry.
 contract DeployProxy is Script, BaseScript {
-    /// @dev The presence of the salt instructs Forge to deploy the contract via a deterministic CREATE2 factory.
-    /// https://github.com/Arachnid/deterministic-deployment-proxy
-    function run() public virtual broadcaster returns (PRBProxy proxy) {
-        proxy = new PRBProxy{ salt: ZERO_SALT }();
+    function run(IPRBProxyRegistry registry) public virtual broadcaster returns (IPRBProxy proxy) {
+        proxy = registry.deploy();
     }
 }
