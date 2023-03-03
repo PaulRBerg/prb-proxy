@@ -1,0 +1,10 @@
+transferOwnership.t.sol
+├── when the new owner has a proxy
+│  └── it should revert
+└── when the new owner does not have a proxy
+   ├── when the caller does not have a proxy
+   │  └── it should revert
+   └── when the caller has a proxy
+      ├── it should delete the proxy for the caller
+      ├── it should set the proxy fo the new owner
+      └── it should emit a {TransferOwnership} event

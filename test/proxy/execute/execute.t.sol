@@ -10,13 +10,17 @@ import { TargetReverter } from "../../shared/targets/TargetReverter.t.sol";
 import { Proxy_Test } from "../Proxy.t.sol";
 
 contract Execute_Test is Proxy_Test {
+    function setUp() public virtual override {
+        Proxy_Test.setUp();
+    }
+
     modifier callerUnauthorized() {
         _;
     }
 
     /// @dev it should revert.
     function test_RevertWhen_NoPermission() external callerUnauthorized {
-        changePrank(users.eve);
+        changePrank({ msgSender: users.eve });
         bytes memory data = bytes.concat(targets.dummy.foo.selector);
         vm.expectRevert(
             abi.encodeWithSelector(
@@ -29,7 +33,7 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_PermissionDifferentTarget() external callerUnauthorized {
         setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
-        changePrank(users.envoy);
+        changePrank({ msgSender: users.envoy });
 
         bytes memory data = bytes.concat(targets.dummy.foo.selector);
         vm.expectRevert(
@@ -283,7 +287,7 @@ contract Execute_Test is Proxy_Test {
     /// @dev This modifier runs the test twice, once with the owner as the caller, and once with the envoy.
     modifier callerOwnerOrEnvoy() {
         _;
-        changePrank(users.envoy);
+        changePrank({ msgSender: users.envoy });
         _;
     }
 

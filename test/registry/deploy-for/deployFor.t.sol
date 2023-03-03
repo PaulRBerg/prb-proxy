@@ -7,122 +7,77 @@ import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 import { Registry_Test } from "../Registry.t.sol";
 
 contract DeployFor_Test is Registry_Test {
-    address internal deployer;
-    address internal owner;
-
     function setUp() public override {
         Registry_Test.setUp();
-        deployer = users.alice;
-        owner = users.bob;
-    }
-
-    modifier ownerHasProxyInRegistry() {
-        _;
     }
 
     /// @dev it should revert.
-    function test_RevertWhen_OwnerDidNotTransferOwnership() external ownerHasProxyInRegistry {
-        registry.deployFor(deployer);
+    function test_RevertWhen_OwnerHasProxy() external {
+        IPRBProxy proxy = registry.deployFor({ owner: users.alice });
         vm.expectRevert(
-            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_ProxyAlreadyExists.selector, deployer)
+            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerHasProxy.selector, users.alice, proxy)
         );
-        registry.deployFor(deployer);
+        registry.deployFor({ owner: users.alice });
     }
 
-    /// @dev it should deploy the proxy.
-    function test_DeployFor_OwnerTransferredOwnership() external ownerHasProxyInRegistry {
-        IPRBProxy proxy = registry.deployFor(deployer);
-        proxy.transferOwnership(address(1729));
-        bytes memory actualRuntimeBytecode = address(registry.deployFor(deployer)).code;
-        bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
-    }
-
-    modifier ownerDoesNotHaveProxyInRegistry() {
+    modifier ownerDoesNotHaveProxy() {
         _;
     }
 
     /// @dev it should deploy the proxy.
-    function test_DeployFor_DeployerSameAsOwner() external ownerDoesNotHaveProxyInRegistry {
-        bytes memory actualRuntimeBytecode = address(registry.deployFor(deployer)).code;
-        bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
+    function testFuzz_DeployFor(address origin, address operator, address owner) external ownerDoesNotHaveProxy {
+        changePrank({ txOrigin: origin, msgSender: operator });
+        address actualProxy = address(registry.deployFor(owner));
+        address expectedProxy = computeProxyAddress(origin, SEED_ZERO);
+        assertEq(actualProxy, expectedProxy, "deployed proxy address");
     }
 
-    modifier deployerNotSameAsOwner() {
-        _;
-    }
-
-    /// @dev it should deploy the proxy.
-    function test_DeployFor_DeployerDidNotDeployAnotherProxyForTheOwnerViaFactory()
+    /// @dev it should update the next seeds mapping.
+    function testFuzz_DeployFor_UpdateNextSeeds(
+        address origin,
+        address operator,
+        address owner
+    )
         external
-        ownerDoesNotHaveProxyInRegistry
-        deployerNotSameAsOwner
+        ownerDoesNotHaveProxy
     {
-        bytes memory actualRuntimeBytecode = address(registry.deployFor(owner)).code;
-        bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
-    }
-
-    modifier deployerDeployedAnotherProxyForTheOwnerViaFactory() {
-        factory.deployFor(owner);
-        _;
-    }
-
-    /// @dev it should deploy the proxy.
-    function test_DeployFor_DeployerDidNotDeployAnotherProxyForHimselfViaFactory()
-        external
-        ownerDoesNotHaveProxyInRegistry
-        deployerNotSameAsOwner
-        deployerDeployedAnotherProxyForTheOwnerViaFactory
-    {
-        bytes memory actualRuntimeBytecode = address(registry.deployFor(owner)).code;
-        bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
-    }
-
-    modifier deployerDeployedAnotherProxyForHimselfViaFactory() {
-        factory.deployFor(deployer);
-        _;
-    }
-
-    /// @dev it should deploy the proxy.
-    function test_DeployFor()
-        external
-        ownerDoesNotHaveProxyInRegistry
-        deployerNotSameAsOwner
-        deployerDeployedAnotherProxyForTheOwnerViaFactory
-        deployerDeployedAnotherProxyForHimselfViaFactory
-    {
-        bytes memory actualRuntimeBytecode = address(registry.deployFor(owner)).code;
-        bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
-    }
-
-    /// @dev it should update the current proxies mapping.
-    function test_DeployFor_CurrentProxies()
-        external
-        ownerDoesNotHaveProxyInRegistry
-        deployerNotSameAsOwner
-        deployerDeployedAnotherProxyForTheOwnerViaFactory
-        deployerDeployedAnotherProxyForHimselfViaFactory
-    {
+        changePrank({ txOrigin: origin, msgSender: operator });
         registry.deployFor(owner);
-        address actualProxyAddress = address(registry.getCurrentProxy(owner));
-        address expectedProxyAddress = computeProxyAddress(deployer, SEED_TWO);
+
+        bytes32 actualNextSeed = registry.getNextSeed(origin);
+        bytes32 expectedNextSeed = SEED_ONE;
+        assertEq(actualNextSeed, expectedNextSeed, "next seed");
+    }
+
+    /// @dev it should update the proxies mapping.
+    function testFuzz_DeployFor_UpdateProxies(
+        address origin,
+        address operator,
+        address owner
+    )
+        external
+        ownerDoesNotHaveProxy
+    {
+        changePrank({ txOrigin: origin, msgSender: operator });
+        registry.deployFor(owner);
+
+        address actualProxyAddress = address(registry.getProxy(owner));
+        address expectedProxyAddress = computeProxyAddress(origin, SEED_ZERO);
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
     }
 
     /// @dev it should emit a {DeployProxy} event.
-    function test_DeployFor_Event() external {
+    function testFuzz_DeployFor_Event(address origin, address operator, address owner) external ownerDoesNotHaveProxy {
+        changePrank({ txOrigin: origin, msgSender: operator });
+
         expectEmit();
         emit DeployProxy({
-            origin: deployer,
-            deployer: address(registry),
+            origin: origin,
+            operator: operator,
             owner: owner,
             seed: SEED_ZERO,
-            salt: keccak256(abi.encode(deployer, SEED_ZERO)),
-            proxy: IPRBProxy(computeProxyAddress(deployer, SEED_ZERO))
+            salt: keccak256(abi.encode(origin, SEED_ZERO)),
+            proxy: IPRBProxy(computeProxyAddress(origin, SEED_ZERO))
         });
         registry.deployFor(owner);
     }

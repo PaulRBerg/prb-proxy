@@ -13,8 +13,6 @@ contract Proxy_Test is Base_Test {
 
     event RunPlugin(IPRBProxyPlugin indexed plugin, bytes data, bytes response);
 
-    event TransferOwnership(address indexed oldOwner, address indexed newOwner);
-
     /*//////////////////////////////////////////////////////////////////////////
                                   TESTING VARIABLES
     //////////////////////////////////////////////////////////////////////////*/
@@ -27,6 +25,12 @@ contract Proxy_Test is Base_Test {
 
     function setUp() public virtual override {
         Base_Test.setUp();
+
+        // Make Alice the owner of the default proxy.
         owner = users.alice;
+
+        // Deploy and label the default proxy.
+        proxy = registry.deployFor({ owner: users.alice });
+        vm.label({ account: address(proxy), newLabel: "Default Proxy" });
     }
 }

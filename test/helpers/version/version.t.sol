@@ -5,8 +5,8 @@ import { Helpers_Test } from "../Helpers.t.sol";
 
 contract Version_Test is Helpers_Test {
     function test_Versions() external {
-        uint256 factoryVersion = factory.VERSION();
+        uint256 registryVersion = registry.VERSION();
         uint256 helpersVersion = helpers.VERSION();
-        assertEq(factoryVersion, helpersVersion, "Factory version does not match helpers version");
+        assertEq(registryVersion, helpersVersion, "Registry version does not match helpers version");
     }
 }

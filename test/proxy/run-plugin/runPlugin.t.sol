@@ -16,6 +16,10 @@ import { TargetReverter } from "../../shared/targets/TargetReverter.t.sol";
 import { Proxy_Test } from "../Proxy.t.sol";
 
 contract RunPlugin_Test is Proxy_Test {
+    function setUp() public virtual override {
+        Proxy_Test.setUp();
+    }
+
     /// @dev it should revert.
     function test_RevertWhen_PluginNotInstalled() external {
         vm.expectRevert(

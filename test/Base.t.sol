@@ -9,12 +9,10 @@ import { StdCheats } from "forge-std/StdCheats.sol";
 import { StdUtils } from "forge-std/StdUtils.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
-import { IPRBProxyFactory } from "src/interfaces/IPRBProxyFactory.sol";
 import { IPRBProxyHelpers } from "src/interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 import { PRBProxy } from "src/PRBProxy.sol";
-import { PRBProxyFactory } from "src/PRBProxyFactory.sol";
 import { PRBProxyHelpers } from "src/PRBProxyHelpers.sol";
 import { PRBProxyRegistry } from "src/PRBProxyRegistry.sol";
 
@@ -75,7 +73,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
 
     event DeployProxy(
         address indexed origin,
-        address indexed deployer,
+        address indexed operator,
         address indexed owner,
         bytes32 seed,
         bytes32 salt,
@@ -83,6 +81,8 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     );
 
     event Execute(address indexed target, bytes data, bytes response);
+
+    event TransferOwnership(IPRBProxy proxy, address indexed oldOwner, address indexed newOwner);
 
     /*//////////////////////////////////////////////////////////////////////////
                                       CONSTANTS
@@ -106,7 +106,6 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     //////////////////////////////////////////////////////////////////////////*/
 
     ERC20 internal dai = new ERC20("Dai Stablecoin", "DAI", 18);
-    IPRBProxyFactory internal factory;
     IPRBProxyHelpers internal helpers;
     IPRBProxy internal proxy;
     IPRBProxyRegistry internal registry;
@@ -169,15 +168,15 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     }
 
     /// @dev Computes the proxy address without deploying it.
-    function computeProxyAddress(address deployer, bytes32 seed) internal returns (address proxyAddress) {
-        bytes32 salt = keccak256(abi.encode(deployer, seed));
+    function computeProxyAddress(address origin, bytes32 seed) internal returns (address proxyAddress) {
+        bytes32 salt = keccak256(abi.encode(origin, seed));
         bytes32 creationBytecodeHash = keccak256(getProxyBytecode());
-        // Uses the create2 utility from forge-std.
-        proxyAddress = computeCreate2Address(salt, creationBytecodeHash, address(factory));
+        // Use the create2 utility from Forge Std.
+        proxyAddress =
+            computeCreate2Address({ salt: salt, initcodeHash: creationBytecodeHash, deployer: address(registry) });
     }
 
-    /// @dev Generates an address by hashing the name, labels the address and funds it with 100 ETH, 1 million DAI,
-    /// and 1 million USDC.
+    /// @dev Generates an address by hashing the name, labels the address and funds it with 100 ETH and 1 million DAI.
     function createUser(string memory name) internal returns (address payable addr) {
         addr = payable(makeAddr(name));
         vm.deal({ account: addr, newBalance: 100 ether });
@@ -188,38 +187,18 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     function deployDefaultContracts() internal {
         // We deploy from precompiled source if the profile is "test-optimized".
         if (isTestOptimizedProfile()) {
-            factory = IPRBProxyFactory(deployCode("optimized-out/PRBProxyFactory.sol/PRBProxyFactory.json"));
             helpers = IPRBProxyHelpers(deployCode("optimized-out/PRBProxyHelpers.sol/PRBProxyHelpers.json"));
-            proxy = IPRBProxy(deployCode("optimized-out/PRBProxy.sol/PRBProxy.json"));
-            registry = IPRBProxyRegistry(
-                deployCode("optimized-out/PRBProxyRegistry.sol/PRBProxyRegistry.json", abi.encode(address(factory)))
-            );
+            registry = IPRBProxyRegistry(deployCode("optimized-out/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
         }
         // We deploy normally in all other cases.
         else {
-            factory = new PRBProxyFactory();
             helpers = new PRBProxyHelpers();
-            proxy = new PRBProxy();
-            registry = new PRBProxyRegistry(factory);
+            registry = new PRBProxyRegistry();
         }
 
         // Finally, label all the contracts just deployed.
-        vm.label({ account: address(factory), newLabel: "Factory" });
         vm.label({ account: address(helpers), newLabel: "Helpers" });
-        vm.label({ account: address(proxy), newLabel: "Proxy" });
         vm.label({ account: address(registry), newLabel: "Registry" });
-    }
-
-    /// @dev Conditionally deploy the proxy either normally or from precompiled source.
-    function deployProxy() internal returns (IPRBProxy deployedProxy) {
-        if (isTestOptimizedProfile()) {
-            deployedProxy = IPRBProxy(deployCode("optimized-out/PRBProxy.sol/PRBProxy.json"));
-        } else {
-            deployedProxy = new PRBProxy();
-        }
-
-        // Label the proxy.
-        vm.label({ account: address(deployedProxy), newLabel: "Proxy" });
     }
 
     /// @dev Expects an event to be emitted by checking all three topics and the data. As mentioned in the Foundry

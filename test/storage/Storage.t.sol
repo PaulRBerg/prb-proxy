@@ -11,6 +11,7 @@ contract Storage_Test is Base_Test {
 
     function setUp() public virtual override {
         Base_Test.setUp();
+        proxy = registry.deployFor({ owner: users.alice });
         installPlugin(plugins.dummy);
         setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
         storageMock = new StorageMock({

@@ -4,6 +4,10 @@ pragma solidity >=0.8.19 <=0.9.0;
 import { Proxy_Test } from "../Proxy.t.sol";
 
 contract Receive_Test is Proxy_Test {
+    function setUp() public virtual override {
+        Proxy_Test.setUp();
+    }
+
     /// @dev it should say that the call has not been successful.
     function test_RevertWhen_CallDataNonEmpty() external {
         uint256 value = 1 ether;

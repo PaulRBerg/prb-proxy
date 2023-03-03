@@ -3,10 +3,22 @@ pragma solidity >=0.8.18;
 
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
+import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
 
 /// @title PRBProxy
 /// @dev This contract implements the {IPRBProxy} interface.
 contract PRBProxy is IPRBProxy {
+    /*//////////////////////////////////////////////////////////////////////////
+                                     CONSTANTS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @inheritdoc IPRBProxy
+    IPRBProxyRegistry public immutable override registry;
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                   PUBLIC STORAGE
+    //////////////////////////////////////////////////////////////////////////*/
+
     /// @inheritdoc IPRBProxy
     address public override owner;
 
@@ -27,10 +39,12 @@ contract PRBProxy is IPRBProxy {
                                      CONSTRUCTOR
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Constructs the proxy by fetching the constructor parameters from the registry.
+    /// @dev This is implemented like this to make it easy to precompute the CREATE2 address of the proxy.
     constructor() {
         minGasReserve = 5000;
-        owner = msg.sender;
-        emit TransferOwnership({ oldOwner: address(0), newOwner: msg.sender });
+        registry = IPRBProxyRegistry(msg.sender);
+        owner = IPRBProxyRegistry(msg.sender).transientProxyOwner();
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -124,16 +138,13 @@ contract PRBProxy is IPRBProxy {
 
     /// @inheritdoc IPRBProxy
     function transferOwnership(address newOwner) external override {
-        // Check that the caller is the owner.
-        if (owner != msg.sender) {
-            revert PRBProxy_NotOwner({ owner: owner, caller: msg.sender });
+        // Check that the caller is the registry.
+        if (address(registry) != msg.sender) {
+            revert PRBProxy_CallerNotRegistry({ registry: registry, caller: msg.sender });
         }
 
         // Effects: update the owner.
         owner = newOwner;
-
-        // Log the transfer of the owner.
-        emit TransferOwnership({ oldOwner: msg.sender, newOwner: newOwner });
     }
 
     /*//////////////////////////////////////////////////////////////////////////

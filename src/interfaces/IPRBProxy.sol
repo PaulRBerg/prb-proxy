@@ -2,6 +2,7 @@
 pragma solidity >=0.8.4;
 
 import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
+import { IPRBProxyRegistry } from "./IPRBProxyRegistry.sol";
 
 /// @title IPRBProxy
 /// @notice Proxy contract to compose transactions on owner's behalf.
@@ -10,14 +11,14 @@ interface IPRBProxy {
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Thrown when the caller is not the registry.
+    error PRBProxy_CallerNotRegistry(IPRBProxyRegistry registry, address caller);
+
     /// @notice Thrown when execution reverted with no reason.
     error PRBProxy_ExecutionReverted();
 
     /// @notice Thrown when the caller is not the owner.
     error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target);
-
-    /// @notice Thrown when the caller is not the owner.
-    error PRBProxy_NotOwner(address owner, address caller);
 
     /// @notice Thrown when the owner is changed during the DELEGATECALL.
     error PRBProxy_OwnerChanged(address originalOwner, address newOwner);
@@ -41,9 +42,6 @@ interface IPRBProxy {
     /// @notice Emitted when a plugin is run for a provided method.
     event RunPlugin(IPRBProxyPlugin indexed plugin, bytes data, bytes response);
 
-    /// @notice Emitted when the owner changes the proxy's owner.
-    event TransferOwnership(address indexed oldOwner, address indexed newOwner);
-
     /*//////////////////////////////////////////////////////////////////////////
                               PUBLIC CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
@@ -63,6 +61,9 @@ interface IPRBProxy {
 
     /// @notice The address of the owner account or contract.
     function owner() external view returns (address);
+
+    /// @notice The address of the registry that has deployed this proxy.
+    function registry() external view returns (IPRBProxyRegistry);
 
     /*//////////////////////////////////////////////////////////////////////////
                             PUBLIC NON-CONSTANT FUNCTIONS
@@ -86,9 +87,7 @@ interface IPRBProxy {
 
     /// @notice Transfers the owner of the contract to a new account.
     ///
-    /// @dev Emits a {TransferOwnership} event.
-    ///
-    /// Requirements:
+    /// @dev Requirements:
     /// - The caller must be the owner.
     ///
     /// @param newOwner The address of the new owner account.

@@ -2,43 +2,45 @@
 pragma solidity >=0.8.18;
 
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
-import { IPRBProxyFactory } from "./interfaces/IPRBProxyFactory.sol";
 import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
+import { PRBProxy } from "./PRBProxy.sol";
 
 /// @title PRBProxyRegistry
 /// @dev This contract implements the {IPRBProxyRegistry} interface.
 contract PRBProxyRegistry is IPRBProxyRegistry {
     /*//////////////////////////////////////////////////////////////////////////
+                                     CONSTANTS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @inheritdoc IPRBProxyRegistry
+    uint256 public constant override VERSION = 4;
+
+    /*//////////////////////////////////////////////////////////////////////////
                                    PUBLIC STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
-    IPRBProxyFactory public immutable override factory;
+    address public override transientProxyOwner;
 
     /*//////////////////////////////////////////////////////////////////////////
                                   INTERNAL STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Internal mapping of owners to current proxies.
-    mapping(address owner => IPRBProxy currentProxy) internal currentProxies;
+    /// @notice Internal mapping between owners and proxies.
+    mapping(address owner => IPRBProxy proxy) internal proxies;
 
-    /*//////////////////////////////////////////////////////////////////////////
-                                     CONSTRUCTOR
-    //////////////////////////////////////////////////////////////////////////*/
-
-    constructor(IPRBProxyFactory factory_) {
-        factory = factory_;
-    }
+    /// @dev Internal mapping to track the next seed to be used by an EOA.
+    mapping(address eoa => bytes32 seed) internal nextSeeds;
 
     /*//////////////////////////////////////////////////////////////////////////
                                      MODIFIERS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Check that no proxy is currently registered for the owner.
-    modifier noCurrentProxy(address owner) {
-        IPRBProxy currentProxy = currentProxies[owner];
-        if (address(currentProxy) != address(0) && currentProxy.owner() == owner) {
-            revert PRBProxyRegistry_ProxyAlreadyExists(owner);
+    /// @notice Check that the owner does not have a proxy.
+    modifier noProxy(address owner) {
+        IPRBProxy proxy = proxies[owner];
+        if (address(proxy) != address(0)) {
+            revert PRBProxyRegistry_OwnerHasProxy(owner, proxy);
         }
         _;
     }
@@ -48,8 +50,13 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
-    function getCurrentProxy(address owner) external view override returns (IPRBProxy proxy) {
-        proxy = currentProxies[owner];
+    function getNextSeed(address origin) external view override returns (bytes32 nextSeed) {
+        nextSeed = nextSeeds[origin];
+    }
+
+    /// @inheritdoc IPRBProxyRegistry
+    function getProxy(address owner) external view override returns (IPRBProxy proxy) {
+        proxy = proxies[owner];
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -57,17 +64,13 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
-    function deploy() external override returns (IPRBProxy proxy) {
-        proxy = deployFor({ owner: msg.sender });
+    function deploy() external override noProxy(msg.sender) returns (IPRBProxy proxy) {
+        proxy = _deploy({ owner: msg.sender });
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner) public override noCurrentProxy(owner) returns (IPRBProxy proxy) {
-        // Deploy the proxy via the factory.
-        proxy = factory.deployFor(owner);
-
-        // Set or override the current proxy for the owner.
-        currentProxies[owner] = proxy;
+    function deployFor(address owner) public override noProxy(owner) returns (IPRBProxy proxy) {
+        proxy = _deploy(owner);
     }
 
     /// @inheritdoc IPRBProxyRegistry
@@ -77,9 +80,10 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     )
         external
         override
+        noProxy(msg.sender)
         returns (IPRBProxy proxy, bytes memory response)
     {
-        (proxy, response) = deployAndExecuteFor({ owner: msg.sender, target: target, data: data });
+        (proxy, response) = _deployAndExecute({ owner: msg.sender, target: target, data: data });
     }
 
     /// @inheritdoc IPRBProxyRegistry
@@ -90,13 +94,115 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     )
         public
         override
-        noCurrentProxy(owner)
+        noProxy(owner)
         returns (IPRBProxy proxy, bytes memory response)
     {
-        // Deploy the proxy via the factory, and delegate call to the target.
-        (proxy, response) = factory.deployAndExecuteFor(owner, target, data);
+        (proxy, response) = _deployAndExecute(owner, target, data);
+    }
 
-        // Set or override the current proxy for the owner.
-        currentProxies[owner] = proxy;
+    /// @inheritdoc IPRBProxyRegistry
+    function transferOwnership(address newOwner) external override noProxy(newOwner) {
+        // Check that the caller has a proxy.
+        IPRBProxy proxy = proxies[msg.sender];
+        if (address(proxy) == address(0)) {
+            revert PRBProxyRegistry_OwnerDoesNotHaveProxy({ owner: msg.sender });
+        }
+
+        // Delete the proxy for the caller.
+        delete proxies[msg.sender];
+
+        // Set the proxy for the new owner.
+        proxies[newOwner] = proxy;
+
+        // Transfer the proxy.
+        proxy.transferOwnership(newOwner);
+
+        // Log the transfer of the proxy ownership.
+        emit TransferOwnership({ proxy: proxy, oldOwner: msg.sender, newOwner: newOwner });
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                          INTERNAL NON-CONSTANT FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev See the documentation for the public functions that call this internal function.
+    function _deploy(address owner) internal returns (IPRBProxy proxy) {
+        // Load the next seed.
+        bytes32 seed = nextSeeds[tx.origin];
+
+        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
+        bytes32 salt = keccak256(abi.encode(tx.origin, seed));
+
+        // Deploy the proxy with CREATE2.
+        transientProxyOwner = owner;
+        proxy = new PRBProxy{ salt: salt }();
+        delete transientProxyOwner;
+
+        // Set the proxy for the owner.
+        proxies[owner] = proxy;
+
+        // Increment the seed.
+        // We're using unchecked arithmetic here because this cannot realistically overflow, ever.
+        unchecked {
+            nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
+        }
+
+        // Log the proxy via en event.
+        // forgefmt: disable-next-line
+        emit DeployProxy({
+            origin: tx.origin,
+            operator: msg.sender,
+            owner: owner,
+            seed: seed,
+            salt: salt,
+            proxy: proxy
+        });
+    }
+
+    /// @dev See the documentation for the public functions that call this internal function.
+    function _deployAndExecute(
+        address owner,
+        address target,
+        bytes calldata data
+    )
+        internal
+        returns (IPRBProxy proxy, bytes memory response)
+    {
+        // Load the next seed.
+        bytes32 seed = nextSeeds[tx.origin];
+
+        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
+        bytes32 salt = keccak256(abi.encode(tx.origin, seed));
+
+        // Deploy the proxy with CREATE2. The registry will temporarily be the owner of the proxy.
+        transientProxyOwner = address(this);
+        proxy = new PRBProxy{ salt: salt }();
+        delete transientProxyOwner;
+
+        // Set the proxy for the owner.
+        proxies[owner] = proxy;
+
+        // Increment the seed.
+        // We're using unchecked arithmetic here because this cannot realistically overflow, ever.
+        unchecked {
+            nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
+        }
+
+        // Delegate call to the target contract.
+        response = proxy.execute(target, data);
+
+        // Transfer the ownership to the specified owner.
+        proxy.transferOwnership(owner);
+
+        // Log the proxy via en event.
+        // forgefmt: disable-next-line
+        emit DeployProxy({
+            origin: tx.origin,
+            operator: msg.sender,
+            owner: owner,
+            seed: seed,
+            salt: salt,
+            proxy: proxy
+        });
     }
 }

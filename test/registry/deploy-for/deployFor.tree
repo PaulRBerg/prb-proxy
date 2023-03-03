@@ -1,20 +1,8 @@
 deployFor.t.sol
-├── when the owner has a proxy in the registry
-│  ├── when the owner did not transfer ownership
-│  │  └── it should revert
-│  └── when the owner transferred ownership
-│     └── it should deploy the proxy
-└── when the owner does not have a proxy in the registry
-   ├── when the deployer is the same as the owner
-   │  └── it should deploy the proxy
-   └── when the deployer is not the same as the owner
-      ├── when the deployer did not deploy another proxy for the owner via the factory
-      │  └── it should deploy the proxy
-      └── when the deployer deployed another proxy for the owner via the factory
-         ├── when the deployer did not deploy another proxy for himself via the factory
-         │  ├── it should deploy the proxy
-         │  └── it should update the current proxies mapping
-         └── when the deployer deployed another proxy for himself via the factory
-            ├── it should deploy the proxy
-            ├── it should update the current proxies mapping
-            └── it should emit a {DeployProxy} event
+├── when the owner has a proxy
+│  └── it should revert
+└── when the owner does not have a proxy
+   ├── it should deploy the proxy
+   ├── it should update the next seeds mapping
+   ├── it should update the proxies mapping
+   └── it should emit a {DeployProxy} event

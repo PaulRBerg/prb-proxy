@@ -2,61 +2,94 @@
 pragma solidity >=0.8.19 <=0.9.0;
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
+import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 
 import { Registry_Test } from "../Registry.t.sol";
 
+/// @dev User roles:
+/// - Bob is the origin, operator, and owner of the proxy
 contract DeployAndExecute_Test is Registry_Test {
     bytes internal data;
-    address internal deployer;
     uint256 internal input = 1729;
     address internal target;
 
     function setUp() public override {
         Registry_Test.setUp();
+
         data = abi.encodeWithSelector(targets.echo.echoUint256.selector, input);
-        deployer = users.alice;
         target = address(targets.echo);
     }
 
-    /// @dev it should deploy the proxy.
-    function test_DeployAndExecute_Deploy() external {
+    /// @dev it should revert.
+    function test_RevertWhen_OwnerHasProxy() external {
         (IPRBProxy proxy,) = registry.deployAndExecute(target, data);
-        bytes memory actualRuntimeBytecode = address(proxy).code;
-        bytes memory expectedRuntimeBytecode = address(deployProxy()).code;
-        assertEq(actualRuntimeBytecode, expectedRuntimeBytecode, "runtime bytecode");
+        vm.expectRevert(
+            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerHasProxy.selector, users.alice, proxy)
+        );
+        registry.deployAndExecute(target, data);
     }
 
-    /// @dev it should update the current proxies mapping.
-    function test_DeployAndExecute_UpdateCurrentProxies() external {
+    modifier ownerDoesNotHaveProxy() {
+        _;
+    }
+
+    /// @dev it should deploy the proxy.
+    function testFuzz_DeployAndExecute_Deploy(address origin, address owner) external ownerDoesNotHaveProxy {
+        changePrank({ txOrigin: origin, msgSender: owner });
+
+        (IPRBProxy actualProxy,) = registry.deployAndExecute(target, data);
+        address expectedProxy = computeProxyAddress(origin, SEED_ZERO);
+        assertEq(address(actualProxy), expectedProxy, "deployed proxy address");
+    }
+
+    /// @dev it should update the next seeds mapping.
+    function testFuzz_DeployAndExecute_UpdateNextSeeds(address origin, address owner) external ownerDoesNotHaveProxy {
+        changePrank({ txOrigin: origin, msgSender: owner });
         registry.deployAndExecute(target, data);
-        address actualProxyAddress = address(registry.getCurrentProxy(deployer));
-        address expectedProxyAddress = computeProxyAddress(deployer, SEED_ZERO);
+
+        bytes32 actualNextSeed = registry.getNextSeed(origin);
+        bytes32 expectedNextSeed = SEED_ONE;
+        assertEq(actualNextSeed, expectedNextSeed, "next seed");
+    }
+
+    /// @dev it should update the proxies mapping.
+    function testFuzz_DeployAndExecute_UpdateProxies(address origin, address owner) external ownerDoesNotHaveProxy {
+        changePrank({ txOrigin: origin, msgSender: owner });
+        registry.deployAndExecute(target, data);
+
+        address actualProxyAddress = address(registry.getProxy(owner));
+        address expectedProxyAddress = computeProxyAddress(origin, SEED_ZERO);
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
     }
 
     /// @dev it should delegate call to the target contract.
-    function test_DeployAndExecute_Execute() external {
+    function testFuzz_DeployAndExecute_Execute(address origin, address owner) external ownerDoesNotHaveProxy {
+        changePrank({ txOrigin: origin, msgSender: owner });
         (, bytes memory actualResponse) = registry.deployAndExecute(target, data);
         bytes memory expectedResponse = abi.encode(input);
         assertEq(actualResponse, expectedResponse, "echo.echoUint256 response");
     }
 
     /// @dev it should emit a {DeployProxy} event.
-    function test_DeployAndExecute_Event_Deploy() external {
+    function testFuzz_DeployAndExecute_Event_Deploy(address origin, address owner) external ownerDoesNotHaveProxy {
+        changePrank({ txOrigin: origin, msgSender: owner });
+
         expectEmit();
         emit DeployProxy({
-            origin: deployer,
-            deployer: address(registry),
-            owner: deployer,
+            origin: origin,
+            operator: owner,
+            owner: owner,
             seed: SEED_ZERO,
-            salt: keccak256(abi.encode(deployer, SEED_ZERO)),
-            proxy: IPRBProxy(computeProxyAddress(deployer, SEED_ZERO))
+            salt: keccak256(abi.encode(origin, SEED_ZERO)),
+            proxy: IPRBProxy(computeProxyAddress(origin, SEED_ZERO))
         });
         registry.deployAndExecute(target, data);
     }
 
     /// @dev it should emit an {Execute} event.
-    function test_DeployAndExecute_Event_Execute() external {
+    function testFuzz_DeployAndExecute_Event_Execute(address origin, address owner) external ownerDoesNotHaveProxy {
+        changePrank({ txOrigin: origin, msgSender: owner });
+
         expectEmit();
         emit Execute({ target: address(targets.echo), data: data, response: abi.encode(input) });
         registry.deployAndExecute(target, data);

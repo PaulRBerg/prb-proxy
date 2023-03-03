@@ -6,49 +6,34 @@ import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 import { Proxy_Test } from "../Proxy.t.sol";
 
 contract TransferOwnership_Test is Proxy_Test {
+    function setUp() public virtual override {
+        Proxy_Test.setUp();
+    }
+
     /// @dev it should revert.
-    function test_RevertWhen_CallerNotOwner() external {
+    function test_RevertWhen_CallerNotRegistry() external {
         // Make Eve the caller in this test.
         address caller = users.eve;
-        changePrank(caller);
+        changePrank({ msgSender: caller });
 
         // Run the test.
         address newOwner = users.eve;
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_NotOwner.selector, owner, caller));
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_CallerNotRegistry.selector, registry, caller));
         proxy.transferOwnership(newOwner);
     }
 
-    modifier callerOwner() {
+    modifier callerRegistry() {
+        changePrank({ msgSender: address(registry) });
         _;
     }
 
     /// @dev it should transfer the ownership.
-    function test_TransferOwnership_ToZeroAddress() external callerOwner {
-        proxy.transferOwnership(address(0));
-        address actualOwner = proxy.owner();
-        address expectedOwner = address(0);
-        assertEq(actualOwner, expectedOwner, "proxy owner");
-    }
+    function testFuzz_TransferOwnership(address newOwner) external callerRegistry {
+        vm.assume(newOwner != users.alice);
 
-    modifier toNonZeroAddress() {
-        _;
-    }
-
-    /// @dev it should transfer the ownership.
-    function test_TransferOwnership() external callerOwner toNonZeroAddress {
-        address newOwner = users.bob;
         proxy.transferOwnership(newOwner);
         address actualOwner = proxy.owner();
         address expectedOwner = newOwner;
         assertEq(actualOwner, expectedOwner, "proxy owner");
-    }
-
-    /// @dev it should emit a {TransferOwnership} event.
-    function test_TransferOwnership_Event() external callerOwner toNonZeroAddress {
-        address oldOwner = owner;
-        address newOwner = users.bob;
-        expectEmit();
-        emit TransferOwnership(oldOwner, newOwner);
-        proxy.transferOwnership(newOwner);
     }
 }
