@@ -5,8 +5,8 @@ import { Helpers_Test } from "../Helpers.t.sol";
 
 contract Version_Test is Helpers_Test {
     function test_Versions() external {
-        uint256 registryVersion = registry.VERSION();
-        uint256 helpersVersion = helpers.VERSION();
+        string memory registryVersion = registry.VERSION();
+        string memory helpersVersion = helpers.VERSION();
         assertEq(registryVersion, helpersVersion, "Registry version does not match helpers version");
     }
 }

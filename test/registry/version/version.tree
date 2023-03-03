@@ -1,2 +1,2 @@
 version.t.sol
-└── it should return the release version
+└── it should return the correct version

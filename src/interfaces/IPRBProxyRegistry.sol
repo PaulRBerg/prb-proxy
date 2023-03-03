@@ -38,9 +38,9 @@ interface IPRBProxyRegistry {
                               PUBLIC CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice The release version of the {PRBProxy} system.
+    /// @notice The semantic version of the {PRBProxy} release.
     /// @dev This is stored in the registry rather than the proxy to save gas for end users.
-    function VERSION() external view returns (uint256);
+    function VERSION() external view returns (string memory);
 
     /// @notice Returns the next seed that will be used to deploy the proxy.
     /// @param origin The externally owned account (EOA) that is part of the CREATE2 salt.
