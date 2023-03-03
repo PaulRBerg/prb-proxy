@@ -37,9 +37,9 @@ interface IPRBProxyHelpers {
                               PUBLIC CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice The release version of the {PRBProxy} protocol.
-    /// @dev This version is mirrored here to serve as a link to the proxy registry.
-    function VERSION() external view returns (uint256);
+    /// @notice The semantic version of the {PRBProxy} release.
+    /// @dev This is mirrored here to serve as a link to the proxy registry.
+    function VERSION() external view returns (string memory);
 
     /*//////////////////////////////////////////////////////////////////////////
                             PUBLIC NON-CONSTANT FUNCTIONS
