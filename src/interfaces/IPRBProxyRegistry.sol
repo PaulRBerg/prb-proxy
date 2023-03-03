@@ -12,7 +12,7 @@ interface IPRBProxyRegistry {
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Emitted when a proxy already exists for the provided owner.
+    /// @notice Thrown when a proxy already exists for the provided owner.
     error PRBProxyRegistry_ProxyAlreadyExists(address owner);
 
     /*//////////////////////////////////////////////////////////////////////////

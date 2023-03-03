@@ -10,7 +10,7 @@ interface IPRBProxyFactory {
                                        EVENTS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Emitted when a new proxy is deployed.
+    /// @notice Thrown when a new proxy is deployed.
     event DeployProxy(
         address indexed origin,
         address indexed deployer,

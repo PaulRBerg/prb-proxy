@@ -14,7 +14,7 @@ interface IPRBProxyHelpers {
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Emitted when the plugin has no listed methods.
+    /// @notice Thrown when the plugin has no listed methods.
     error PRBProxy_NoPluginMethods(IPRBProxyPlugin plugin);
 
     /*//////////////////////////////////////////////////////////////////////////

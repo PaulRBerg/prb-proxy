@@ -10,25 +10,25 @@ interface IPRBProxy {
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Emitted when execution reverted with no reason.
+    /// @notice Thrown when execution reverted with no reason.
     error PRBProxy_ExecutionReverted();
 
-    /// @notice Emitted when the caller is not the owner.
+    /// @notice Thrown when the caller is not the owner.
     error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target);
 
-    /// @notice Emitted when the caller is not the owner.
+    /// @notice Thrown when the caller is not the owner.
     error PRBProxy_NotOwner(address owner, address caller);
 
-    /// @notice Emitted when the owner is changed during the DELEGATECALL.
+    /// @notice Thrown when the owner is changed during the DELEGATECALL.
     error PRBProxy_OwnerChanged(address originalOwner, address newOwner);
 
-    /// @notice Emitted when a plugin execution reverts with no reason.
+    /// @notice Thrown when a plugin execution reverts with no reason.
     error PRBProxy_PluginReverted(IPRBProxyPlugin plugin);
 
-    /// @notice Emitted when the fallback function does not find an installed plugin for the called method.
+    /// @notice Thrown when the fallback function does not find an installed plugin for the called method.
     error PRBProxy_PluginNotInstalledForMethod(address caller, bytes4 selector);
 
-    /// @notice Emitted when passing an EOA or an undeployed contract as the target.
+    /// @notice Thrown when passing an EOA or an undeployed contract as the target.
     error PRBProxy_TargetNotContract(address target);
 
     /*//////////////////////////////////////////////////////////////////////////
