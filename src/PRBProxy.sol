@@ -44,7 +44,7 @@ contract PRBProxy is IPRBProxy {
     constructor() {
         minGasReserve = 5000;
         registry = IPRBProxyRegistry(msg.sender);
-        owner = IPRBProxyRegistry(msg.sender).transientProxyOwner();
+        owner = registry.transientProxyOwner();
     }
 
     /*//////////////////////////////////////////////////////////////////////////
