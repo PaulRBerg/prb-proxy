@@ -9,11 +9,12 @@ interface IPRBProxyStorage {
     /// @notice The address of the owner account or contract.
     function owner() external view returns (address);
 
-    /// @notice How much gas to reserve for running the remainder of the "execute" function after the DELEGATECALL.
+    /// @notice How much gas to reserve for running the remainder of either the fallback or the "execute" function
+    /// after the delegate call.
     /// @dev This prevents the proxy from becoming unusable if EVM opcode gas costs change in the future.
     function minGasReserve() external view returns (uint256);
 
-    /// @notice Returns the address of the plugin installed for the the provided method.
+    /// @notice Returns the address of the plugin installed for the provided method.
     /// @dev Returns the zero address if no plugin is installed.
     /// @param method The signature of the method to make the query for.
     function plugins(bytes4 method) external view returns (IPRBProxyPlugin plugin);
