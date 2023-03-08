@@ -17,27 +17,9 @@ abstract contract PRBProxyStorage is IPRBProxyStorage {
     /// @inheritdoc IPRBProxyStorage
     uint256 public override minGasReserve;
 
-    /*//////////////////////////////////////////////////////////////////////////
-                                  INTERNAL STORAGE
-    //////////////////////////////////////////////////////////////////////////*/
-
-    /// @dev Maps plugin methods to plugin implementation.
-    mapping(bytes4 method => IPRBProxyPlugin plugin) internal plugins;
-
-    /// @dev Maps envoys to target contracts to function selectors to boolean flags.
-    mapping(address envoy => mapping(address target => bool permission)) internal permissions;
-
-    /*//////////////////////////////////////////////////////////////////////////
-                              PUBLIC CONSTANT FUNCTIONS
-    //////////////////////////////////////////////////////////////////////////*/
+    /// @inheritdoc IPRBProxyStorage
+    mapping(address envoy => mapping(address target => bool permission)) public permissions;
 
     /// @inheritdoc IPRBProxyStorage
-    function getPermission(address envoy, address target) external view override returns (bool permission) {
-        permission = permissions[envoy][target];
-    }
-
-    /// @inheritdoc IPRBProxyStorage
-    function getPluginForMethod(bytes4 method) external view override returns (IPRBProxyPlugin plugin) {
-        plugin = plugins[method];
-    }
+    mapping(bytes4 method => IPRBProxyPlugin plugin) public plugins;
 }
