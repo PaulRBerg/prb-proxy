@@ -4,36 +4,17 @@ pragma solidity >=0.8.18;
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
+import { PRBProxyStorage } from "./PRBProxyStorage.sol";
 
 /// @title PRBProxy
 /// @dev This contract implements the {IPRBProxy} interface.
-contract PRBProxy is IPRBProxy {
+contract PRBProxy is IPRBProxy, PRBProxyStorage {
     /*//////////////////////////////////////////////////////////////////////////
                                      CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxy
     IPRBProxyRegistry public immutable override registry;
-
-    /*//////////////////////////////////////////////////////////////////////////
-                                   PUBLIC STORAGE
-    //////////////////////////////////////////////////////////////////////////*/
-
-    /// @inheritdoc IPRBProxy
-    address public override owner;
-
-    /// @inheritdoc IPRBProxy
-    uint256 public override minGasReserve;
-
-    /*//////////////////////////////////////////////////////////////////////////
-                                  INTERNAL STORAGE
-    //////////////////////////////////////////////////////////////////////////*/
-
-    /// @dev Maps plugin methods to plugin implementation.
-    mapping(bytes4 method => IPRBProxyPlugin plugin) internal plugins;
-
-    /// @dev Maps envoys to target contracts to function selectors to boolean flags.
-    mapping(address envoy => mapping(address target => bool permission)) internal permissions;
 
     /*//////////////////////////////////////////////////////////////////////////
                                      CONSTRUCTOR
@@ -83,20 +64,6 @@ contract PRBProxy is IPRBProxy {
 
     /// @dev Called when the call data is empty.
     receive() external payable { }
-
-    /*//////////////////////////////////////////////////////////////////////////
-                              PUBLIC CONSTANT FUNCTIONS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    /// @inheritdoc IPRBProxy
-    function getPermission(address envoy, address target) external view override returns (bool permission) {
-        permission = permissions[envoy][target];
-    }
-
-    /// @inheritdoc IPRBProxy
-    function getPluginForMethod(bytes4 method) external view override returns (IPRBProxyPlugin plugin) {
-        plugin = plugins[method];
-    }
 
     /*/////////////////////////////////////////////////////////////////////////
                             PUBLIC NON-CONSTANT FUNCTIONS

@@ -7,7 +7,7 @@ contract SetPermission_Test is Helpers_Test {
     /// @dev it should set the permission.
     function test_SetPermission_PermissionNotSet() external {
         setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
-        bool permission = proxy.getPermission({ envoy: users.envoy, target: address(targets.dummy) });
+        bool permission = proxy.permissions({ envoy: users.envoy, target: address(targets.dummy) });
         assertTrue(permission);
     }
 
@@ -19,7 +19,7 @@ contract SetPermission_Test is Helpers_Test {
     /// @dev it should do nothing when re-setting the permission.
     function test_SetPermission_PermissionSet_ResetPermission() external permissionSet {
         setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
-        bool permission = proxy.getPermission({ envoy: users.envoy, target: address(targets.dummy) });
+        bool permission = proxy.permissions({ envoy: users.envoy, target: address(targets.dummy) });
         assertTrue(permission);
     }
 

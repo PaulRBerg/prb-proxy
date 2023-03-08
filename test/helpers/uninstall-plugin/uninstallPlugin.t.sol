@@ -25,7 +25,7 @@ contract UninstallPlugin_Test is Helpers_Test {
         // Assert that every plugin method has been uninstalled.
         bytes4[] memory pluginMethods = plugins.dummy.methodList();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
-            IPRBProxyPlugin actualPlugin = proxy.getPluginForMethod(pluginMethods[i]);
+            IPRBProxyPlugin actualPlugin = proxy.plugins(pluginMethods[i]);
             IPRBProxyPlugin expectedPlugin = IPRBProxyPlugin(address(0));
             assertEq(actualPlugin, expectedPlugin, "Plugin method installed");
         }
@@ -45,7 +45,7 @@ contract UninstallPlugin_Test is Helpers_Test {
         // Assert that every plugin method has been uninstalled.
         bytes4[] memory pluginMethods = plugins.dummy.methodList();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
-            IPRBProxyPlugin actualPlugin = proxy.getPluginForMethod(pluginMethods[i]);
+            IPRBProxyPlugin actualPlugin = proxy.plugins(pluginMethods[i]);
             IPRBProxyPlugin expectedPlugin = IPRBProxyPlugin(address(0));
             assertEq(actualPlugin, expectedPlugin, "Plugin method installed");
         }

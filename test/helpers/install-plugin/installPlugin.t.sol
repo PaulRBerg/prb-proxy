@@ -28,7 +28,7 @@ contract InstallPlugin_Test is Helpers_Test {
         // Assert that every plugin method has been installed.
         bytes4[] memory pluginMethods = plugins.dummy.methodList();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
-            IPRBProxyPlugin actualPlugin = proxy.getPluginForMethod(pluginMethods[i]);
+            IPRBProxyPlugin actualPlugin = proxy.plugins(pluginMethods[i]);
             IPRBProxyPlugin expectedPlugin = plugins.dummy;
             assertEq(actualPlugin, expectedPlugin, "Plugin method not installed");
         }
@@ -46,7 +46,7 @@ contract InstallPlugin_Test is Helpers_Test {
         // Assert that every plugin method has been installed.
         bytes4[] memory pluginMethods = plugins.dummy.methodList();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
-            IPRBProxyPlugin actualPlugin = proxy.getPluginForMethod(pluginMethods[i]);
+            IPRBProxyPlugin actualPlugin = proxy.plugins(pluginMethods[i]);
             IPRBProxyPlugin expectedPlugin = plugins.dummy;
             assertEq(actualPlugin, expectedPlugin, "Plugin method not installed");
         }
