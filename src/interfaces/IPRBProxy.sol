@@ -3,10 +3,11 @@ pragma solidity >=0.8.4;
 
 import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "./IPRBProxyRegistry.sol";
+import { IPRBProxyStorage } from "./IPRBProxyStorage.sol";
 
 /// @title IPRBProxy
 /// @notice Proxy contract to compose transactions on owner's behalf.
-interface IPRBProxy {
+interface IPRBProxy is IPRBProxyStorage {
     /*//////////////////////////////////////////////////////////////////////////
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
@@ -43,24 +44,8 @@ interface IPRBProxy {
     event RunPlugin(IPRBProxyPlugin indexed plugin, bytes data, bytes response);
 
     /*//////////////////////////////////////////////////////////////////////////
-                              PUBLIC CONSTANT FUNCTIONS
+                             PUBLIC CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
-
-    /// @notice Returns a boolean flag that indicates whether the envoy has permission to call the provided target
-    /// contract.
-    function getPermission(address envoy, address target) external view returns (bool permission);
-
-    /// @notice Returns the address of the plugin installed for the the provided method.
-    /// @dev Returns the zero address if no plugin is installed.
-    /// @param method The signature of the method to make the query for.
-    function getPluginForMethod(bytes4 method) external view returns (IPRBProxyPlugin plugin);
-
-    /// @notice How much gas to reserve for running the remainder of the "execute" function after the DELEGATECALL.
-    /// @dev This prevents the proxy from becoming unusable if EVM opcode gas costs change in the future.
-    function minGasReserve() external view returns (uint256);
-
-    /// @notice The address of the owner account or contract.
-    function owner() external view returns (address);
 
     /// @notice The address of the registry that has deployed this proxy.
     function registry() external view returns (IPRBProxyRegistry);
