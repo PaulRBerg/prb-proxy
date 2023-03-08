@@ -5,11 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[4.0.0-beta.3]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.2...v4.0.0-beta.3
 [4.0.0-beta.2]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.1...v4.0.0-beta.2
 [4.0.0-beta.1]: https://github.com/PaulRBerg/prb-proxy/compare/v2.0.0...v4.0.0-beta.1
 [2.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/PaulRBerg/prb-proxy/releases/tag/v1.0.0
+
+## [4.0.0-beta.3] - 2023-03-08
+
+### Changed
+
+- Improve documentation (@PaulRBerg)
+- Make `permissions` and `plugins` mappings public ([#84](https://github.com/PaulRBerg/prb-proxy/pull/84)) (@andreivladbrg)
+- Reorder storage variables ([`d86514`](https://github.com/PaulRBerg/prb-proxy/commit/d86514)) (@PaulRBerg)
+
+### Added
+
+- Add `IRPProxyStorage` interface ([#84](https://github.com/PaulRBerg/prb-proxy/pull/84)) (@andreivladbrg)
+
+### Removed
+
+- Remove getters `getPermission` and `getPluginForMethod` ([#84](https://github.com/PaulRBerg/prb-proxy/pull/84)) (@andreivladbrg)
 
 ## [4.0.0-beta.2] - 2023-03-03
 
@@ -21,7 +38,7 @@ The format is based on [Common Changelog](https://common-changelog.org/), and th
 - Transfer ownership via the registry ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
 - Bump submodules (@PaulRBerg)
 - Improve documentation (@PaulRBerg)
-- Make `VERSION` a string ([699f76](https://github.com/PaulRBerg/prb-proxy/commit/699f76bd2e93c3ef3c1867b3e97190344f2fc4aa)) (@PaulRBerg)
+- Make `VERSION` a string ([699f76](https://github.com/PaulRBerg/prb-proxy/commit/699f76)) (@PaulRBerg)
 
 ### Added
 

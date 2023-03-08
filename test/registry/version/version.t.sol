@@ -7,7 +7,7 @@ contract Version_Test is Registry_Test {
     /// @dev it should return the correct version.
     function test_Version() external {
         string memory actualVersion = registry.VERSION();
-        string memory expectedVersion = "4.0.0-beta.2";
+        string memory expectedVersion = "4.0.0-beta.3";
         assertEq(actualVersion, expectedVersion, "VERSION");
     }
 }

@@ -1,7 +1,7 @@
 {
   "name": "@prb/proxy",
   "description": "Proxy contract to compose Ethereum transactions on behalf of the owner",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.3",
   "author": {
     "name": "Paul Razvan Berg",
     "url": "https://github.com/PaulRBerg"
