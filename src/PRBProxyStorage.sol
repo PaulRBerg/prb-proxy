@@ -18,8 +18,8 @@ abstract contract PRBProxyStorage is IPRBProxyStorage {
     uint256 public override minGasReserve;
 
     /// @inheritdoc IPRBProxyStorage
-    mapping(address envoy => mapping(address target => bool permission)) public permissions;
+    mapping(bytes4 method => IPRBProxyPlugin plugin) public plugins;
 
     /// @inheritdoc IPRBProxyStorage
-    mapping(bytes4 method => IPRBProxyPlugin plugin) public plugins;
+    mapping(address envoy => mapping(address target => bool permission)) public permissions;
 }
