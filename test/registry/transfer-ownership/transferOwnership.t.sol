@@ -69,7 +69,7 @@ contract TransferOwnership_Test is Registry_Test {
     function testFuzz_TransferOwnership_Event(address newOwner) external newOwnerDoesNotHaveProxy callerHasProxy {
         vm.assume(newOwner != users.alice);
 
-        expectEmit();
+        vm.expectEmit();
         emit TransferOwnership({ proxy: proxy, oldOwner: users.alice, newOwner: newOwner });
         registry.transferOwnership(newOwner);
     }

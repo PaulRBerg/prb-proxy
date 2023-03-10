@@ -108,7 +108,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
     {
         changePrank({ txOrigin: origin, msgSender: operator });
 
-        expectEmit();
+        vm.expectEmit();
         emit DeployProxy({
             origin: origin,
             operator: operator,
@@ -131,7 +131,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
     {
         changePrank({ txOrigin: origin, msgSender: operator });
 
-        expectEmit();
+        vm.expectEmit();
         emit Execute({ target: address(targets.echo), data: data, response: abi.encode(input) });
         registry.deployAndExecuteFor(owner, target, data);
     }

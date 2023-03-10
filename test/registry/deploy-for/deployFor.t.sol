@@ -70,7 +70,7 @@ contract DeployFor_Test is Registry_Test {
     function testFuzz_DeployFor_Event(address origin, address operator, address owner) external ownerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: operator });
 
-        expectEmit();
+        vm.expectEmit();
         emit DeployProxy({
             origin: origin,
             operator: operator,

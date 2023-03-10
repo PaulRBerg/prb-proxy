@@ -278,7 +278,7 @@ contract RunPlugin_Test is Proxy_Test {
         pluginDoesNotSelfDestruct
     {
         installPlugin(plugins.dummy);
-        expectEmit();
+        vm.expectEmit();
         emit RunPlugin({
             plugin: plugins.dummy,
             data: abi.encodeWithSelector(TargetDummy.foo.selector),

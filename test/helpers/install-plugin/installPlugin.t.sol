@@ -55,7 +55,7 @@ contract InstallPlugin_Test is Helpers_Test {
     /// @dev it should emit an {InstallPlugin} event.
     function test_InstallPlugin_Event() external pluginHasMethods pluginNotInstalled {
         // Expect an {InstallPlugin} event.
-        expectEmit();
+        vm.expectEmit();
         emit InstallPlugin(plugins.dummy);
 
         // Install the dummy plugin.

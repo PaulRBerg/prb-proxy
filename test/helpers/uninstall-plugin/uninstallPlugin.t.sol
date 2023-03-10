@@ -54,7 +54,7 @@ contract UninstallPlugin_Test is Helpers_Test {
     /// @dev it should emit an {UninstallPlugin} event.
     function test_UninstallPlugin_Event() external pluginHasMethods pluginInstalled {
         // Expect an {UninstallPlugin} event to be emitted.
-        expectEmit();
+        vm.expectEmit();
         emit UninstallPlugin(plugins.dummy);
 
         // Uninstall the dummy plugin.

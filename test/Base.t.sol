@@ -200,12 +200,6 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
         vm.label({ account: address(registry), newLabel: "Registry" });
     }
 
-    /// @dev Expects an event to be emitted by checking all three topics and the data. As mentioned in the Foundry
-    /// Book, the extra `true` arguments don't hurt.
-    function expectEmit() internal {
-        vm.expectEmit({ checkTopic1: true, checkTopic2: true, checkTopic3: true, checkData: true });
-    }
-
     /// @dev Reads the proxy bytecode either normally or from precompiled source.
     function getProxyBytecode() internal returns (bytes memory bytecode) {
         if (isTestOptimizedProfile()) {

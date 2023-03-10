@@ -54,7 +54,7 @@ contract Deploy_Test is Registry_Test {
     /// @dev it should emit a {DeployProxy} event.
     function testFuzz_Deploy_Event(address origin, address owner) external ownerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
-        expectEmit();
+        vm.expectEmit();
         emit DeployProxy({
             origin: origin,
             operator: owner,

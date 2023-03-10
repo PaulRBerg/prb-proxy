@@ -25,7 +25,7 @@ contract SetPermission_Test is Helpers_Test {
 
     /// @dev it should emit a {SetPermission} event.
     function test_SetPermission_PermissionSet_ResetPermission_Event() external permissionSet {
-        expectEmit();
+        vm.expectEmit();
         emit SetPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
         setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
     }
@@ -37,7 +37,7 @@ contract SetPermission_Test is Helpers_Test {
 
     /// @dev it should emit a {SetPermission} event.
     function test_SetPermission_PermissionSet_UnsetPermission_Event() external permissionSet {
-        expectEmit();
+        vm.expectEmit();
         emit SetPermission({ envoy: users.envoy, target: address(targets.dummy), permission: false });
         setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: false });
     }
