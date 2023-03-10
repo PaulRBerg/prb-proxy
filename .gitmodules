@@ -1,7 +1,7 @@
 [submodule "lib/forge-std"]
-  branch = "master"
-  path = "lib/forge-std"
-  url = "https://github.com/PaulRBerg/forge-std"
+  branch = "v1"
+	path = "lib/forge-std"
+	url = "https://github.com/foundry-rs/forge-std"
 [submodule "lib/openzeppelin-contracts"]
   branch = "release-v4.8"
   path = "lib/openzeppelin-contracts"
