@@ -1,15 +1,17 @@
 # directories
-.yarn/
 **/broadcast
 **/cache
 **/lib
+**/node_modules
 **/optimized-out
 **/out
-**/node_modules
 
 # files
 *.env
 *.log
+.DS_Store
 .pnp.*
-yarn-debug.log*
-yarn-error.log*
+lcov.info
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
