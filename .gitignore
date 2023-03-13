@@ -1,9 +1,9 @@
 # directories
-**/broadcast
-**/cache
-**/node_modules
-**/optimized-out
-**/out
+broadcast
+cache
+node_modules
+optimized-out
+out
 
 # files
 *.env

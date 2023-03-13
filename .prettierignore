@@ -1,10 +1,10 @@
 # directories
-**/broadcast
-**/cache
-**/lib
-**/node_modules
-**/optimized-out
-**/out
+broadcast
+cache
+lib
+node_modules
+optimized-out
+out
 
 # files
 *.env
