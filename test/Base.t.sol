@@ -15,6 +15,7 @@ import { PRBProxy } from "src/PRBProxy.sol";
 import { PRBProxyHelpers } from "src/PRBProxyHelpers.sol";
 import { PRBProxyRegistry } from "src/PRBProxyRegistry.sol";
 
+import { Events } from "./shared/Events.t.sol";
 import { PluginChangeOwner } from "./shared/plugins/PluginChangeOwner.t.sol";
 import { PluginDummy } from "./shared/plugins/PluginDummy.t.sol";
 import { PluginEcho } from "./shared/plugins/PluginEcho.t.sol";
@@ -32,8 +33,8 @@ import { TargetReverter } from "./shared/targets/TargetReverter.t.sol";
 import { TargetSelfDestructer } from "./shared/targets/TargetSelfDestructer.t.sol";
 
 /// @title Base_Test
-/// @notice Common contract members needed across test contracts.
-abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
+/// @notice Base test contract with common logic needed by all test contracts.
+abstract contract Base_Test is PRBTest, Events, StdCheats, StdUtils {
     /*//////////////////////////////////////////////////////////////////////////
                                        STRUCTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -67,23 +68,6 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                       EVENTS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    event DeployProxy(
-        address indexed origin,
-        address indexed operator,
-        address indexed owner,
-        bytes32 seed,
-        bytes32 salt,
-        IPRBProxy proxy
-    );
-
-    event Execute(address indexed target, bytes data, bytes response);
-
-    event TransferOwnership(IPRBProxy proxy, address indexed oldOwner, address indexed newOwner);
-
-    /*//////////////////////////////////////////////////////////////////////////
                                       CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
 
@@ -93,7 +77,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     bytes32 internal constant SEED_ZERO = bytes32(uint256(0x00));
 
     /*//////////////////////////////////////////////////////////////////////////
-                                   TEST VARIABLES
+                                     VARIABLES
     //////////////////////////////////////////////////////////////////////////*/
 
     Plugins internal plugins;

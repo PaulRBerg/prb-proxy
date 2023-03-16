@@ -1,23 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <=0.9.0;
 
-import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
-
 import { Base_Test } from "../Base.t.sol";
 
 contract Helpers_Test is Base_Test {
-    /*//////////////////////////////////////////////////////////////////////////
-                                       EVENTS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    event SetMinGasReserve(uint256 oldMinGasReserve, uint256 newMinGasReserve);
-
-    event SetPermission(address indexed envoy, address indexed target, bool permission);
-
-    event InstallPlugin(IPRBProxyPlugin indexed plugin);
-
-    event UninstallPlugin(IPRBProxyPlugin indexed plugin);
-
     /*//////////////////////////////////////////////////////////////////////////
                                      VARIABLES
     //////////////////////////////////////////////////////////////////////////*/
