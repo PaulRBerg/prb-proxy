@@ -226,7 +226,7 @@ If you discover any bugs or security issues, please report them via [Telegram](h
 
 ## License
 
-[MIT](./LICENSE.md) © Paul Razvan Berg
+This project is licensed under MIT.
 
 <!-- Links -->
 
