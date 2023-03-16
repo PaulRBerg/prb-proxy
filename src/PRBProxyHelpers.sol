@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18;
 
+import { PRBProxyStorage } from "./abstracts/PRBProxyStorage.sol";
 import { IPRBProxyHelpers } from "./interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
-import { PRBProxyStorage } from "./PRBProxyStorage.sol";
 
 /*
 

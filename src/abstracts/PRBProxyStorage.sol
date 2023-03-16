@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18;
 
-import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
-import { IPRBProxyStorage } from "./interfaces/IPRBProxyStorage.sol";
+import { IPRBProxyPlugin } from "../interfaces/IPRBProxyPlugin.sol";
+import { IPRBProxyStorage } from "../interfaces/IPRBProxyStorage.sol";
 
 /// @title PRBProxyStorage
 /// @dev This contract implements the {IPRBProxyStorage} interface.

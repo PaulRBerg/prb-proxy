@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
+import { PRBProxyStorage } from "./abstracts/PRBProxyStorage.sol";
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
-import { PRBProxyStorage } from "./PRBProxyStorage.sol";
 
 /*
 
