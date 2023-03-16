@@ -35,10 +35,10 @@ interface IPRBProxyRegistry {
     event TransferOwnership(IPRBProxy proxy, address indexed oldOwner, address indexed newOwner);
 
     /*//////////////////////////////////////////////////////////////////////////
-                              PUBLIC CONSTANT FUNCTIONS
+                                 CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice The semantic version of the {PRBProxy} release.
+    /// @notice The semantic version of the proxy system release.
     /// @dev This is stored in the registry rather than the proxy to save gas for end users.
     function VERSION() external view returns (string memory);
 
@@ -56,7 +56,7 @@ interface IPRBProxyRegistry {
     function transientProxyOwner() external view returns (address owner);
 
     /*//////////////////////////////////////////////////////////////////////////
-                            PUBLIC NON-CONSTANT FUNCTIONS
+                               NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Deploys a new proxy with CREATE2 by setting the caller as the owner.
@@ -80,7 +80,7 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy contract.
     function deployFor(address owner) external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy via CREATE@ by setting the caller as the owner, and delegate calls to the provided
+    /// @notice Deploys a new proxy via CREATE2 by setting the caller as the owner, and delegate calls to the provided
     /// target contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.

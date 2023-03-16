@@ -153,7 +153,7 @@ abstract contract Base_Test is PRBTest, StdCheats, StdUtils {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                           INTERNAL NON-CONSTANT FUNCTIONS
+                                  HELPER FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev Helper function to compare two {IPRBProxyPlugin} addresses.

@@ -44,14 +44,14 @@ interface IPRBProxy is IPRBProxyStorage {
     event RunPlugin(IPRBProxyPlugin indexed plugin, bytes data, bytes response);
 
     /*//////////////////////////////////////////////////////////////////////////
-                             PUBLIC CONSTANT FUNCTIONS
+                                 CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice The address of the registry that has deployed this proxy.
     function registry() external view returns (IPRBProxyRegistry);
 
     /*//////////////////////////////////////////////////////////////////////////
-                            PUBLIC NON-CONSTANT FUNCTIONS
+                               NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Delegate calls to the provided target contract by forwarding the data. It then returns the data it

@@ -34,7 +34,7 @@ interface IPRBProxyHelpers {
     event UninstallPlugin(IPRBProxyPlugin indexed plugin);
 
     /*//////////////////////////////////////////////////////////////////////////
-                              PUBLIC CONSTANT FUNCTIONS
+                                 CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice The semantic version of the {PRBProxy} release.
@@ -42,7 +42,7 @@ interface IPRBProxyHelpers {
     function VERSION() external view returns (string memory);
 
     /*//////////////////////////////////////////////////////////////////////////
-                            PUBLIC NON-CONSTANT FUNCTIONS
+                               NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Installs the provided plugin contract.

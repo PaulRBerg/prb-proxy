@@ -19,7 +19,7 @@ contract Helpers_Test is Base_Test {
     event UninstallPlugin(IPRBProxyPlugin indexed plugin);
 
     /*//////////////////////////////////////////////////////////////////////////
-                                  TESTING VARIABLES
+                                     VARIABLES
     //////////////////////////////////////////////////////////////////////////*/
 
     address internal owner;
