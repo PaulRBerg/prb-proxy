@@ -6,6 +6,17 @@ import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
 import { PRBProxyStorage } from "./PRBProxyStorage.sol";
 
+/*
+
+██████╗ ██████╗ ██████╗ ██████╗ ██████╗  ██████╗ ██╗  ██╗██╗   ██╗
+██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔═══██╗╚██╗██╔╝╚██╗ ██╔╝
+██████╔╝██████╔╝██████╔╝██████╔╝██████╔╝██║   ██║ ╚███╔╝  ╚████╔╝
+██╔═══╝ ██╔══██╗██╔══██╗██╔═══╝ ██╔══██╗██║   ██║ ██╔██╗   ╚██╔╝
+██║     ██║  ██║██████╔╝██║     ██║  ██║╚██████╔╝██╔╝ ██╗   ██║
+╚═╝     ╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝
+
+*/
+
 /// @title PRBProxy
 /// @dev This contract implements the {IPRBProxy} interface.
 contract PRBProxy is IPRBProxy, PRBProxyStorage {
