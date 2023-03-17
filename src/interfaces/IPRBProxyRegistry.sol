@@ -38,20 +38,20 @@ interface IPRBProxyRegistry {
                                  CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice The semantic version of the proxy system release.
+    /// @notice The release version of the proxy system.
     /// @dev This is stored in the registry rather than the proxy to save gas for end users.
     function VERSION() external view returns (string memory);
 
-    /// @notice Returns the next seed that will be used to deploy the proxy.
+    /// @notice The seed that will be used to deploy the next proxy for the provided origin.
     /// @param origin The externally owned account (EOA) that is part of the CREATE2 salt.
-    function getNextSeed(address origin) external view returns (bytes32 result);
+    function nextSeeds(address origin) external view returns (bytes32 seed);
 
-    /// @notice Gets the current proxy of the provided owner.
-    /// @param proxy The address of the current proxy.
-    function getProxy(address owner) external view returns (IPRBProxy proxy);
+    /// @notice The address of the current proxy for the provided owner.
+    /// @param owner The address of the user to make the query for.
+    function proxies(address owner) external view returns (IPRBProxy proxy);
 
-    /// @notice Gets the owner to be used in constructing the proxy, set transiently during proxy deployment.
-    /// @dev This is called by the proxy to fetch the address of the owner.
+    /// @notice Gets the owner to be used in constructing the proxy. This is set transiently during proxy deployment.
+    /// @dev This is called by the proxy constructor to fetch the address of the owner.
     /// @return owner The address of the owner of the proxy.
     function transientProxyOwner() external view returns (address owner);
 
@@ -64,7 +64,7 @@ interface IPRBProxyRegistry {
     /// @dev Emits a {DeployProxy} event.
     ///
     /// Requirements:
-    /// - The owner must not have a proxy.
+    /// - The caller must not have a proxy.
     ///
     /// @return proxy The address of the newly deployed proxy contract.
     function deploy() external returns (IPRBProxy proxy);
@@ -86,7 +86,7 @@ interface IPRBProxyRegistry {
     /// @dev Emits a {DeployProxy} and an {Execute} event.
     ///
     /// Requirements:
-    /// - The owner must not have a proxy.
+    /// - The caller must not have a proxy.
     /// - All from {PRBProxy-execute}.
     ///
     /// @param target The address of the target contract.

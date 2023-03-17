@@ -38,17 +38,13 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
+    mapping(address eoa => bytes32 seed) public override nextSeeds;
+
+    /// @inheritdoc IPRBProxyRegistry
+    mapping(address owner => IPRBProxy proxy) public override proxies;
+
+    /// @inheritdoc IPRBProxyRegistry
     address public override transientProxyOwner;
-
-    /*//////////////////////////////////////////////////////////////////////////
-                                  INTERNAL STORAGE
-    //////////////////////////////////////////////////////////////////////////*/
-
-    /// @notice Internal mapping between owners and proxies.
-    mapping(address owner => IPRBProxy proxy) internal proxies;
-
-    /// @dev Internal mapping to track the next seed to be used by an EOA.
-    mapping(address eoa => bytes32 seed) internal nextSeeds;
 
     /*//////////////////////////////////////////////////////////////////////////
                                      MODIFIERS
@@ -61,20 +57,6 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
             revert PRBProxyRegistry_OwnerHasProxy(owner, proxy);
         }
         _;
-    }
-
-    /*//////////////////////////////////////////////////////////////////////////
-                           USER-FACING CONSTANT FUNCTIONS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    /// @inheritdoc IPRBProxyRegistry
-    function getNextSeed(address origin) external view override returns (bytes32 nextSeed) {
-        nextSeed = nextSeeds[origin];
-    }
-
-    /// @inheritdoc IPRBProxyRegistry
-    function getProxy(address owner) external view override returns (IPRBProxy proxy) {
-        proxy = proxies[owner];
     }
 
     /*//////////////////////////////////////////////////////////////////////////

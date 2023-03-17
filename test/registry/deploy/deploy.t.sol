@@ -37,7 +37,7 @@ contract Deploy_Test is Registry_Test {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deploy();
 
-        bytes32 actualNextSeed = registry.getNextSeed(origin);
+        bytes32 actualNextSeed = registry.nextSeeds(origin);
         bytes32 expectedNextSeed = SEED_ONE;
         assertEq(actualNextSeed, expectedNextSeed, "next seed");
     }
@@ -46,7 +46,7 @@ contract Deploy_Test is Registry_Test {
     function testFuzz_Deploy_UpdateProxies(address origin, address owner) external ownerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deploy();
-        address actualProxy = address(registry.getProxy(owner));
+        address actualProxy = address(registry.proxies(owner));
         address expectedProxy = computeProxyAddress({ origin: origin, seed: SEED_ZERO });
         assertEq(actualProxy, expectedProxy, "proxy mapping");
     }

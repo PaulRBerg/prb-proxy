@@ -59,7 +59,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         changePrank({ txOrigin: origin, msgSender: operator });
         registry.deployAndExecuteFor(owner, target, data);
 
-        bytes32 actualNextSeed = registry.getNextSeed(origin);
+        bytes32 actualNextSeed = registry.nextSeeds(origin);
         bytes32 expectedNextSeed = SEED_ONE;
         assertEq(actualNextSeed, expectedNextSeed, "next seed");
     }
@@ -76,7 +76,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         changePrank({ txOrigin: origin, msgSender: operator });
         registry.deployAndExecuteFor(owner, target, data);
 
-        address actualProxyAddress = address(registry.getProxy(owner));
+        address actualProxyAddress = address(registry.proxies(owner));
         address expectedProxyAddress = computeProxyAddress(origin, SEED_ZERO);
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
     }

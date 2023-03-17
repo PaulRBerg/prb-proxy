@@ -50,7 +50,7 @@ contract TransferOwnership_Test is Registry_Test {
         vm.assume(newOwner != users.alice);
 
         registry.transferOwnership(newOwner);
-        address actualProxy = address(registry.getProxy({ owner: users.alice }));
+        address actualProxy = address(registry.proxies({ owner: users.alice }));
         address expectedProxy = address(0);
         assertEq(actualProxy, expectedProxy, "proxy for caller");
     }
@@ -60,7 +60,7 @@ contract TransferOwnership_Test is Registry_Test {
         vm.assume(newOwner != users.alice);
 
         registry.transferOwnership(newOwner);
-        address actualProxy = address(registry.getProxy({ owner: newOwner }));
+        address actualProxy = address(registry.proxies({ owner: newOwner }));
         address expectedProxy = address(proxy);
         assertEq(actualProxy, expectedProxy, "proxy for new owner");
     }
