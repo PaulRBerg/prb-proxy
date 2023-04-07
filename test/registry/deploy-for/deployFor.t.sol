@@ -20,12 +20,12 @@ contract DeployFor_Test is Registry_Test {
         registry.deployFor({ owner: users.alice });
     }
 
-    modifier ownerDoesNotHaveProxy() {
+    modifier whenOwnerDoesNotHaveProxy() {
         _;
     }
 
     /// @dev it should deploy the proxy.
-    function testFuzz_DeployFor(address origin, address operator, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_DeployFor(address origin, address operator, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: operator });
         address actualProxy = address(registry.deployFor(owner));
         address expectedProxy = computeProxyAddress(origin, SEED_ZERO);
@@ -39,7 +39,7 @@ contract DeployFor_Test is Registry_Test {
         address owner
     )
         external
-        ownerDoesNotHaveProxy
+        whenOwnerDoesNotHaveProxy
     {
         changePrank({ txOrigin: origin, msgSender: operator });
         registry.deployFor(owner);
@@ -56,7 +56,7 @@ contract DeployFor_Test is Registry_Test {
         address owner
     )
         external
-        ownerDoesNotHaveProxy
+        whenOwnerDoesNotHaveProxy
     {
         changePrank({ txOrigin: origin, msgSender: operator });
         registry.deployFor(owner);
@@ -67,7 +67,14 @@ contract DeployFor_Test is Registry_Test {
     }
 
     /// @dev it should emit a {DeployProxy} event.
-    function testFuzz_DeployFor_Event(address origin, address operator, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_DeployFor_Event(
+        address origin,
+        address operator,
+        address owner
+    )
+        external
+        whenOwnerDoesNotHaveProxy
+    {
         changePrank({ txOrigin: origin, msgSender: operator });
 
         vm.expectEmit();

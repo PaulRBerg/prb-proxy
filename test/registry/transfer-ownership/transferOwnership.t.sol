@@ -24,19 +24,19 @@ contract TransferOwnership_Test is Registry_Test {
         registry.transferOwnership({ newOwner: users.bob });
     }
 
-    modifier newOwnerDoesNotHaveProxy() {
+    modifier whenNewOwnerDoesNotHaveProxy() {
         _;
     }
 
     /// @dev it should revert.
-    function test_RevertWhen_CallerDoesNotHaveProxy() external newOwnerDoesNotHaveProxy {
+    function test_RevertWhen_CallerDoesNotHaveProxy() external whenNewOwnerDoesNotHaveProxy {
         vm.expectRevert(
             abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerDoesNotHaveProxy.selector, users.alice)
         );
         registry.transferOwnership({ newOwner: users.bob });
     }
 
-    modifier callerHasProxy() {
+    modifier whenCallerHasProxy() {
         proxy = registry.deploy();
         _;
     }
@@ -44,8 +44,8 @@ contract TransferOwnership_Test is Registry_Test {
     /// @dev it should transfer the ownership.
     function testFuzz_TransferOwnership_DeleteProxy(address newOwner)
         external
-        newOwnerDoesNotHaveProxy
-        callerHasProxy
+        whenNewOwnerDoesNotHaveProxy
+        whenCallerHasProxy
     {
         vm.assume(newOwner != users.alice);
 
@@ -56,7 +56,11 @@ contract TransferOwnership_Test is Registry_Test {
     }
 
     /// @dev it should transfer the ownership.
-    function testFuzz_TransferOwnership_SetProxy(address newOwner) external newOwnerDoesNotHaveProxy callerHasProxy {
+    function testFuzz_TransferOwnership_SetProxy(address newOwner)
+        external
+        whenNewOwnerDoesNotHaveProxy
+        whenCallerHasProxy
+    {
         vm.assume(newOwner != users.alice);
 
         registry.transferOwnership(newOwner);
@@ -66,7 +70,11 @@ contract TransferOwnership_Test is Registry_Test {
     }
 
     /// @dev it should emit a {TransferOwnership} event.
-    function testFuzz_TransferOwnership_Event(address newOwner) external newOwnerDoesNotHaveProxy callerHasProxy {
+    function testFuzz_TransferOwnership_Event(address newOwner)
+        external
+        whenNewOwnerDoesNotHaveProxy
+        whenCallerHasProxy
+    {
         vm.assume(newOwner != users.alice);
 
         vm.expectEmit();

@@ -27,7 +27,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         registry.deployAndExecuteFor({ owner: users.alice, target: target, data: data });
     }
 
-    modifier ownerDoesNotHaveProxy() {
+    modifier whenOwnerDoesNotHaveProxy() {
         _;
     }
 
@@ -38,7 +38,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         address owner
     )
         external
-        ownerDoesNotHaveProxy
+        whenOwnerDoesNotHaveProxy
     {
         changePrank({ txOrigin: origin, msgSender: operator });
 
@@ -54,7 +54,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         address owner
     )
         external
-        ownerDoesNotHaveProxy
+        whenOwnerDoesNotHaveProxy
     {
         changePrank({ txOrigin: origin, msgSender: operator });
         registry.deployAndExecuteFor(owner, target, data);
@@ -71,7 +71,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         address owner
     )
         external
-        ownerDoesNotHaveProxy
+        whenOwnerDoesNotHaveProxy
     {
         changePrank({ txOrigin: origin, msgSender: operator });
         registry.deployAndExecuteFor(owner, target, data);
@@ -88,7 +88,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         address owner
     )
         external
-        ownerDoesNotHaveProxy
+        whenOwnerDoesNotHaveProxy
     {
         changePrank({ txOrigin: origin, msgSender: operator });
 
@@ -104,7 +104,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         address owner
     )
         external
-        ownerDoesNotHaveProxy
+        whenOwnerDoesNotHaveProxy
     {
         changePrank({ txOrigin: origin, msgSender: operator });
 
@@ -127,7 +127,7 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         address owner
     )
         external
-        ownerDoesNotHaveProxy
+        whenOwnerDoesNotHaveProxy
     {
         changePrank({ txOrigin: origin, msgSender: operator });
 

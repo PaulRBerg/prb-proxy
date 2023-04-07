@@ -14,12 +14,12 @@ contract Execute_Test is Proxy_Test {
         Proxy_Test.setUp();
     }
 
-    modifier callerUnauthorized() {
+    modifier whenCallerUnauthorized() {
         _;
     }
 
     /// @dev it should revert.
-    function test_RevertWhen_NoPermission() external callerUnauthorized {
+    function test_RevertWhen_NoPermission() external whenCallerUnauthorized {
         changePrank({ msgSender: users.eve });
         bytes memory data = bytes.concat(targets.dummy.foo.selector);
         vm.expectRevert(
@@ -31,7 +31,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     /// @dev it should revert.
-    function test_RevertWhen_PermissionDifferentTarget() external callerUnauthorized {
+    function test_RevertWhen_PermissionDifferentTarget() external whenCallerUnauthorized {
         setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
         changePrank({ msgSender: users.envoy });
 
@@ -44,23 +44,23 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.dummy), data);
     }
 
-    modifier callerAuthorized() {
+    modifier whenCallerAuthorized() {
         _;
     }
 
     /// @dev it should revert.
-    function test_RevertWhen_TargetNotContract(address nonContract) external callerAuthorized {
+    function test_RevertWhen_TargetNotContract(address nonContract) external whenCallerAuthorized {
         vm.assume(nonContract.code.length == 0);
         vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_TargetNotContract.selector, nonContract));
         proxy.execute(nonContract, bytes(""));
     }
 
-    modifier targetContract() {
+    modifier whenTargetContract() {
         _;
     }
 
     /// @dev it should revert.
-    function test_RevertWhen_GasStipendCalculationUnderflows() external callerAuthorized targetContract {
+    function test_RevertWhen_GasStipendCalculationUnderflows() external whenCallerAuthorized whenTargetContract {
         // Set the min gas reserve.
         uint256 gasLimit = 10_000;
         proxy.execute(
@@ -74,38 +74,38 @@ contract Execute_Test is Proxy_Test {
         proxy.execute{ gas: gasLimit }(address(targets.echo), data);
     }
 
-    modifier gasStipendCalculationDoesNotUnderflow() {
+    modifier whenGasStipendCalculationDoesNotUnderflow() {
         _;
     }
 
     /// @dev it should revert.
     function test_RevertWhen_OwnerChangedDuringDelegateCall()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
     {
         bytes memory data = bytes.concat(targets.changeOwner.changeIt.selector);
         vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(1729)));
         proxy.execute(address(targets.changeOwner), data);
     }
 
-    modifier ownerNotChangedDuringDelegateCall() {
+    modifier whenOwnerNotChangedDuringDelegateCall() {
         _;
     }
 
-    modifier delegateCallReverts() {
+    modifier whenDelegateCallReverts() {
         _;
     }
 
     /// @dev it should revert.
     function test_RevertWhen_Panic_FailedAssertion()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.panic.failedAssertion.selector);
         vm.expectRevert(stdError.assertionError);
@@ -115,11 +115,11 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Panic_ArithmeticOverflow()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.panic.arithmeticOverflow.selector);
         vm.expectRevert(stdError.arithmeticError);
@@ -129,11 +129,11 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Panic_DivisionByZero()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.panic.divisionByZero.selector);
         vm.expectRevert(stdError.divisionError);
@@ -143,11 +143,11 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Panic_IndexOOB()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.panic.indexOOB.selector);
         vm.expectRevert(stdError.indexOOBError);
@@ -157,11 +157,11 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Error_EmptyRevertStatement()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.reverter.withNothing.selector);
         vm.expectRevert(IPRBProxy.PRBProxy_ExecutionReverted.selector);
@@ -171,11 +171,11 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Error_CustomError()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.reverter.withCustomError.selector);
         vm.expectRevert(TargetReverter.SomeError.selector);
@@ -185,11 +185,11 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Error_Require()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.reverter.withRequire.selector);
         vm.expectRevert();
@@ -199,11 +199,11 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Error_ReasonString()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.reverter.withReasonString.selector);
         vm.expectRevert("You shall not pass");
@@ -213,29 +213,29 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Error_NoPayableModifier()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.reverter.dueToNoPayableModifier.selector);
         vm.expectRevert();
         proxy.execute{ value: 0.1 ether }(address(targets.reverter), data);
     }
 
-    modifier delegateCallDoesNotRevert() {
+    modifier whenDelegateCallDoesNotRevert() {
         _;
     }
 
     /// @dev it should return the Ether amount.
     function test_Execute_EtherSent()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
     {
         uint256 amount = 0.1 ether;
         bytes memory data = bytes.concat(targets.echo.echoMsgValue.selector);
@@ -244,19 +244,19 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoMsgValue response");
     }
 
-    modifier noEtherSent() {
+    modifier whenNoEtherSent() {
         _;
     }
 
     /// @dev it should return an empty response and send the ETH to the SELFDESTRUCT recipient.
     function test_Execute_TargetSelfDestructs()
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
     {
         // Load Bob's initial balance.
         uint256 initialBobBalance = users.bob.balance;
@@ -279,13 +279,13 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualBobBalance, expectedAliceBalance, "selfDestructer balance");
     }
 
-    modifier targetDoesNotSelfDestruct() {
+    modifier whenTargetDoesNotSelfDestruct() {
         setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
         _;
     }
 
     /// @dev This modifier runs the test twice, once with the owner as the caller, and once with the envoy.
-    modifier callerOwnerOrEnvoy() {
+    modifier whenCallerOwnerOrEnvoy() {
         _;
         changePrank({ msgSender: users.envoy });
         _;
@@ -294,14 +294,14 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should return the address.
     function testFuzz_Execute_ReturnAddress(address input)
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
-        targetDoesNotSelfDestruct
-        callerOwnerOrEnvoy
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenTargetDoesNotSelfDestruct
+        whenCallerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoAddress, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -312,14 +312,14 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should return the bytes array.
     function testFuzz_Execute_ReturnBytesArray(bytes memory input)
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
-        targetDoesNotSelfDestruct
-        callerOwnerOrEnvoy
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenTargetDoesNotSelfDestruct
+        whenCallerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoBytesArray, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -330,14 +330,14 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should return the bytes32.
     function testFuzz_Execute_ReturnBytes32(bytes32 input)
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
-        targetDoesNotSelfDestruct
-        callerOwnerOrEnvoy
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenTargetDoesNotSelfDestruct
+        whenCallerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoBytes32, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -348,14 +348,14 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should return the string.
     function testFuzz_Execute_ReturnString(string memory input)
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
-        targetDoesNotSelfDestruct
-        callerOwnerOrEnvoy
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenTargetDoesNotSelfDestruct
+        whenCallerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoString, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -366,14 +366,14 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should return the struct.
     function testFuzz_Execute_ReturnStruct(TargetEcho.SomeStruct memory input)
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
-        targetDoesNotSelfDestruct
-        callerOwnerOrEnvoy
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenTargetDoesNotSelfDestruct
+        whenCallerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoStruct, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -384,14 +384,14 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should return the uint8.
     function testFuzz_Execute_ReturnUint8(uint8 input)
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
-        targetDoesNotSelfDestruct
-        callerOwnerOrEnvoy
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenTargetDoesNotSelfDestruct
+        whenCallerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoUint8, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -402,14 +402,14 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should return the uint256.
     function testFuzz_Execute_ReturnUint256(uint256 input)
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
-        targetDoesNotSelfDestruct
-        callerOwnerOrEnvoy
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenTargetDoesNotSelfDestruct
+        whenCallerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoUint256, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -420,14 +420,14 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should return the uint256 array.
     function testFuzz_Execute_ReturnUint256Array(uint256[] memory input)
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
-        targetDoesNotSelfDestruct
-        callerOwnerOrEnvoy
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenTargetDoesNotSelfDestruct
+        whenCallerOwnerOrEnvoy
     {
         bytes memory data = abi.encodeCall(targets.echo.echoUint256Array, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
@@ -438,14 +438,14 @@ contract Execute_Test is Proxy_Test {
     /// @dev it should emit an {Execute} event.
     function testFuzz_Execute_Event(uint256 input)
         external
-        callerAuthorized
-        targetContract
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallDoesNotRevert
-        noEtherSent
-        targetDoesNotSelfDestruct
-        callerOwnerOrEnvoy
+        whenCallerAuthorized
+        whenTargetContract
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenTargetDoesNotSelfDestruct
+        whenCallerOwnerOrEnvoy
     {
         vm.expectEmit();
         bytes memory data = abi.encodeCall(targets.echo.echoUint256, (input));

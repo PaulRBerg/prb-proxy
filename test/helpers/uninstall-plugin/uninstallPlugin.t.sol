@@ -13,12 +13,12 @@ contract UninstallPlugin_Test is Helpers_Test {
         uninstallPlugin(plugins.empty);
     }
 
-    modifier pluginHasMethods() {
+    modifier whenPluginHasMethods() {
         _;
     }
 
     /// @dev it should do nothing.
-    function test_UninstallPlugin_PluginNotInstalledBefore() external pluginHasMethods {
+    function test_UninstallPlugin_PluginNotInstalledBefore() external whenPluginHasMethods {
         // Uninstall the plugin.
         uninstallPlugin(plugins.dummy);
 
@@ -31,14 +31,14 @@ contract UninstallPlugin_Test is Helpers_Test {
         }
     }
 
-    modifier pluginInstalled() {
+    modifier whenPluginInstalled() {
         // Install the dummy plugin.
         installPlugin(plugins.dummy);
         _;
     }
 
     /// @dev it should uninstall the plugin.
-    function test_UninstallPlugin() external pluginHasMethods pluginInstalled {
+    function test_UninstallPlugin() external whenPluginHasMethods whenPluginInstalled {
         // Uninstall the plugin.
         uninstallPlugin(plugins.dummy);
 
@@ -52,7 +52,7 @@ contract UninstallPlugin_Test is Helpers_Test {
     }
 
     /// @dev it should emit an {UninstallPlugin} event.
-    function test_UninstallPlugin_Event() external pluginHasMethods pluginInstalled {
+    function test_UninstallPlugin_Event() external whenPluginHasMethods whenPluginInstalled {
         // Expect an {UninstallPlugin} event to be emitted.
         vm.expectEmit();
         emit UninstallPlugin(plugins.dummy);

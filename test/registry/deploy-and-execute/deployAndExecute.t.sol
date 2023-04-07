@@ -29,12 +29,12 @@ contract DeployAndExecute_Test is Registry_Test {
         registry.deployAndExecute(target, data);
     }
 
-    modifier ownerDoesNotHaveProxy() {
+    modifier whenOwnerDoesNotHaveProxy() {
         _;
     }
 
     /// @dev it should deploy the proxy.
-    function testFuzz_DeployAndExecute_Deploy(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecute_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
 
         (IPRBProxy actualProxy,) = registry.deployAndExecute(target, data);
@@ -43,7 +43,13 @@ contract DeployAndExecute_Test is Registry_Test {
     }
 
     /// @dev it should update the next seeds mapping.
-    function testFuzz_DeployAndExecute_UpdateNextSeeds(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecute_UpdateNextSeeds(
+        address origin,
+        address owner
+    )
+        external
+        whenOwnerDoesNotHaveProxy
+    {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deployAndExecute(target, data);
 
@@ -53,7 +59,13 @@ contract DeployAndExecute_Test is Registry_Test {
     }
 
     /// @dev it should update the proxies mapping.
-    function testFuzz_DeployAndExecute_UpdateProxies(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecute_UpdateProxies(
+        address origin,
+        address owner
+    )
+        external
+        whenOwnerDoesNotHaveProxy
+    {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deployAndExecute(target, data);
 
@@ -63,7 +75,7 @@ contract DeployAndExecute_Test is Registry_Test {
     }
 
     /// @dev it should delegate call to the target contract.
-    function testFuzz_DeployAndExecute_Execute(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecute_Execute(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         (, bytes memory actualResponse) = registry.deployAndExecute(target, data);
         bytes memory expectedResponse = abi.encode(input);
@@ -71,7 +83,7 @@ contract DeployAndExecute_Test is Registry_Test {
     }
 
     /// @dev it should emit a {DeployProxy} event.
-    function testFuzz_DeployAndExecute_Event_Deploy(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecute_Event_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
 
         vm.expectEmit();
@@ -87,7 +99,13 @@ contract DeployAndExecute_Test is Registry_Test {
     }
 
     /// @dev it should emit an {Execute} event.
-    function testFuzz_DeployAndExecute_Event_Execute(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecute_Event_Execute(
+        address origin,
+        address owner
+    )
+        external
+        whenOwnerDoesNotHaveProxy
+    {
         changePrank({ txOrigin: origin, msgSender: owner });
 
         vm.expectEmit();

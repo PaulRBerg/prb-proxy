@@ -20,12 +20,12 @@ contract Deploy_Test is Registry_Test {
         registry.deploy();
     }
 
-    modifier ownerDoesNotHaveProxy() {
+    modifier whenOwnerDoesNotHaveProxy() {
         _;
     }
 
     /// @dev it should deploy the proxy.
-    function testFuzz_Deploy(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         address actualProxy = address(registry.deploy());
         address expectedProxy = computeProxyAddress({ origin: origin, seed: SEED_ZERO });
@@ -33,7 +33,7 @@ contract Deploy_Test is Registry_Test {
     }
 
     /// @dev it should update the next seeds mapping.
-    function testFuzz_Deploy_UpdateNextSeeds(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_Deploy_UpdateNextSeeds(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deploy();
 
@@ -43,7 +43,7 @@ contract Deploy_Test is Registry_Test {
     }
 
     /// @dev it should update the proxies mapping.
-    function testFuzz_Deploy_UpdateProxies(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_Deploy_UpdateProxies(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deploy();
         address actualProxy = address(registry.proxies(owner));
@@ -52,7 +52,7 @@ contract Deploy_Test is Registry_Test {
     }
 
     /// @dev it should emit a {DeployProxy} event.
-    function testFuzz_Deploy_Event(address origin, address owner) external ownerDoesNotHaveProxy {
+    function testFuzz_Deploy_Event(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         vm.expectEmit();
         emit DeployProxy({

@@ -13,12 +13,12 @@ contract InstallPlugin_Test is Helpers_Test {
         installPlugin(plugins.empty);
     }
 
-    modifier pluginHasMethods() {
+    modifier whenPluginHasMethods() {
         _;
     }
 
     /// @dev it should re-install the plugin.
-    function test_InstallPlugin_PluginInstalledBefore() external pluginHasMethods pluginNotInstalled {
+    function test_InstallPlugin_PluginInstalledBefore() external whenPluginHasMethods whenPluginNotInstalled {
         // Install a dummy plugin that has some methods.
         installPlugin(plugins.dummy);
 
@@ -34,12 +34,12 @@ contract InstallPlugin_Test is Helpers_Test {
         }
     }
 
-    modifier pluginNotInstalled() {
+    modifier whenPluginNotInstalled() {
         _;
     }
 
     /// @dev it should install the plugin.
-    function test_InstallPlugin() external pluginHasMethods pluginNotInstalled {
+    function test_InstallPlugin() external whenPluginHasMethods whenPluginNotInstalled {
         // Install a dummy plugin that has some methods.
         installPlugin(plugins.dummy);
 
@@ -53,7 +53,7 @@ contract InstallPlugin_Test is Helpers_Test {
     }
 
     /// @dev it should emit an {InstallPlugin} event.
-    function test_InstallPlugin_Event() external pluginHasMethods pluginNotInstalled {
+    function test_InstallPlugin_Event() external whenPluginHasMethods whenPluginNotInstalled {
         // Expect an {InstallPlugin} event.
         vm.expectEmit();
         emit InstallPlugin(plugins.dummy);

@@ -31,12 +31,12 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    modifier pluginInstalled() {
+    modifier whenPluginInstalled() {
         _;
     }
 
     /// @dev it should revert.
-    function test_RevertWhen_GasStipendCalculationUnderflows() external pluginInstalled {
+    function test_RevertWhen_GasStipendCalculationUnderflows() external whenPluginInstalled {
         // Install the dummy plugin.
         installPlugin(plugins.dummy);
 
@@ -55,15 +55,15 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    modifier gasStipendCalculationDoesNotUnderflow() {
+    modifier whenGasStipendCalculationDoesNotUnderflow() {
         _;
     }
 
     /// @dev it should revert.
     function test_RevertWhen_OwnerChangedDuringDelegateCall()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
     {
         installPlugin(plugins.changeOwner);
         vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(1729)));
@@ -71,21 +71,21 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    modifier ownerNotChangedDuringDelegateCall() {
+    modifier whenOwnerNotChangedDuringDelegateCall() {
         _;
     }
 
-    modifier delegateCallReverts() {
+    modifier whenDelegateCallReverts() {
         _;
     }
 
     /// @dev it should revert.
     function test_RevertWhen_Panic_FailedAssertion()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.assertionError);
@@ -96,10 +96,10 @@ contract RunPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Panic_ArithmeticOverflow()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
@@ -110,10 +110,10 @@ contract RunPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Panic_DivisionByZero()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
@@ -124,10 +124,10 @@ contract RunPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Panic_IndexOOB()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
@@ -138,10 +138,10 @@ contract RunPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Error_EmptyRevertStatement()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         installPlugin(plugins.reverter);
         vm.expectRevert(IPRBProxy.PRBProxy_PluginReverted.selector);
@@ -152,10 +152,10 @@ contract RunPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Error_CustomError()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
@@ -166,10 +166,10 @@ contract RunPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Error_Require()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
@@ -180,10 +180,10 @@ contract RunPlugin_Test is Proxy_Test {
     /// @dev it should revert.
     function test_RevertWhen_Error_ReasonString()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
     {
         installPlugin(plugins.reverter);
         vm.expectRevert("You shall not pass");
@@ -191,18 +191,18 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    modifier delegateCallDoesNotRevert() {
+    modifier whenDelegateCallDoesNotRevert() {
         _;
     }
 
     /// @dev it should return the Ether amount.
     function test_RunPlugin_EtherSent()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
-        delegateCallDoesNotRevert
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
+        whenDelegateCallDoesNotRevert
     {
         installPlugin(plugins.echo);
         uint256 amount = 0.1 ether;
@@ -212,19 +212,19 @@ contract RunPlugin_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoMsgValue response");
     }
 
-    modifier noEtherSent() {
+    modifier whenNoEtherSent() {
         _;
     }
 
     /// @dev it should return an empty response and send the ETH to the SELFDESTRUCT recipient.
     function test_RunPlugin_PluginSelfDestructs()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
-        delegateCallDoesNotRevert
-        noEtherSent
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
     {
         // Load Bob's initial balance.
         uint256 initialBobBalance = users.bob.balance;
@@ -245,20 +245,20 @@ contract RunPlugin_Test is Proxy_Test {
         assertEq(actualBobBalance, expectedAliceBalance, "selfDestructer.destroyMe balance");
     }
 
-    modifier pluginDoesNotSelfDestruct() {
+    modifier whenPluginDoesNotSelfDestruct() {
         _;
     }
 
     /// @dev it should run the plugin.
     function test_RunPlugin_Zzz()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
-        delegateCallDoesNotRevert
-        noEtherSent
-        pluginDoesNotSelfDestruct
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenPluginDoesNotSelfDestruct
     {
         installPlugin(plugins.dummy);
         (, bytes memory actualResponse) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
@@ -269,13 +269,13 @@ contract RunPlugin_Test is Proxy_Test {
     /// @dev it should emit a {RunPlugin} event.
     function test_RunPlugin_Event()
         external
-        pluginInstalled
-        gasStipendCalculationDoesNotUnderflow
-        ownerNotChangedDuringDelegateCall
-        delegateCallReverts
-        delegateCallDoesNotRevert
-        noEtherSent
-        pluginDoesNotSelfDestruct
+        whenPluginInstalled
+        whenGasStipendCalculationDoesNotUnderflow
+        whenOwnerNotChangedDuringDelegateCall
+        whenDelegateCallReverts
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenPluginDoesNotSelfDestruct
     {
         installPlugin(plugins.dummy);
         vm.expectEmit();

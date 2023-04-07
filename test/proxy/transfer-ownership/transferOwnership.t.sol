@@ -22,13 +22,13 @@ contract TransferOwnership_Test is Proxy_Test {
         proxy.transferOwnership(newOwner);
     }
 
-    modifier callerRegistry() {
+    modifier whenCallerRegistry() {
         changePrank({ msgSender: address(registry) });
         _;
     }
 
     /// @dev it should transfer the ownership.
-    function testFuzz_TransferOwnership(address newOwner) external callerRegistry {
+    function testFuzz_TransferOwnership(address newOwner) external whenCallerRegistry {
         vm.assume(newOwner != users.alice);
 
         proxy.transferOwnership(newOwner);

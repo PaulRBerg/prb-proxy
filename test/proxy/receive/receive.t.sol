@@ -16,12 +16,12 @@ contract Receive_Test is Proxy_Test {
         assertFalse(condition);
     }
 
-    modifier callDataEmpty() {
+    modifier whenCallDataEmpty() {
         _;
     }
 
     /// @dev it should receive the ETH.
-    function test_Receive() external callDataEmpty {
+    function test_Receive() external whenCallDataEmpty {
         uint256 value = 1 ether;
         (bool condition,) = address(proxy).call{ value: value }("");
         assertTrue(condition);
