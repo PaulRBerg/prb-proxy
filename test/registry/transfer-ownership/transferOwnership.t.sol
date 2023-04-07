@@ -14,7 +14,6 @@ contract TransferOwnership_Test is Registry_Test {
         Registry_Test.setUp();
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_NewOwnerHasProxy() external {
         registry.deploy();
         IPRBProxy proxy = registry.deployFor({ owner: users.bob });
@@ -28,7 +27,6 @@ contract TransferOwnership_Test is Registry_Test {
         _;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_CallerDoesNotHaveProxy() external whenNewOwnerDoesNotHaveProxy {
         vm.expectRevert(
             abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerDoesNotHaveProxy.selector, users.alice)
@@ -41,7 +39,6 @@ contract TransferOwnership_Test is Registry_Test {
         _;
     }
 
-    /// @dev it should transfer the ownership.
     function testFuzz_TransferOwnership_DeleteProxy(address newOwner)
         external
         whenNewOwnerDoesNotHaveProxy
@@ -55,7 +52,6 @@ contract TransferOwnership_Test is Registry_Test {
         assertEq(actualProxy, expectedProxy, "proxy for caller");
     }
 
-    /// @dev it should transfer the ownership.
     function testFuzz_TransferOwnership_SetProxy(address newOwner)
         external
         whenNewOwnerDoesNotHaveProxy
@@ -69,7 +65,6 @@ contract TransferOwnership_Test is Registry_Test {
         assertEq(actualProxy, expectedProxy, "proxy for new owner");
     }
 
-    /// @dev it should emit a {TransferOwnership} event.
     function testFuzz_TransferOwnership_Event(address newOwner)
         external
         whenNewOwnerDoesNotHaveProxy

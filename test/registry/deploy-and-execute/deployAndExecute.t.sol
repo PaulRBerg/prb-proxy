@@ -20,7 +20,6 @@ contract DeployAndExecute_Test is Registry_Test {
         target = address(targets.echo);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_OwnerHasProxy() external {
         (IPRBProxy proxy,) = registry.deployAndExecute(target, data);
         vm.expectRevert(
@@ -33,7 +32,6 @@ contract DeployAndExecute_Test is Registry_Test {
         _;
     }
 
-    /// @dev it should deploy the proxy.
     function testFuzz_DeployAndExecute_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
 
@@ -42,7 +40,6 @@ contract DeployAndExecute_Test is Registry_Test {
         assertEq(address(actualProxy), expectedProxy, "deployed proxy address");
     }
 
-    /// @dev it should update the next seeds mapping.
     function testFuzz_DeployAndExecute_UpdateNextSeeds(
         address origin,
         address owner
@@ -58,7 +55,6 @@ contract DeployAndExecute_Test is Registry_Test {
         assertEq(actualNextSeed, expectedNextSeed, "next seed");
     }
 
-    /// @dev it should update the proxies mapping.
     function testFuzz_DeployAndExecute_UpdateProxies(
         address origin,
         address owner
@@ -74,7 +70,6 @@ contract DeployAndExecute_Test is Registry_Test {
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
     }
 
-    /// @dev it should delegate call to the target contract.
     function testFuzz_DeployAndExecute_Execute(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         (, bytes memory actualResponse) = registry.deployAndExecute(target, data);
@@ -82,7 +77,6 @@ contract DeployAndExecute_Test is Registry_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint256 response");
     }
 
-    /// @dev it should emit a {DeployProxy} event.
     function testFuzz_DeployAndExecute_Event_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
 
@@ -98,7 +92,6 @@ contract DeployAndExecute_Test is Registry_Test {
         registry.deployAndExecute(target, data);
     }
 
-    /// @dev it should emit an {Execute} event.
     function testFuzz_DeployAndExecute_Event_Execute(
         address origin,
         address owner

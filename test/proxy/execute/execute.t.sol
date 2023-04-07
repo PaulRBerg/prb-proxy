@@ -18,7 +18,6 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_NoPermission() external whenCallerUnauthorized {
         changePrank({ msgSender: users.eve });
         bytes memory data = bytes.concat(targets.dummy.foo.selector);
@@ -30,7 +29,6 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.dummy), data);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_PermissionDifferentTarget() external whenCallerUnauthorized {
         setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
         changePrank({ msgSender: users.envoy });
@@ -48,7 +46,6 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_TargetNotContract(address nonContract) external whenCallerAuthorized {
         vm.assume(nonContract.code.length == 0);
         vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_TargetNotContract.selector, nonContract));
@@ -59,7 +56,6 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_GasStipendCalculationUnderflows() external whenCallerAuthorized whenTargetContract {
         // Set the min gas reserve.
         uint256 gasLimit = 10_000;
@@ -78,7 +74,6 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_OwnerChangedDuringDelegateCall()
         external
         whenCallerAuthorized
@@ -98,7 +93,6 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Panic_FailedAssertion()
         external
         whenCallerAuthorized
@@ -112,7 +106,6 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.panic), data);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Panic_ArithmeticOverflow()
         external
         whenCallerAuthorized
@@ -126,7 +119,6 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.panic), data);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Panic_DivisionByZero()
         external
         whenCallerAuthorized
@@ -140,7 +132,6 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.panic), data);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Panic_IndexOOB()
         external
         whenCallerAuthorized
@@ -154,7 +145,6 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.panic), data);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Error_EmptyRevertStatement()
         external
         whenCallerAuthorized
@@ -168,7 +158,6 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.reverter), data);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Error_CustomError()
         external
         whenCallerAuthorized
@@ -182,7 +171,6 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.reverter), data);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Error_Require()
         external
         whenCallerAuthorized
@@ -196,7 +184,6 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.reverter), data);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Error_ReasonString()
         external
         whenCallerAuthorized
@@ -210,7 +197,6 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.reverter), data);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Error_NoPayableModifier()
         external
         whenCallerAuthorized
@@ -228,7 +214,6 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should return the Ether amount.
     function test_Execute_EtherSent()
         external
         whenCallerAuthorized
@@ -248,7 +233,6 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should return an empty response and send the ETH to the SELFDESTRUCT recipient.
     function test_Execute_TargetSelfDestructs()
         external
         whenCallerAuthorized
@@ -291,7 +275,6 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should return the address.
     function testFuzz_Execute_ReturnAddress(address input)
         external
         whenCallerAuthorized
@@ -309,7 +292,6 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoAddress response");
     }
 
-    /// @dev it should return the bytes array.
     function testFuzz_Execute_ReturnBytesArray(bytes memory input)
         external
         whenCallerAuthorized
@@ -327,7 +309,6 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoBytesArray response");
     }
 
-    /// @dev it should return the bytes32.
     function testFuzz_Execute_ReturnBytes32(bytes32 input)
         external
         whenCallerAuthorized
@@ -345,7 +326,6 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoBytes32 response");
     }
 
-    /// @dev it should return the string.
     function testFuzz_Execute_ReturnString(string memory input)
         external
         whenCallerAuthorized
@@ -363,7 +343,6 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoString response");
     }
 
-    /// @dev it should return the struct.
     function testFuzz_Execute_ReturnStruct(TargetEcho.SomeStruct memory input)
         external
         whenCallerAuthorized
@@ -381,7 +360,6 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoStruct response");
     }
 
-    /// @dev it should return the uint8.
     function testFuzz_Execute_ReturnUint8(uint8 input)
         external
         whenCallerAuthorized
@@ -399,7 +377,6 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint8 response");
     }
 
-    /// @dev it should return the uint256.
     function testFuzz_Execute_ReturnUint256(uint256 input)
         external
         whenCallerAuthorized
@@ -417,7 +394,6 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint256 response");
     }
 
-    /// @dev it should return the uint256 array.
     function testFuzz_Execute_ReturnUint256Array(uint256[] memory input)
         external
         whenCallerAuthorized
@@ -435,7 +411,6 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint256Array response");
     }
 
-    /// @dev it should emit an {Execute} event.
     function testFuzz_Execute_Event(uint256 input)
         external
         whenCallerAuthorized

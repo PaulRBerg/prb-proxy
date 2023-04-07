@@ -10,7 +10,6 @@ contract TransferOwnership_Test is Proxy_Test {
         Proxy_Test.setUp();
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_CallerNotRegistry() external {
         // Make Eve the caller in this test.
         address caller = users.eve;
@@ -27,7 +26,6 @@ contract TransferOwnership_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should transfer the ownership.
     function testFuzz_TransferOwnership(address newOwner) external whenCallerRegistry {
         vm.assume(newOwner != users.alice);
 

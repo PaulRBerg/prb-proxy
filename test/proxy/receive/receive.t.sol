@@ -8,7 +8,6 @@ contract Receive_Test is Proxy_Test {
         Proxy_Test.setUp();
     }
 
-    /// @dev it should say that the call has not been successful.
     function test_RevertWhen_CallDataNonEmpty() external {
         uint256 value = 1 ether;
         bytes memory data = bytes.concat("0xcafe");
@@ -20,7 +19,6 @@ contract Receive_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should receive the ETH.
     function test_Receive() external whenCallDataEmpty {
         uint256 value = 1 ether;
         (bool condition,) = address(proxy).call{ value: value }("");

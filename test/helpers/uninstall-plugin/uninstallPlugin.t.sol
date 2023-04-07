@@ -7,7 +7,6 @@ import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 import { Helpers_Test } from "../Helpers.t.sol";
 
 contract UninstallPlugin_Test is Helpers_Test {
-    /// @dev it should revert.
     function test_RevertWhen_PluginHasNoMethods() external {
         vm.expectRevert(abi.encodeWithSelector(IPRBProxyHelpers.PRBProxy_NoPluginMethods.selector, plugins.empty));
         uninstallPlugin(plugins.empty);
@@ -17,7 +16,6 @@ contract UninstallPlugin_Test is Helpers_Test {
         _;
     }
 
-    /// @dev it should do nothing.
     function test_UninstallPlugin_PluginNotInstalledBefore() external whenPluginHasMethods {
         // Uninstall the plugin.
         uninstallPlugin(plugins.dummy);
@@ -37,7 +35,6 @@ contract UninstallPlugin_Test is Helpers_Test {
         _;
     }
 
-    /// @dev it should uninstall the plugin.
     function test_UninstallPlugin() external whenPluginHasMethods whenPluginInstalled {
         // Uninstall the plugin.
         uninstallPlugin(plugins.dummy);
@@ -51,7 +48,6 @@ contract UninstallPlugin_Test is Helpers_Test {
         }
     }
 
-    /// @dev it should emit an {UninstallPlugin} event.
     function test_UninstallPlugin_Event() external whenPluginHasMethods whenPluginInstalled {
         // Expect an {UninstallPlugin} event to be emitted.
         vm.expectEmit();

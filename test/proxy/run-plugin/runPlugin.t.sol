@@ -20,7 +20,6 @@ contract RunPlugin_Test is Proxy_Test {
         Proxy_Test.setUp();
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_PluginNotInstalled() external {
         vm.expectRevert(
             abi.encodeWithSelector(
@@ -35,7 +34,6 @@ contract RunPlugin_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_GasStipendCalculationUnderflows() external whenPluginInstalled {
         // Install the dummy plugin.
         installPlugin(plugins.dummy);
@@ -59,7 +57,6 @@ contract RunPlugin_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_OwnerChangedDuringDelegateCall()
         external
         whenPluginInstalled
@@ -79,7 +76,6 @@ contract RunPlugin_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Panic_FailedAssertion()
         external
         whenPluginInstalled
@@ -93,7 +89,6 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Panic_ArithmeticOverflow()
         external
         whenPluginInstalled
@@ -107,7 +102,6 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Panic_DivisionByZero()
         external
         whenPluginInstalled
@@ -121,7 +115,6 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Panic_IndexOOB()
         external
         whenPluginInstalled
@@ -135,7 +128,6 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Error_EmptyRevertStatement()
         external
         whenPluginInstalled
@@ -149,7 +141,6 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Error_CustomError()
         external
         whenPluginInstalled
@@ -163,7 +154,6 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Error_Require()
         external
         whenPluginInstalled
@@ -177,7 +167,6 @@ contract RunPlugin_Test is Proxy_Test {
         success;
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_Error_ReasonString()
         external
         whenPluginInstalled
@@ -195,7 +184,6 @@ contract RunPlugin_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should return the Ether amount.
     function test_RunPlugin_EtherSent()
         external
         whenPluginInstalled
@@ -216,7 +204,6 @@ contract RunPlugin_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should return an empty response and send the ETH to the SELFDESTRUCT recipient.
     function test_RunPlugin_PluginSelfDestructs()
         external
         whenPluginInstalled
@@ -249,8 +236,7 @@ contract RunPlugin_Test is Proxy_Test {
         _;
     }
 
-    /// @dev it should run the plugin.
-    function test_RunPlugin_Zzz()
+    function test_RunPlugin()
         external
         whenPluginInstalled
         whenGasStipendCalculationDoesNotUnderflow
@@ -266,7 +252,6 @@ contract RunPlugin_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "dummy.foo response");
     }
 
-    /// @dev it should emit a {RunPlugin} event.
     function test_RunPlugin_Event()
         external
         whenPluginInstalled

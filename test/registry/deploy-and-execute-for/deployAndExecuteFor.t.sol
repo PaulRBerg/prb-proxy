@@ -18,7 +18,6 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         target = address(targets.echo);
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_OwnerHasProxy() external {
         (IPRBProxy proxy,) = registry.deployAndExecuteFor({ owner: users.alice, target: target, data: data });
         vm.expectRevert(
@@ -31,7 +30,6 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         _;
     }
 
-    /// @dev it should deploy the proxy.
     function testFuzz_DeployAndExecuteFor_Deploy(
         address origin,
         address operator,
@@ -47,7 +45,6 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         assertEq(address(actualProxy), expectedProxy, "deployed proxy address");
     }
 
-    /// @dev it should update the next seeds mapping.
     function testFuzz_DeployAndExecuteFor_UpdateNextSeeds(
         address origin,
         address operator,
@@ -64,7 +61,6 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         assertEq(actualNextSeed, expectedNextSeed, "next seed");
     }
 
-    /// @dev it should update the current proxies mapping.
     function testFuzz_DeployAndExecuteFor_UpdateCurrentProxies(
         address origin,
         address operator,
@@ -81,7 +77,6 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
     }
 
-    /// @dev it should delegate call to the target contract.
     function testFuzz_DeployAndExecuteFor_Execute(
         address origin,
         address operator,
@@ -97,7 +92,6 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint256 response");
     }
 
-    /// @dev it should emit a {DeployProxy} event.
     function testFuzz_DeployAndExecuteFor_Event_Deploy(
         address origin,
         address operator,
@@ -120,7 +114,6 @@ contract DeployAndExecuteFor_Test is Registry_Test {
         registry.deployAndExecuteFor(owner, target, data);
     }
 
-    /// @dev it should emit an {Execute} event.
     function testFuzz_DeployAndExecuteFor_Event_Execute(
         address origin,
         address operator,

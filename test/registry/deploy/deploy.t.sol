@@ -11,7 +11,6 @@ contract Deploy_Test is Registry_Test {
         Registry_Test.setUp();
     }
 
-    /// @dev it should revert.
     function test_RevertWhen_OwnerHasProxy() external {
         IPRBProxy proxy = registry.deploy();
         vm.expectRevert(
@@ -24,7 +23,6 @@ contract Deploy_Test is Registry_Test {
         _;
     }
 
-    /// @dev it should deploy the proxy.
     function testFuzz_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         address actualProxy = address(registry.deploy());
@@ -32,7 +30,6 @@ contract Deploy_Test is Registry_Test {
         assertEq(actualProxy, expectedProxy, "deployed proxy address");
     }
 
-    /// @dev it should update the next seeds mapping.
     function testFuzz_Deploy_UpdateNextSeeds(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deploy();
@@ -42,7 +39,6 @@ contract Deploy_Test is Registry_Test {
         assertEq(actualNextSeed, expectedNextSeed, "next seed");
     }
 
-    /// @dev it should update the proxies mapping.
     function testFuzz_Deploy_UpdateProxies(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deploy();
@@ -51,7 +47,6 @@ contract Deploy_Test is Registry_Test {
         assertEq(actualProxy, expectedProxy, "proxy mapping");
     }
 
-    /// @dev it should emit a {DeployProxy} event.
     function testFuzz_Deploy_Event(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         vm.expectEmit();
