@@ -87,7 +87,7 @@ interface IPRBProxyRegistry {
     ///
     /// Requirements:
     /// - The caller must not have a proxy.
-    /// - All from {PRBProxy-execute}.
+    /// - All from {PRBProxy::execute}.
     ///
     /// @param target The address of the target contract.
     /// @param data Function selector plus ABI encoded data.
@@ -107,7 +107,7 @@ interface IPRBProxyRegistry {
     ///
     /// Requirements:
     /// - The owner must not have a proxy.
-    /// - All from {PRBProxy-execute}.
+    /// - All from {PRBProxy::execute}.
     ///
     /// @param owner The owner of the proxy.
     /// @param target The address of the target contract.
