@@ -19,7 +19,10 @@ import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
 
 /// @title PRBProxy
 /// @dev This contract implements the {IPRBProxy} interface.
-contract PRBProxy is IPRBProxy, PRBProxyStorage {
+contract PRBProxy is
+    PRBProxyStorage, // 1 inherited component
+    IPRBProxy // 1 inherited component
+{
     /*//////////////////////////////////////////////////////////////////////////
                                      CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
