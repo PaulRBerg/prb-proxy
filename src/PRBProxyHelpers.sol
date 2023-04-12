@@ -24,7 +24,7 @@ import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 */
 
 /// @title PRBProxyHelpers
-/// @dev This contract implements the {IPRBProxyHelpers} interface.
+/// @dev See the documentation in {IPRBProxyHelpers}.
 contract PRBProxyHelpers is
     IPRBProxyHelpers, // 0 inherited components
     PRBProxyStorage // 1 inherited component

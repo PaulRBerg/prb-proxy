@@ -3,14 +3,15 @@ pragma solidity >=0.8.4;
 
 /// @title IPRBProxyPlugin
 /// @notice Interface for the plugins that can be installed on a proxy.
-/// @dev Plugin are contracts that can make the proxy react to certain callbacks. They are run in the fallback function.
+/// @dev Plugins are contracts that enable the proxy to interact with and respond to calls from other contracts. These
+/// plugins are run in the proxy's fallback function.
 interface IPRBProxyPlugin {
-    /// @notice Lists the methods that the plugin implements.
-    /// @dev These methods are installed and uninstalled on the proxy.
+    /// @notice Enumerates the methods implemented by the plugin.
+    /// @dev These methods can be installed and uninstalled.
     ///
     /// Requirements:
-    /// - The plugin needs at least one method to be listed.
+    /// - The plugin must implement at least one method.
     ///
-    /// @return methods The methods that the plugin implements.
+    /// @return methods An array of the methods implemented by the plugin.
     function methodList() external returns (bytes4[] memory methods);
 }

@@ -18,7 +18,7 @@ import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
 */
 
 /// @title PRBProxy
-/// @dev This contract implements the {IPRBProxy} interface.
+/// @dev See the documentation in {IPRBProxy}.
 contract PRBProxy is
     PRBProxyStorage, // 1 inherited component
     IPRBProxy // 1 inherited component
@@ -47,9 +47,8 @@ contract PRBProxy is
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Used for running plugins.
-    /// @dev Called when the call data is not empty.
     fallback(bytes calldata data) external payable returns (bytes memory response) {
-        // Check if the function signature exists in the installed plugin methods mapping.
+        // Check if the function signature exists in the installed plugins mapping.
         IPRBProxyPlugin plugin = plugins[msg.sig];
         if (address(plugin) == address(0)) {
             revert PRBProxy_PluginNotInstalledForMethod(msg.sender, msg.sig);
@@ -62,7 +61,7 @@ contract PRBProxy is
         // Log the plugin run.
         emit RunPlugin(plugin, data, response);
 
-        // Check if the call has been successful or not.
+        // Check if the call was successful or not.
         if (!success) {
             // If there is return data, the call reverted with a reason or a custom error.
             if (response.length > 0) {
@@ -76,7 +75,7 @@ contract PRBProxy is
         }
     }
 
-    /// @dev Called when the call data is empty.
+    /// @dev Called when `msg.value` is not zero and the call data is empty.
     receive() external payable { }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -90,7 +89,7 @@ contract PRBProxy is
             revert PRBProxy_ExecutionUnauthorized({ owner: owner, caller: msg.sender, target: target });
         }
 
-        // Check that the target is a valid contract.
+        // Check that the target is a contract.
         if (target.code.length == 0) {
             revert PRBProxy_TargetNotContract(target);
         }
@@ -102,7 +101,7 @@ contract PRBProxy is
         // Log the execution.
         emit Execute(target, data, response);
 
-        // Check if the call has been successful or not.
+        // Check if the call was successful or not.
         if (!success) {
             // If there is return data, the call reverted with a reason or a custom error.
             if (response.length > 0) {
@@ -135,10 +134,10 @@ contract PRBProxy is
     /// @notice Performs a DELEGATECALL to the provided address with the provided data.
     /// @dev Shared logic between the {execute} and the {fallback} functions.
     function _safeDelegateCall(address to, bytes memory data) internal returns (bool success, bytes memory response) {
-        // Save the owner address in memory. This variable cannot be modified during the DELEGATECALL.
+        // Save the owner address in memory so that this variable cannot be modified during the DELEGATECALL.
         address owner_ = owner;
 
-        // Reserve some gas to ensure that the function has enough to finish the execution.
+        // Reserve some gas to ensure that the contract call will not run out of gas.
         uint256 stipend = gasleft() - minGasReserve;
 
         // Delegate call to the provided contract.

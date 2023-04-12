@@ -5,16 +5,16 @@ import { IPRBProxy } from "./IPRBProxy.sol";
 
 /// @title IPRBProxyRegistry
 /// @notice Deploys new proxies with CREATE2 and keeps a registry of owners to proxies. Owners can only
-/// have one proxy at a time.
+/// have only one proxy at a time.
 interface IPRBProxyRegistry {
     /*//////////////////////////////////////////////////////////////////////////
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Thrown when some function requires the owner to not have a proxy.
+    /// @notice Thrown when an action requires the owner to not have a proxy.
     error PRBProxyRegistry_OwnerHasProxy(address owner, IPRBProxy proxy);
 
-    /// @notice Thrown when some function requires the owner to have a proxy.
+    /// @notice Thrown when an action requires the owner to have a proxy.
     error PRBProxyRegistry_OwnerDoesNotHaveProxy(address owner);
 
     /*//////////////////////////////////////////////////////////////////////////

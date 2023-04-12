@@ -12,32 +12,32 @@ interface IPRBProxy is IPRBProxyStorage {
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Thrown when the caller is not the registry.
+    /// @notice Thrown when the transfer ownership function is called directly (not via the registry).
     error PRBProxy_CallerNotRegistry(IPRBProxyRegistry registry, address caller);
 
-    /// @notice Thrown when execution reverted with no reason.
+    /// @notice Thrown when a target contract reverts without a specified reason.
     error PRBProxy_ExecutionReverted();
 
-    /// @notice Thrown when the caller is not the owner.
+    /// @notice Thrown when the caller to be the owner.
     error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target);
 
-    /// @notice Thrown when the owner is changed during the DELEGATECALL.
+    /// @notice Thrown when the owner changes during the delegate call.
     error PRBProxy_OwnerChanged(address originalOwner, address newOwner);
 
-    /// @notice Thrown when a plugin execution reverts with no reason.
+    /// @notice Thrown when a plugin execution reverts without a specified reason.
     error PRBProxy_PluginReverted(IPRBProxyPlugin plugin);
 
-    /// @notice Thrown when the fallback function does not find an installed plugin for the called method.
+    /// @notice Thrown when the fallback function fails to find an installed plugin for the called method.
     error PRBProxy_PluginNotInstalledForMethod(address caller, bytes4 selector);
 
-    /// @notice Thrown when passing an EOA or an undeployed contract as the target.
+    /// @notice Thrown when a non-contract address is passed as the target.
     error PRBProxy_TargetNotContract(address target);
 
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Emitted when the proxy executes a delegate call to a target contract.
+    /// @notice Emitted when a target contract is delegate called.
     event Execute(address indexed target, bytes data, bytes response);
 
     /// @notice Emitted when a plugin is run for a provided method.
@@ -54,14 +54,14 @@ interface IPRBProxy is IPRBProxyStorage {
                                NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Delegate calls to the provided target contract by forwarding the data. It then returns the data it
-    /// gets back, bubbling up any potential revert.
+    /// @notice Delegate calls to the provided target contract, forwarding the data. It returns the data it
+    /// gets back, and bubbles up any potential revert.
     ///
     /// @dev Emits an {Execute} event.
     ///
     /// Requirements:
     /// - The caller must be either an owner or an envoy with permission.
-    /// - `target` must be a deployed contract.
+    /// - `target` must be a contract.
     /// - The gas stipend must be greater than or equal to `minGasReserve`.
     /// - The owner must not be changed during the DELEGATECALL.
     ///

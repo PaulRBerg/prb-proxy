@@ -24,7 +24,7 @@ import { PRBProxy } from "./PRBProxy.sol";
 */
 
 /// @title PRBProxyRegistry
-/// @dev This contract implements the {IPRBProxyRegistry} interface.
+/// @dev See the documentation in {IPRBProxyRegistry}.
 contract PRBProxyRegistry is IPRBProxyRegistry {
     /*//////////////////////////////////////////////////////////////////////////
                                      CONSTANTS

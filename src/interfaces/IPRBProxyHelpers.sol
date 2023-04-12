@@ -4,7 +4,7 @@ pragma solidity >=0.8.4;
 import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
 
 /// @title IPRBProxyHelpers
-/// @notice The enshrined target contract, with essential helper functions for:
+/// @notice The enshrined target contract, which implements helper functions for the following operations:
 /// - Installing plugins on the proxy.
 /// - Updating the minimum gas reserve.
 /// - Permitting envoys to call target contracts on behalf of the proxy.
@@ -14,7 +14,7 @@ interface IPRBProxyHelpers {
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Thrown when the plugin has no listed methods.
+    /// @notice Thrown when installing or uninstall a plugin, and the plugin doesn't implement any method.
     error PRBProxy_NoPluginMethods(IPRBProxyPlugin plugin);
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ interface IPRBProxyHelpers {
     /// @notice Emitted when the minimum gas reserve is updated.
     event SetMinGasReserve(uint256 oldMinGasReserve, uint256 newMinGasReserve);
 
-    /// @notice Emitted when the permission is set for an (envoy,target) tuple.
+    /// @notice Emitted when the permission is updated for an (envoy,target) tuple.
     event SetPermission(address indexed envoy, address indexed target, bool permission);
 
     /// @notice Emitted when a plugin is uninstalled.
@@ -49,13 +49,13 @@ interface IPRBProxyHelpers {
     ///
     /// @dev Emits an {InstallPlugin} event.
     ///
-    /// Requirements:
-    /// - The plugin must have at least one listed method.
-    /// - By design, the plugin cannot implement any method that is also implemented by the proxy itself.
-    ///
     /// Notes:
-    /// - Does not revert if the plugin is already installed.
+    /// - Does not revert if the plugin is installed.
     /// - Installing a plugin is a potentially dangerous operation, because anyone can then call the plugin's methods.
+    ///
+    /// Requirements:
+    /// - The plugin must have at least one implemented method.
+    /// - By design, the plugin cannot implement any method that is also implemented by the proxy itself.
     ///
     /// @param plugin The address of the plugin to install.
     function installPlugin(IPRBProxyPlugin plugin) external;
@@ -73,7 +73,7 @@ interface IPRBProxyHelpers {
     /// @dev Emits a {SetPermission} event.
     ///
     /// Notes:
-    /// - It is not an error to reset a permission on the same (envoy,target) tuple.
+    /// - It is not an error to set the same permission.
     ///
     /// @param envoy The address of the envoy account.
     /// @param target The address of the target contract.
@@ -84,11 +84,12 @@ interface IPRBProxyHelpers {
     ///
     /// @dev Emits an {UninstallPlugin} event.
     ///
-    /// Requirements:
-    /// - The plugin must have at least one listed method.
-    ///
     /// Notes:
-    /// - Does not revert if the plugin is not already installed.
+    /// - Does not revert if the plugin is not installed.
+    ///
+    /// Requirements:
+    /// - The plugin must have at least one implemented method.
+    ///
     ///
     /// @param plugin The address of the plugin to uninstall.
     function uninstallPlugin(IPRBProxyPlugin plugin) external;
