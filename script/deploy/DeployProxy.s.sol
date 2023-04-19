@@ -7,7 +7,7 @@ import { PRBProxyHelpers } from "../../src/PRBProxyHelpers.sol";
 
 import { BaseScript } from "../shared/Base.s.sol";
 
-/// @notice Deploys the {PRBProxy} contract by calling the `deploy` function on the registry.
+/// @notice Deploys an instance of {PRBProxy} via the registry. The owner of the proxy will be `deployer`.
 contract DeployProxy is BaseScript {
     function run(IPRBProxyRegistry registry) public virtual broadcaster returns (IPRBProxy proxy) {
         proxy = registry.deploy();

@@ -5,10 +5,10 @@ import { PRBProxyRegistry } from "../../src/PRBProxyRegistry.sol";
 
 import { BaseScript } from "../shared/Base.s.sol";
 
-/// @notice Deploys the {PRBProxyRegistry} contract at a deterministic address across all chains. Reverts if the
-/// contract has already been deployed.
+/// @notice Deploys {PRBProxyRegistry} at a deterministic address across chains.
+/// @dev Reverts if the contract has already been deployed.
 contract DeployRegistry is BaseScript {
-    /// @dev The presence of the salt instructs Forge to deploy the contract via a deterministic CREATE2 factory.
+    /// @dev The presence of the salt instructs Forge to deploy contracts via this deterministic CREATE2 factory:
     /// https://github.com/Arachnid/deterministic-deployment-proxy
     function run() public virtual broadcaster returns (PRBProxyRegistry registry) {
         registry = new PRBProxyRegistry{ salt: ZERO_SALT }();

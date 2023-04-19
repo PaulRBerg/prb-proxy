@@ -193,7 +193,7 @@ abstract contract Base_Test is PRBTest, Events, StdCheats, StdUtils {
         }
     }
 
-    /// @dev ABI encodes the arguments and calls the `installPlugin` helper on the enshrined target.
+    /// @dev ABI encodes the parameters and calls the `installPlugin` helper on the enshrined target.
     function installPlugin(IPRBProxyPlugin plugin) internal {
         bytes memory data = abi.encodeCall(helpers.installPlugin, (plugin));
         proxy.execute({ target: address(helpers), data: data });
@@ -205,19 +205,19 @@ abstract contract Base_Test is PRBTest, Events, StdCheats, StdUtils {
         result = eqString(profile, "test-optimized");
     }
 
-    /// @dev ABI encodes the arguments and calls the `setMinGasReserve` helper on the enshrined target.
+    /// @dev ABI encodes the parameters and calls the `setMinGasReserve` helper on the enshrined target.
     function setMinGasReserve(uint256 newMinGasReserve) internal {
         bytes memory data = abi.encodeCall(helpers.setMinGasReserve, (newMinGasReserve));
         proxy.execute({ target: address(helpers), data: data });
     }
 
-    /// @dev ABI encodes the arguments and calls the `setPermission` helper on the enshrined target.
+    /// @dev ABI encodes the parameters and calls the `setPermission` helper on the enshrined target.
     function setPermission(address envoy, address target, bool permission) internal {
         bytes memory data = abi.encodeCall(helpers.setPermission, (envoy, target, permission));
         proxy.execute({ target: address(helpers), data: data });
     }
 
-    /// @dev ABI encodes the arguments and calls the `uninstallPlugin` helper on the enshrined target.
+    /// @dev ABI encodes the parameters and calls the `uninstallPlugin` helper on the enshrined target.
     function uninstallPlugin(IPRBProxyPlugin plugin) internal {
         bytes memory data = abi.encodeCall(helpers.uninstallPlugin, (plugin));
         proxy.execute({ target: address(helpers), data: data });
