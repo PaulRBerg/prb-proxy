@@ -15,22 +15,22 @@ import { PRBProxy } from "src/PRBProxy.sol";
 import { PRBProxyHelpers } from "src/PRBProxyHelpers.sol";
 import { PRBProxyRegistry } from "src/PRBProxyRegistry.sol";
 
-import { Events } from "./shared/Events.t.sol";
-import { PluginChangeOwner } from "./shared/plugins/PluginChangeOwner.t.sol";
-import { PluginDummy } from "./shared/plugins/PluginDummy.t.sol";
-import { PluginEcho } from "./shared/plugins/PluginEcho.t.sol";
-import { PluginEmpty } from "./shared/plugins/PluginEmpty.t.sol";
-import { PluginPanic } from "./shared/plugins/PluginPanic.t.sol";
-import { PluginReverter } from "./shared/plugins/PluginReverter.t.sol";
-import { PluginSelfDestructer } from "./shared/plugins/PluginSelfDestructer.t.sol";
-import { TargetChangeOwner } from "./shared/targets/TargetChangeOwner.t.sol";
-import { TargetDummy } from "./shared/targets/TargetDummy.t.sol";
-import { TargetDummyWithFallback } from "./shared/targets/TargetDummyWithFallback.t.sol";
-import { TargetEcho } from "./shared/targets/TargetEcho.t.sol";
-import { TargetMinGasReserve } from "./shared/targets/TargetMinGasReserve.t.sol";
-import { TargetPanic } from "./shared/targets/TargetPanic.t.sol";
-import { TargetReverter } from "./shared/targets/TargetReverter.t.sol";
-import { TargetSelfDestructer } from "./shared/targets/TargetSelfDestructer.t.sol";
+import { PluginChangeOwner } from "./mocks/plugins/PluginChangeOwner.t.sol";
+import { PluginDummy } from "./mocks/plugins/PluginDummy.t.sol";
+import { PluginEcho } from "./mocks/plugins/PluginEcho.t.sol";
+import { PluginEmpty } from "./mocks/plugins/PluginEmpty.t.sol";
+import { PluginPanic } from "./mocks/plugins/PluginPanic.t.sol";
+import { PluginReverter } from "./mocks/plugins/PluginReverter.t.sol";
+import { PluginSelfDestructer } from "./mocks/plugins/PluginSelfDestructer.t.sol";
+import { TargetChangeOwner } from "./mocks/targets/TargetChangeOwner.t.sol";
+import { TargetDummy } from "./mocks/targets/TargetDummy.t.sol";
+import { TargetDummyWithFallback } from "./mocks/targets/TargetDummyWithFallback.t.sol";
+import { TargetEcho } from "./mocks/targets/TargetEcho.t.sol";
+import { TargetMinGasReserve } from "./mocks/targets/TargetMinGasReserve.t.sol";
+import { TargetPanic } from "./mocks/targets/TargetPanic.t.sol";
+import { TargetReverter } from "./mocks/targets/TargetReverter.t.sol";
+import { TargetSelfDestructer } from "./mocks/targets/TargetSelfDestructer.t.sol";
+import { Events } from "./utils/Events.t.sol";
 
 /// @title Base_Test
 /// @notice Base test contract with common logic needed by all test contracts.

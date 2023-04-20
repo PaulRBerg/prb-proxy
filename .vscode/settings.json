@@ -5,6 +5,10 @@
   "[toml]": {
     "editor.defaultFormatter": "tamasfe.even-better-toml"
   },
+  "files.associations": {
+    ".gas-snapshot": "julia"
+  },
+  "editor.formatOnSave": true,
   "npm.exclude": "**/lib/**",
   "solidity.formatter": "forge"
 }
