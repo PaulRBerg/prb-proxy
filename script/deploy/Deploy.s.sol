@@ -11,7 +11,7 @@ import { BaseScript } from "../shared/Base.s.sol";
 contract Deploy is BaseScript {
     /// @dev The presence of the salt instructs Forge to deploy contracts via this deterministic CREATE2 factory:
     /// https://github.com/Arachnid/deterministic-deployment-proxy
-    function run() public virtual broadcaster returns (PRBProxyHelpers helpers, PRBProxyRegistry registry) {
+    function run() public virtual broadcaster returns (PRBProxyRegistry registry, PRBProxyHelpers helpers) {
         registry = new PRBProxyRegistry{ salt: ZERO_SALT }();
         helpers = new PRBProxyHelpers{ salt: ZERO_SALT }();
     }
