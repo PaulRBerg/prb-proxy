@@ -2,8 +2,8 @@
 pragma solidity >=0.8.19 <=0.9.0;
 
 import { ERC20 } from "@openzeppelin/token/ERC20/ERC20.sol";
+
 import { eqString } from "@prb/test/Helpers.sol";
-import { PRBTest } from "@prb/test/PRBTest.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 import { StdUtils } from "forge-std/StdUtils.sol";
 
@@ -30,11 +30,12 @@ import { TargetMinGasReserve } from "./mocks/targets/TargetMinGasReserve.t.sol";
 import { TargetPanic } from "./mocks/targets/TargetPanic.t.sol";
 import { TargetReverter } from "./mocks/targets/TargetReverter.t.sol";
 import { TargetSelfDestructer } from "./mocks/targets/TargetSelfDestructer.t.sol";
-import { Events } from "./utils/Events.t.sol";
+import { Assertions } from "./utils/Assertions.sol";
+import { Events } from "./utils/Events.sol";
 
 /// @title Base_Test
 /// @notice Base test contract with common logic needed by all test contracts.
-abstract contract Base_Test is PRBTest, Events, StdCheats, StdUtils {
+abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     /*//////////////////////////////////////////////////////////////////////////
                                        STRUCTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -129,32 +130,26 @@ abstract contract Base_Test is PRBTest, Events, StdCheats, StdUtils {
             selfDestructer: new TargetSelfDestructer()
         });
 
-        // Make Alice both the caller and the origin for all subsequent calls.
+        // Make Alice both the caller and the origin.
         vm.startPrank({ msgSender: users.alice, txOrigin: users.alice });
 
-        // Deploy the default proxy-related contracts.
-        deployDefaultContracts();
+        // Deploy the proxy system.
+        deployConditionally();
+
+        // Labels the contracts most relevant for testing.
+        vm.label({ account: address(helpers), newLabel: "Proxy Helpers" });
+        vm.label({ account: address(registry), newLabel: "Registry" });
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                  HELPER FUNCTIONS
+                                      HELPERS
     //////////////////////////////////////////////////////////////////////////*/
-
-    /// @dev Helper function to compare two {IPRBProxyPlugin} addresses.
-    function assertEq(IPRBProxyPlugin a, IPRBProxyPlugin b) internal {
-        assertEq(address(a), address(b));
-    }
-
-    /// @dev Helper function to compare two {IPRBProxyPlugin} addresses.
-    function assertEq(IPRBProxyPlugin a, IPRBProxyPlugin b, string memory err) internal {
-        assertEq(address(a), address(b), err);
-    }
 
     /// @dev Computes the proxy address without deploying it.
     function computeProxyAddress(address origin, bytes32 seed) internal returns (address proxyAddress) {
         bytes32 salt = keccak256(abi.encode(origin, seed));
         bytes32 creationBytecodeHash = keccak256(getProxyBytecode());
-        // Use the create2 utility from Forge Std.
+        // Use the Create2 utility from Forge Std.
         proxyAddress =
             computeCreate2Address({ salt: salt, initcodeHash: creationBytecodeHash, deployer: address(registry) });
     }
@@ -166,22 +161,28 @@ abstract contract Base_Test is PRBTest, Events, StdCheats, StdUtils {
         deal({ token: address(dai), to: addr, give: 1_000_000e18 });
     }
 
-    /// @dev Conditionally the default contracts either normally or from precompiled source.
-    function deployDefaultContracts() internal {
-        // We deploy from precompiled source if the profile is "test-optimized".
+    /// @dev Deploys {PRBProxyHelpers} from precompiled source.
+    function deployPrecompiledHelpers() internal returns (IPRBProxyHelpers helpers_) {
+        helpers_ = IPRBProxyHelpers(deployCode("optimized-out/PRBProxyHelpers.sol/PRBProxyHelpers.json"));
+    }
+
+    /// @dev Deploys {PRBProxyRegistry} from precompiled source.
+    function deployPrecompiledRegistry() internal returns (IPRBProxyRegistry registry_) {
+        registry_ = IPRBProxyRegistry(deployCode("optimized-out/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
+    }
+
+    /// @dev Conditionally deploy the proxy system either normally or from precompiled source.
+    function deployConditionally() internal {
+        // We deploy from precompiled source if the Foundry profile is "test-optimized".
         if (isTestOptimizedProfile()) {
-            helpers = IPRBProxyHelpers(deployCode("optimized-out/PRBProxyHelpers.sol/PRBProxyHelpers.json"));
-            registry = IPRBProxyRegistry(deployCode("optimized-out/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
+            helpers = deployPrecompiledHelpers();
+            registry = deployPrecompiledRegistry();
         }
-        // We deploy normally in all other cases.
+        // We deploy normally for all other profiles.
         else {
             helpers = new PRBProxyHelpers();
             registry = new PRBProxyRegistry();
         }
-
-        // Finally, label all the contracts just deployed.
-        vm.label({ account: address(helpers), newLabel: "Helpers" });
-        vm.label({ account: address(registry), newLabel: "Registry" });
     }
 
     /// @dev Reads the proxy bytecode either normally or from precompiled source.
@@ -193,31 +194,35 @@ abstract contract Base_Test is PRBTest, Events, StdCheats, StdUtils {
         }
     }
 
-    /// @dev ABI encodes the parameters and calls the `installPlugin` helper on the enshrined target.
-    function installPlugin(IPRBProxyPlugin plugin) internal {
-        bytes memory data = abi.encodeCall(helpers.installPlugin, (plugin));
-        proxy.execute({ target: address(helpers), data: data });
-    }
-
     /// @dev Checks if the Foundry profile is "test-optimized".
     function isTestOptimizedProfile() internal returns (bool result) {
         string memory profile = vm.envOr("FOUNDRY_PROFILE", string(""));
         result = eqString(profile, "test-optimized");
     }
 
-    /// @dev ABI encodes the parameters and calls the `setMinGasReserve` helper on the enshrined target.
+    /*//////////////////////////////////////////////////////////////////////////
+                                    ABI ENCODERS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev ABI encodes the parameters and calls {PRBProxyHelpers.installPlugin}.
+    function installPlugin(IPRBProxyPlugin plugin) internal {
+        bytes memory data = abi.encodeCall(helpers.installPlugin, (plugin));
+        proxy.execute({ target: address(helpers), data: data });
+    }
+
+    /// @dev ABI encodes the parameters and calls {PRBProxyHelpers.setMinGasReserve}.
     function setMinGasReserve(uint256 newMinGasReserve) internal {
         bytes memory data = abi.encodeCall(helpers.setMinGasReserve, (newMinGasReserve));
         proxy.execute({ target: address(helpers), data: data });
     }
 
-    /// @dev ABI encodes the parameters and calls the `setPermission` helper on the enshrined target.
+    /// @dev ABI encodes the parameters and calls {PRBProxyHelpers.setPermission}.
     function setPermission(address envoy, address target, bool permission) internal {
         bytes memory data = abi.encodeCall(helpers.setPermission, (envoy, target, permission));
         proxy.execute({ target: address(helpers), data: data });
     }
 
-    /// @dev ABI encodes the parameters and calls the `uninstallPlugin` helper on the enshrined target.
+    /// @dev ABI encodes the parameters and calls {PRBProxyHelpers.uninstallPlugin}.
     function uninstallPlugin(IPRBProxyPlugin plugin) internal {
         bytes memory data = abi.encodeCall(helpers.uninstallPlugin, (plugin));
         proxy.execute({ target: address(helpers), data: data });

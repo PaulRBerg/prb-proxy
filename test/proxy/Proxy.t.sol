@@ -13,7 +13,7 @@ contract Proxy_Test is Base_Test {
     address internal owner;
 
     /*//////////////////////////////////////////////////////////////////////////
-                                   SETUP FUNCTION
+                                  SET-UP FUNCTION
     //////////////////////////////////////////////////////////////////////////*/
 
     function setUp() public virtual override {

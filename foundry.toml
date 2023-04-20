@@ -39,7 +39,6 @@
 [profile.test-optimized]
   fuzz = { runs = 5_000 }
   src = "test"
-  verbosity = 4
 
 [etherscan]
   arbitrum = { key = "${API_KEY_ARBISCAN}" }
