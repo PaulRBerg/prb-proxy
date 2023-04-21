@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.19;
+pragma solidity >=0.8.18;
 
 import { IPRBProxyHelpers } from "../../src/interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyRegistry } from "../../src/interfaces/IPRBProxyRegistry.sol";

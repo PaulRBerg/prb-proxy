@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.19 <=0.9.0;
+pragma solidity >=0.8.18;
 
 import { IPRBProxy } from "../../src/interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "../../src/interfaces/IPRBProxyPlugin.sol";
 
 /// @title Events
-/// @notice Abstract contract that contains all the events emitted by the protocol.
+/// @notice Abstract contract containing all the events emitted by the protocol.
 abstract contract Events {
     /*//////////////////////////////////////////////////////////////////////////
                                       HELPERS

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // solhint-disable max-line-length
-pragma solidity >=0.8.19 <0.9.0;
+pragma solidity >=0.8.18;
 
 import { IPRBProxyHelpers } from "../../src/interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyRegistry } from "../../src/interfaces/IPRBProxyRegistry.sol";

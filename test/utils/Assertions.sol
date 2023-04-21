@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.19;
+pragma solidity >=0.8.18;
 
 import { PRBTest } from "@prb/test/PRBTest.sol";
 
