@@ -5,14 +5,14 @@ import { stdError } from "forge-std/StdError.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
-import { PluginChangeOwner } from "../../mocks/plugins/PluginChangeOwner.t.sol";
-import { PluginEcho } from "../../mocks/plugins/PluginEcho.t.sol";
-import { PluginDummy } from "../../mocks/plugins/PluginDummy.t.sol";
-import { PluginPanic } from "../../mocks/plugins/PluginPanic.t.sol";
-import { PluginReverter } from "../../mocks/plugins/PluginReverter.t.sol";
-import { PluginSelfDestructer } from "../../mocks/plugins/PluginSelfDestructer.t.sol";
-import { TargetDummy } from "../../mocks/targets/TargetDummy.t.sol";
-import { TargetReverter } from "../../mocks/targets/TargetReverter.t.sol";
+import { PluginChangeOwner } from "../../mocks/plugins/PluginChangeOwner.sol";
+import { PluginEcho } from "../../mocks/plugins/PluginEcho.sol";
+import { PluginDummy } from "../../mocks/plugins/PluginDummy.sol";
+import { PluginPanic } from "../../mocks/plugins/PluginPanic.sol";
+import { PluginReverter } from "../../mocks/plugins/PluginReverter.sol";
+import { PluginSelfDestructer } from "../../mocks/plugins/PluginSelfDestructer.sol";
+import { TargetDummy } from "../../mocks/targets/TargetDummy.sol";
+import { TargetReverter } from "../../mocks/targets/TargetReverter.sol";
 import { Proxy_Test } from "../Proxy.t.sol";
 
 contract RunPlugin_Test is Proxy_Test {

@@ -3,7 +3,7 @@ pragma solidity >=0.8.18;
 
 import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
 
-import { TargetReverter } from "../targets/TargetReverter.t.sol";
+import { TargetReverter } from "../targets/TargetReverter.sol";
 
 contract PluginReverter is IPRBProxyPlugin, TargetReverter {
     function methodList() external pure override returns (bytes4[] memory) {

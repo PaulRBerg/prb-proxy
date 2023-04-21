@@ -3,7 +3,7 @@ pragma solidity >=0.8.18;
 
 import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
 
-import { TargetDummy } from "../targets/TargetDummy.t.sol";
+import { TargetDummy } from "../targets/TargetDummy.sol";
 
 contract PluginDummy is IPRBProxyPlugin, TargetDummy {
     function methodList() external pure override returns (bytes4[] memory) {

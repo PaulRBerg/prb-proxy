@@ -5,8 +5,8 @@ import { stdError } from "forge-std/StdError.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
-import { TargetEcho } from "../../mocks/targets/TargetEcho.t.sol";
-import { TargetReverter } from "../../mocks/targets/TargetReverter.t.sol";
+import { TargetEcho } from "../../mocks/targets/TargetEcho.sol";
+import { TargetReverter } from "../../mocks/targets/TargetReverter.sol";
 import { Proxy_Test } from "../Proxy.t.sol";
 
 contract Execute_Test is Proxy_Test {

@@ -3,7 +3,7 @@ pragma solidity >=0.8.18;
 
 import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
 
-import { TargetChangeOwner } from "../targets/TargetChangeOwner.t.sol";
+import { TargetChangeOwner } from "../targets/TargetChangeOwner.sol";
 
 contract PluginChangeOwner is IPRBProxyPlugin, TargetChangeOwner {
     function methodList() external pure override returns (bytes4[] memory) {

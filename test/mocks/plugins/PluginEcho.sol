@@ -3,7 +3,7 @@ pragma solidity >=0.8.18;
 
 import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
 
-import { TargetEcho } from "../targets/TargetEcho.t.sol";
+import { TargetEcho } from "../targets/TargetEcho.sol";
 
 contract PluginEcho is IPRBProxyPlugin, TargetEcho {
     function methodList() external pure override returns (bytes4[] memory) {
