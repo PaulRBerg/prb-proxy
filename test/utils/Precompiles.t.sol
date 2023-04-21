@@ -8,6 +8,8 @@ import { Base_Test } from "../Base.t.sol";
 import { Precompiles } from "./Precompiles.sol";
 
 contract Precompiles_Test is Base_Test {
+    Precompiles internal precompiles = new Precompiles();
+
     modifier onlyTestOptimizedProfile() {
         if (isTestOptimizedProfile()) {
             _;
@@ -15,22 +17,22 @@ contract Precompiles_Test is Base_Test {
     }
 
     function test_DeployPRBProxyHelpers() external onlyTestOptimizedProfile {
-        address actualHelpers = address(new Precompiles().deployPRBProxyHelpers());
+        address actualHelpers = address(precompiles.deployPRBProxyHelpers());
         address expectedHelpers = address(deployPrecompiledHelpers());
-        assertEq(actualHelpers.code, expectedHelpers.code, "proxy helpers' bytecodes don't match");
+        assertEq(actualHelpers.code, expectedHelpers.code, "proxy helpers bytecodes don't match");
     }
 
     function test_DeployPRBProxyRegistry() external onlyTestOptimizedProfile {
-        address actualRegistry = address(new Precompiles().deployPRBProxyRegistry());
+        address actualRegistry = address(precompiles.deployPRBProxyRegistry());
         address expectedRegistry = address(deployPrecompiledRegistry());
-        assertEq(actualRegistry.code, expectedRegistry.code, "registries' bytecodes don't match");
+        assertEq(actualRegistry.code, expectedRegistry.code, "registry bytecodes don't match");
     }
 
     function test_DeployPRBProxySystem() external onlyTestOptimizedProfile {
-        (IPRBProxyRegistry actualRegistry, IPRBProxyHelpers actualHelpers) = new Precompiles().deployPRBProxySystem();
+        (IPRBProxyRegistry actualRegistry, IPRBProxyHelpers actualHelpers) = precompiles.deployPRBProxySystem();
         address expectedHelpers = address(deployPrecompiledHelpers());
         address expectedRegistry = address(deployPrecompiledRegistry());
-        assertEq(address(actualHelpers).code, expectedHelpers.code, "proxy helpers' bytecodes don't match");
-        assertEq(address(actualRegistry).code, expectedRegistry.code, "registries' bytecodes don't match");
+        assertEq(address(actualHelpers).code, expectedHelpers.code, "proxy helpers bytecodes don't match");
+        assertEq(address(actualRegistry).code, expectedRegistry.code, "registry bytecodes don't match");
     }
 }

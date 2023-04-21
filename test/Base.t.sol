@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <=0.9.0;
 
-import { ERC20 } from "@openzeppelin/token/ERC20/ERC20.sol";
-
 import { eqString } from "@prb/test/Helpers.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 import { StdUtils } from "forge-std/StdUtils.sol";
@@ -89,7 +87,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
                                    TEST CONTRACTS
     //////////////////////////////////////////////////////////////////////////*/
 
-    ERC20 internal dai = new ERC20("Dai Stablecoin", "DAI");
     IPRBProxyHelpers internal helpers;
     IPRBProxy internal proxy;
     IPRBProxyRegistry internal registry;
@@ -154,11 +151,10 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
             computeCreate2Address({ salt: salt, initcodeHash: creationBytecodeHash, deployer: address(registry) });
     }
 
-    /// @dev Generates an address by hashing the name, labels the address and funds it with 100 ETH and 1 million DAI.
+    /// @dev Generates an address by hashing the name, labels the address and funds it with test assets.
     function createUser(string memory name) internal returns (address payable addr) {
         addr = payable(makeAddr(name));
         vm.deal({ account: addr, newBalance: 100 ether });
-        deal({ token: address(dai), to: addr, give: 1_000_000e18 });
     }
 
     /// @dev Deploys {PRBProxyHelpers} from precompiled source.

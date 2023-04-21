@@ -5,13 +5,13 @@ pragma solidity >=0.8.19 <0.9.0;
 import { IPRBProxyHelpers } from "../../src/interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyRegistry } from "../../src/interfaces/IPRBProxyRegistry.sol";
 
-/// @dev Useful for external integrations that want to test against the exact deployed bytecode,
-/// as recompiling with via IR enabled would be time-consuming.
+/// @notice This is useful for external integrations seeking to test against the exact deployed bytecode, as recompiling
+/// with via IR enabled would be time-consuming.
 contract Precompiles {
-    error PRBProxy_Precompiles_DeployError();
+    error PRBProxy_Precompiles_DeploymentError();
 
     /// @notice Deploys {PRBProxyRegistry} and {PRBProxyHelpers} from precompiled bytecode.
-    function deployPRBProxySystem() external returns (IPRBProxyRegistry registry, IPRBProxyHelpers helpers) {
+    function deployPRBProxySystem() public returns (IPRBProxyRegistry registry, IPRBProxyHelpers helpers) {
         registry = deployPRBProxyRegistry();
         helpers = deployPRBProxyHelpers();
     }
@@ -24,7 +24,7 @@ contract Precompiles {
             helpers := create(0, add(bytecode, 0x20), mload(bytecode))
         }
         if (address(helpers) == address(0)) {
-            revert PRBProxy_Precompiles_DeployError();
+            revert PRBProxy_Precompiles_DeploymentError();
         }
     }
 
@@ -36,7 +36,7 @@ contract Precompiles {
             registry := create(0, add(bytecode, 0x20), mload(bytecode))
         }
         if (address(registry) == address(0)) {
-            revert PRBProxy_Precompiles_DeployError();
+            revert PRBProxy_Precompiles_DeploymentError();
         }
     }
 }
