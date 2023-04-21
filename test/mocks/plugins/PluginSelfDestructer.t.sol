@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <=0.9.0;
 
-import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
+import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
 
 import { TargetSelfDestructer } from "../targets/TargetSelfDestructer.t.sol";
 

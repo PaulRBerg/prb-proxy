@@ -25,4 +25,12 @@ contract Precompiles_Test is Base_Test {
         address expectedRegistry = address(deployPrecompiledRegistry());
         assertEq(actualRegistry.code, expectedRegistry.code, "registries' bytecodes don't match");
     }
+
+    function test_DeployPRBProxySystem() external onlyTestOptimizedProfile {
+        (IPRBProxyRegistry actualRegistry, IPRBProxyHelpers actualHelpers) = new Precompiles().deployPRBProxySystem();
+        address expectedHelpers = address(deployPrecompiledHelpers());
+        address expectedRegistry = address(deployPrecompiledRegistry());
+        assertEq(address(actualHelpers).code, expectedHelpers.code, "proxy helpers' bytecodes don't match");
+        assertEq(address(actualRegistry).code, expectedRegistry.code, "registries' bytecodes don't match");
+    }
 }

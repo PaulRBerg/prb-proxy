@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18 <0.9.0;
 
-import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
+import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
 
 import { TargetChangeOwner } from "../targets/TargetChangeOwner.t.sol";
 

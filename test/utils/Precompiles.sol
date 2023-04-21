@@ -1,17 +1,17 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 // solhint-disable max-line-length
-pragma solidity >=0.8.19;
+pragma solidity >=0.8.19 <0.9.0;
 
 import { IPRBProxyHelpers } from "../../src/interfaces/IPRBProxyHelpers.sol";
 import { IPRBProxyRegistry } from "../../src/interfaces/IPRBProxyRegistry.sol";
 
-/// @notice Useful for external integrations that need to test against the exact deployed bytecode,
+/// @dev Useful for external integrations that want to test against the exact deployed bytecode,
 /// as recompiling with via IR enabled would be time-consuming.
 contract Precompiles {
-    error PRBProxy_Utils_DeploymentError();
+    error PRBProxy_Precompiles_DeployError();
 
     /// @notice Deploys {PRBProxyRegistry} and {PRBProxyHelpers} from precompiled bytecode.
-    function deployPRBProxy() external returns (IPRBProxyRegistry registry, IPRBProxyHelpers helpers) {
+    function deployPRBProxySystem() external returns (IPRBProxyRegistry registry, IPRBProxyHelpers helpers) {
         registry = deployPRBProxyRegistry();
         helpers = deployPRBProxyHelpers();
     }
@@ -24,7 +24,7 @@ contract Precompiles {
             helpers := create(0, add(bytecode, 0x20), mload(bytecode))
         }
         if (address(helpers) == address(0)) {
-            revert PRBProxy_Utils_DeploymentError();
+            revert PRBProxy_Precompiles_DeployError();
         }
     }
 
@@ -36,7 +36,7 @@ contract Precompiles {
             registry := create(0, add(bytecode, 0x20), mload(bytecode))
         }
         if (address(registry) == address(0)) {
-            revert PRBProxy_Utils_DeploymentError();
+            revert PRBProxy_Precompiles_DeployError();
         }
     }
 }
