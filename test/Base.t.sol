@@ -157,17 +157,17 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
         vm.deal({ account: addr, newBalance: 100 ether });
     }
 
-    /// @dev Deploys {PRBProxyHelpers} from precompiled source.
+    /// @dev Deploys {PRBProxyHelpers} from a source precompiled with via IR
     function deployPrecompiledHelpers() internal returns (IPRBProxyHelpers helpers_) {
         helpers_ = IPRBProxyHelpers(deployCode("optimized-out/PRBProxyHelpers.sol/PRBProxyHelpers.json"));
     }
 
-    /// @dev Deploys {PRBProxyRegistry} from precompiled source.
+    /// @dev Deploys {PRBProxyRegistry} from a source precompiled with via IR
     function deployPrecompiledRegistry() internal returns (IPRBProxyRegistry registry_) {
         registry_ = IPRBProxyRegistry(deployCode("optimized-out/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
     }
 
-    /// @dev Conditionally deploy the proxy system either normally or from precompiled source.
+    /// @dev Conditionally deploy the proxy system either normally or from a source precompiled with via IR.
     function deploySystemConditionally() internal {
         // We deploy from precompiled source if the Foundry profile is "test-optimized".
         if (isTestOptimizedProfile()) {
