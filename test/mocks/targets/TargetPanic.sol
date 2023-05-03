@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
-contract TargetPanic {
+import { PRBProxyStorage } from "../../../src/abstracts/PRBProxyStorage.sol";
+
+contract TargetPanic is PRBProxyStorage {
     function failedAssertion() external pure {
         assert(false);
     }

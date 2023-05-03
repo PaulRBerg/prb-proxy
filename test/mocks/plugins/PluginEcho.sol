@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
-import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
+import { PRBProxyPlugin } from "../../../src/abstracts/PRBProxyPlugin.sol";
 
 import { TargetEcho } from "../targets/TargetEcho.sol";
 
-contract PluginEcho is IPRBProxyPlugin, TargetEcho {
+contract PluginEcho is PRBProxyPlugin, TargetEcho {
     function methodList() external pure override returns (bytes4[] memory) {
         bytes4[] memory methods = new bytes4[](9);
 

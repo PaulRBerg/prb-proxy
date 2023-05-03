@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
-contract TargetEcho {
+import { PRBProxyStorage } from "../../../src/abstracts/PRBProxyStorage.sol";
+
+contract TargetEcho is PRBProxyStorage {
     struct SomeStruct {
         uint256 foo;
         uint256 bar;

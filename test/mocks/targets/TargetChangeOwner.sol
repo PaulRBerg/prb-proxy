@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
-contract TargetChangeOwner {
-    address public owner;
+import { PRBProxyStorage } from "../../../src/abstracts/PRBProxyStorage.sol";
 
+contract TargetChangeOwner is PRBProxyStorage {
     function changeIt() external {
         owner = address(1729);
     }

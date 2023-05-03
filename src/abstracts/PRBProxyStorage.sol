@@ -5,7 +5,7 @@ import { IPRBProxyPlugin } from "../interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyStorage } from "../interfaces/IPRBProxyStorage.sol";
 
 /// @title PRBProxyStorage
-/// @dev This is meant to be inherited by target contracts. See the full documentation in {IPRBProxyStorage}.
+/// @dev This is meant to be inherited by plugins and targets. See the documentation in {IPRBProxyStorage}.
 abstract contract PRBProxyStorage is IPRBProxyStorage {
     /// @inheritdoc IPRBProxyStorage
     address public override owner;
