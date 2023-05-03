@@ -46,7 +46,8 @@ contract PRBProxy is
                                   FALLBACK FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Used for running plugins.
+    /// @notice Fallback function used to run plugins.
+    /// @dev WARNING: anyone can call this function and thus run any installed plugin.
     fallback(bytes calldata data) external payable returns (bytes memory response) {
         // Check if the function signature exists in the installed plugins mapping.
         IPRBProxyPlugin plugin = plugins[msg.sig];
