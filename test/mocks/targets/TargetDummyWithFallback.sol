@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18 <0.9.0;
 
-contract TargetDummyWithFallback {
+import { PRBProxyStorage } from "../../../src/abstracts/PRBProxyStorage.sol";
+
+contract TargetDummyWithFallback is PRBProxyStorage {
     event LogFallback();
 
     fallback() external payable {

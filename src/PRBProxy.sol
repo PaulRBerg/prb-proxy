@@ -34,8 +34,8 @@ contract PRBProxy is
                                      CONSTRUCTOR
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Constructs the proxy by fetching the constructor parameters from the registry.
-    /// @dev This is implemented like this to make it easy to precompute the CREATE2 address of the proxy.
+    /// @notice Constructs the proxy by fetching the params from the registry.
+    /// @dev This is implemented like this so that the proxy's CREATE2 address doesn't depend on the constructor params.
     constructor() {
         minGasReserve = 5000;
         registry = IPRBProxyRegistry(msg.sender);
@@ -52,7 +52,7 @@ contract PRBProxy is
         // Check if the function signature exists in the installed plugins mapping.
         IPRBProxyPlugin plugin = plugins[msg.sig];
         if (address(plugin) == address(0)) {
-            revert PRBProxy_PluginNotInstalledForMethod(msg.sender, msg.sig);
+            revert PRBProxy_PluginNotInstalledForMethod({ caller: msg.sender, selector: msg.sig });
         }
 
         // Delegate call to the plugin.
