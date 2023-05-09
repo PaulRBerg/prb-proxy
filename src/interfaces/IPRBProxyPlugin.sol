@@ -10,7 +10,7 @@ import { IPRBProxyStorage } from "./IPRBProxyStorage.sol";
 ///
 /// A couple of notes about this interface:
 ///
-/// - It is not meant to be inherited by plugins. Instead, plugins should inherit from {PRBProxyPlugin}.
+/// - It is not meant to be inherited by plugin implementations, which should inherit from {PRBProxyPlugin}.
 /// - It should be used only for casting addresses to the interface type.
 /// - It inherits from {IPRBProxyStorage} to enable plugins to access the proxy's storage.
 interface IPRBProxyPlugin is IPRBProxyStorage {
