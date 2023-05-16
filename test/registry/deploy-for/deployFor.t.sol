@@ -72,7 +72,7 @@ contract DeployFor_Test is Registry_Test {
     {
         changePrank({ txOrigin: origin, msgSender: operator });
 
-        vm.expectEmit();
+        vm.expectEmit({ emitter: address(registry) });
         emit DeployProxy({
             origin: origin,
             operator: operator,

@@ -72,7 +72,7 @@ contract TransferOwnership_Test is Registry_Test {
     {
         vm.assume(newOwner != users.alice);
 
-        vm.expectEmit();
+        vm.expectEmit({ emitter: address(registry) });
         emit TransferOwnership({ proxy: proxy, oldOwner: users.alice, newOwner: newOwner });
         registry.transferOwnership(newOwner);
     }

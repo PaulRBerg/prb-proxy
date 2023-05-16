@@ -49,7 +49,7 @@ contract Deploy_Test is Registry_Test {
 
     function testFuzz_Deploy_Event(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
-        vm.expectEmit();
+        vm.expectEmit({ emitter: address(registry) });
         emit DeployProxy({
             origin: origin,
             operator: owner,
