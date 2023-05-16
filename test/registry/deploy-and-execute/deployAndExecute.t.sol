@@ -80,7 +80,7 @@ contract DeployAndExecute_Test is Registry_Test {
     function testFuzz_DeployAndExecute_Event_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
 
-        vm.expectEmit();
+        vm.expectEmit({ emitter: address(registry) });
         emit DeployProxy({
             origin: origin,
             operator: owner,
@@ -101,7 +101,7 @@ contract DeployAndExecute_Test is Registry_Test {
     {
         changePrank({ txOrigin: origin, msgSender: owner });
 
-        vm.expectEmit();
+        vm.expectEmit({ emitter: computeProxyAddress({ origin: origin, seed: SEED_ZERO }) });
         emit Execute({ target: address(targets.echo), data: data, response: abi.encode(input) });
         registry.deployAndExecute(target, data);
     }

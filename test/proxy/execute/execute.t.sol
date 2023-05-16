@@ -422,7 +422,7 @@ contract Execute_Test is Proxy_Test {
         whenTargetDoesNotSelfDestruct
         whenCallerOwnerOrEnvoy
     {
-        vm.expectEmit();
+        vm.expectEmit({ emitter: address(proxy) });
         bytes memory data = abi.encodeCall(targets.echo.echoUint256, (input));
         emit Execute({ target: address(targets.echo), data: data, response: abi.encode(input) });
         proxy.execute(address(targets.echo), data);
