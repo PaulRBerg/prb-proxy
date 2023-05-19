@@ -3,13 +3,13 @@ pragma solidity >=0.8.4;
 
 import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
 
-/// @title IPRBProxyHelpers
-/// @notice The enshrined target contract, which implements helper functions for the following operations:
+/// @title IPRBProxyAnnex
+/// @notice An enshrined target contract, which implements helper functions for the following operations:
 /// - Installing plugins on the proxy.
 /// - Updating the minimum gas reserve.
 /// - Permitting envoys to call target contracts on behalf of the proxy.
 /// - Uninstalling plugins on the proxy.
-interface IPRBProxyHelpers {
+interface IPRBProxyAnnex {
     /*//////////////////////////////////////////////////////////////////////////
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/

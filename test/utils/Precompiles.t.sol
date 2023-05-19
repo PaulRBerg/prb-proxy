@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18;
 
-import { IPRBProxyHelpers } from "../../src/interfaces/IPRBProxyHelpers.sol";
+import { IPRBProxyAnnex } from "../../src/interfaces/IPRBProxyAnnex.sol";
 import { IPRBProxyRegistry } from "../../src/interfaces/IPRBProxyRegistry.sol";
 
 import { Base_Test } from "../Base.t.sol";
@@ -16,10 +16,10 @@ contract Precompiles_Test is Base_Test {
         }
     }
 
-    function test_DeployPRBProxyHelpers() external onlyTestOptimizedProfile {
-        address actualHelpers = address(precompiles.deployHelpers());
-        address expectedHelpers = address(deployPrecompiledHelpers());
-        assertEq(actualHelpers.code, expectedHelpers.code, "proxy helpers bytecodes don't match");
+    function test_DeployPRBProxyAnnex() external onlyTestOptimizedProfile {
+        address actualAnnex = address(precompiles.deployAnnex());
+        address expectedAnnex = address(deployPrecompiledAnnex());
+        assertEq(actualAnnex.code, expectedAnnex.code, "proxy annex bytecodes don't match");
     }
 
     function test_DeployPRBProxyRegistry() external onlyTestOptimizedProfile {
@@ -29,10 +29,10 @@ contract Precompiles_Test is Base_Test {
     }
 
     function test_DeployPRBProxySystem() external onlyTestOptimizedProfile {
-        (IPRBProxyRegistry actualRegistry, IPRBProxyHelpers actualHelpers) = precompiles.deploySystem();
-        address expectedHelpers = address(deployPrecompiledHelpers());
+        (IPRBProxyAnnex actualAnnex, IPRBProxyRegistry actualRegistry) = precompiles.deploySystem();
+        address expectedAnnex = address(deployPrecompiledAnnex());
         address expectedRegistry = address(deployPrecompiledRegistry());
-        assertEq(address(actualHelpers).code, expectedHelpers.code, "proxy helpers bytecodes don't match");
+        assertEq(address(actualAnnex).code, expectedAnnex.code, "proxy annex bytecodes don't match");
         assertEq(address(actualRegistry).code, expectedRegistry.code, "registry bytecodes don't match");
     }
 }

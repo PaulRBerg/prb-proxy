@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <=0.9.0;
 
-import { Helpers_Test } from "../Helpers.t.sol";
+import { Annex_Test } from "../Annex.t.sol";
 
-contract SetMinGasReserve_Test is Helpers_Test {
+contract SetMinGasReserve_Test is Annex_Test {
     function testFuzz_SetMinGasReserve_Update(uint256 newMinGasReserve) external {
         setMinGasReserve(newMinGasReserve);
         uint256 actualMinGasReserve = proxy.minGasReserve();

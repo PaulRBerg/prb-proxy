@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18 <0.9.0;
 
-import { IPRBProxyHelpers } from "src/interfaces/IPRBProxyHelpers.sol";
+import { IPRBProxyAnnex } from "src/interfaces/IPRBProxyAnnex.sol";
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 
-import { Helpers_Test } from "../Helpers.t.sol";
+import { Annex_Test } from "../Annex.t.sol";
 
-contract UninstallPlugin_Test is Helpers_Test {
+contract UninstallPlugin_Test is Annex_Test {
     function test_RevertWhen_PluginHasNoMethods() external {
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxyHelpers.PRBProxy_NoPluginMethods.selector, plugins.empty));
+        vm.expectRevert(abi.encodeWithSelector(IPRBProxyAnnex.PRBProxy_NoPluginMethods.selector, plugins.empty));
         uninstallPlugin(plugins.empty);
     }
 

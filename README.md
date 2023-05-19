@@ -92,15 +92,15 @@ There are multiple ways to deploy a proxy:
   a single transaction.
 
 Once the proxy is deployed, you can start interacting with target contracts. PRBProxy ships with one "enshrined" target contract called
-`PRBProxyHelpers`. This contract provides several useful functions, including:
+`PRBProxyAnnex`. This contract provides several auxiliary functions, including:
 
 - `installPlugin`
 - `setMinGasReserve`
 - `setPermission`
 - `uninstallPlugin`
 
-You call the functions above by ABI-encoding their calldata and calling `execute` on the proxy. The logic in `PRBProxyHelpers` is kept separate from
-the proxy itself to reduce deployment costs.
+You call the functions above by ABI-encoding their calldata and calling `execute` on the proxy. The logic in `PRBProxyAnnex` is kept separate from the
+proxy itself to reduce deployment costs.
 
 ### Addresses
 
