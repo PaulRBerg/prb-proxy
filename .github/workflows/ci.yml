@@ -54,8 +54,37 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
-      - name: "Build the contracts and print their size"
-        run: "forge build --sizes"
+      - name: "Install Pnpm"
+        uses: "pnpm/action-setup@v2"
+        with:
+          version: "8"
+
+      - name: "Install Node.js"
+        uses: "actions/setup-node@v3"
+        with:
+          cache: "pnpm"
+          node-version: "lts/*"
+
+      - name: "Install the Node.js dependencies"
+        run: "pnpm install"
+
+      - name: "Show the Foundry config"
+        run: "forge config"
+
+      - name: "Generate and prepare the contract artifacts"
+        run: "./shell/prepare-artifacts.sh"
+
+      - name: "Cache the build so that it can be re-used by the other jobs"
+        uses: "actions/cache/save@v3"
+        with:
+          path: "optimized-out"
+          key: "foundry-build-${{ github.sha }}"
+
+      - name: "Store the contract artifacts in CI"
+        uses: "actions/upload-artifact@v3"
+        with:
+          name: "contract-artifacts"
+          path: "artifacts"
 
       - name: "Add build summary"
         run: |
@@ -76,8 +105,12 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
-      - name: "Produce an optimized build with --via-ir"
-        run: "FOUNDRY_PROFILE=optimized forge build"
+      - name: "Restore the cached build"
+        uses: "actions/cache/restore@v3"
+        with:
+          fail-on-cache-miss: true
+          key: "foundry-build-${{ github.sha }}"
+          path: "optimized-out"
 
       - name: "Run the tests against the optimized build"
         run: "FOUNDRY_PROFILE=test-optimized forge test"
@@ -99,7 +132,7 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
-      - name: "Generate the coverage report"
+      - name: "Run the tests and generate the coverage report"
         run: "forge coverage --report lcov"
 
       - name: "Upload coverage report to Codecov"
