@@ -5,12 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[4.0.0-beta.4]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.3...v4.0.0-beta.4
 [4.0.0-beta.3]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.2...v4.0.0-beta.3
 [4.0.0-beta.2]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.1...v4.0.0-beta.2
 [4.0.0-beta.1]: https://github.com/PaulRBerg/prb-proxy/compare/v2.0.0...v4.0.0-beta.1
 [2.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/PaulRBerg/prb-proxy/releases/tag/v1.0.0
+
+## [4.0.0-beta.4] - 2023-05-19
+
+### Changed
+
+- Bump pragma in scripts to `>=0.8.19` (@PaulRBerg)
+- Change license of test utils to MIT (@PaulRBerg)
+- Improve documentation (@PaulRBerg)
+- Improve names of custom errors and functions (@PaulRBerg)
+- Inherit storage in plugin ([#92](https://github.com/PaulRBerg/prb-proxy/pull/92)) (@PaulRBerg)
+- Move `PRBProxyStorage` to `src/abstracts` (@PaulRBerg)
+- Provide default mnemonic in base script (@PaulRBerg)
+- Rename `PRBProxyHelpers` to `PRBProxyAnnex` ([#96](https://github.com/PaulRBerg/prb-proxy/pull/96)) (@PaulRBerg)
+- Replace getters with public mappings (@PaulRBerg)
+- Switch order of return parameters in the `run` function of scripts (@PaulRBerg)
+- Use named parameter in error reverts (@PaulRBerg)
+
+### Added
+
+- Add ASCII art (@PaulRBerg)
+- Add `SablierV2ProxyPlugin` abstract ([#92](https://github.com/PaulRBerg/prb-proxy/pull/92)) (@PaulRBerg)
+- Provide testing utilities for deploying precompiled bytecodes (@PaulRBerg)
+
+### Removed
+
+- Remove development-related Node.js dependencies (@PaulRBerg)
+- Remove problematic src/=src/ remapping (@PaulRBerg)
+
+### Fixed
+
+- Use constructor instead of `setUp` function in base script (@PaulRBerg)
 
 ## [4.0.0-beta.3] - 2023-03-08
 

@@ -108,13 +108,13 @@ The registry and the enshrined target are deployed at the same address on the fo
 
 | Contract | Chain                   | [Chain ID](https://chainlist.org/) | Address                                                                                                                           |
 | -------- | ----------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Registry | Ethereum Goerli Testnet | 5                                  | [0x8afE5fE3BAfA1FbC941a50b630AA966F3A7815A0](https://goerli.etherscan.io/address/0x8afE5fE3BAfA1FbC941a50b630AA966F3A7815A0#code) |
-| Helpers  | Ethereum Goerli Testnet | 5                                  | [0x842b72D8521E9a09D229434e4E9517DB1a4fAA71](https://goerli.etherscan.io/address/0x842b72D8521E9a09D229434e4E9517DB1a4fAA71#code) |
+| Annex    | Ethereum Goerli Testnet | 5                                  | [0xB82EC38478FDC4A7517BC04E79af9a05B50aAB3d](https://goerli.etherscan.io/address/0xB82EC38478FDC4A7517BC04E79af9a05B50aAB3d#code) |
+| Registry | Ethereum Goerli Testnet | 5                                  | [0xFA1D45343396F5640B1a677Ea93D808748714706](https://goerli.etherscan.io/address/0xFA1D45343396F5640B1a677Ea93D808748714706#code) |
 
 ### Targets
 
-To make use of PRBProxy, you'll need a "target" contract. Targets consist of stateless scripts and are the key to leveraging PRBProxy for transaction
-composition.
+To make use of PRBProxy, you need a so-called "target". Target contract consist of stateless scripts and are the key to leveraging PRBProxy for
+transaction composition.
 
 As an example, here's a target contract that wraps ETH into WETH (the ERC-20 version of ETH) and deposits the resulting WETH into a DeFi protocol
 called Acme:
