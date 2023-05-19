@@ -6,11 +6,11 @@ import { StdCheats } from "forge-std/StdCheats.sol";
 import { StdUtils } from "forge-std/StdUtils.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
-import { IPRBProxyHelpers } from "src/interfaces/IPRBProxyHelpers.sol";
+import { IPRBProxyAnnex } from "src/interfaces/IPRBProxyAnnex.sol";
 import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 import { PRBProxy } from "src/PRBProxy.sol";
-import { PRBProxyHelpers } from "src/PRBProxyHelpers.sol";
+import { PRBProxyAnnex } from "src/PRBProxyAnnex.sol";
 import { PRBProxyRegistry } from "src/PRBProxyRegistry.sol";
 
 import { PluginChangeOwner } from "./mocks/plugins/PluginChangeOwner.sol";
@@ -87,7 +87,7 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
                                    TEST CONTRACTS
     //////////////////////////////////////////////////////////////////////////*/
 
-    IPRBProxyHelpers internal helpers;
+    IPRBProxyAnnex internal annex;
     IPRBProxy internal proxy;
     IPRBProxyRegistry internal registry;
 
@@ -134,7 +134,7 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
         deploySystemConditionally();
 
         // Labels the contracts most relevant for testing.
-        vm.label({ account: address(helpers), newLabel: "Proxy Helpers" });
+        vm.label({ account: address(annex), newLabel: "Annex" });
         vm.label({ account: address(registry), newLabel: "Registry" });
     }
 
@@ -157,9 +157,9 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
         vm.deal({ account: addr, newBalance: 100 ether });
     }
 
-    /// @dev Deploys {PRBProxyHelpers} from a source precompiled with `--via-ir`.
-    function deployPrecompiledHelpers() internal returns (IPRBProxyHelpers helpers_) {
-        helpers_ = IPRBProxyHelpers(deployCode("optimized-out/PRBProxyHelpers.sol/PRBProxyHelpers.json"));
+    /// @dev Deploys {PRBProxyAnnex} from a source precompiled with `--via-ir`.
+    function deployPrecompiledAnnex() internal returns (IPRBProxyAnnex annex_) {
+        annex_ = IPRBProxyAnnex(deployCode("optimized-out/PRBProxyAnnex.sol/PRBProxyAnnex.json"));
     }
 
     /// @dev Deploys {PRBProxyRegistry} from a source precompiled with `--via-ir`.
@@ -171,12 +171,12 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     function deploySystemConditionally() internal {
         // We deploy from precompiled source if the Foundry profile is "test-optimized".
         if (isTestOptimizedProfile()) {
-            helpers = deployPrecompiledHelpers();
+            annex = deployPrecompiledAnnex();
             registry = deployPrecompiledRegistry();
         }
         // We deploy normally for all other profiles.
         else {
-            helpers = new PRBProxyHelpers();
+            annex = new PRBProxyAnnex();
             registry = new PRBProxyRegistry();
         }
     }
@@ -200,27 +200,27 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
                                     ABI ENCODERS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @dev ABI encodes the parameters and calls {PRBProxyHelpers.installPlugin}.
+    /// @dev ABI encodes the parameters and calls {PRBProxyAnnex.installPlugin}.
     function installPlugin(IPRBProxyPlugin plugin) internal {
-        bytes memory data = abi.encodeCall(helpers.installPlugin, (plugin));
-        proxy.execute({ target: address(helpers), data: data });
+        bytes memory data = abi.encodeCall(annex.installPlugin, (plugin));
+        proxy.execute({ target: address(annex), data: data });
     }
 
-    /// @dev ABI encodes the parameters and calls {PRBProxyHelpers.setMinGasReserve}.
+    /// @dev ABI encodes the parameters and calls {PRBProxyAnnex.setMinGasReserve}.
     function setMinGasReserve(uint256 newMinGasReserve) internal {
-        bytes memory data = abi.encodeCall(helpers.setMinGasReserve, (newMinGasReserve));
-        proxy.execute({ target: address(helpers), data: data });
+        bytes memory data = abi.encodeCall(annex.setMinGasReserve, (newMinGasReserve));
+        proxy.execute({ target: address(annex), data: data });
     }
 
-    /// @dev ABI encodes the parameters and calls {PRBProxyHelpers.setPermission}.
+    /// @dev ABI encodes the parameters and calls {PRBProxyAnnex.setPermission}.
     function setPermission(address envoy, address target, bool permission) internal {
-        bytes memory data = abi.encodeCall(helpers.setPermission, (envoy, target, permission));
-        proxy.execute({ target: address(helpers), data: data });
+        bytes memory data = abi.encodeCall(annex.setPermission, (envoy, target, permission));
+        proxy.execute({ target: address(annex), data: data });
     }
 
-    /// @dev ABI encodes the parameters and calls {PRBProxyHelpers.uninstallPlugin}.
+    /// @dev ABI encodes the parameters and calls {PRBProxyAnnex.uninstallPlugin}.
     function uninstallPlugin(IPRBProxyPlugin plugin) internal {
-        bytes memory data = abi.encodeCall(helpers.uninstallPlugin, (plugin));
-        proxy.execute({ target: address(helpers), data: data });
+        bytes memory data = abi.encodeCall(annex.uninstallPlugin, (plugin));
+        proxy.execute({ target: address(annex), data: data });
     }
 }

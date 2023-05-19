@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <=0.9.0;
 
-import { Helpers_Test } from "../Helpers.t.sol";
+import { Annex_Test } from "../Annex.t.sol";
 
-contract SetPermission_Test is Helpers_Test {
+contract SetPermission_Test is Annex_Test {
     function test_SetPermission_PermissionNotSet() external {
         setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
         bool permission = proxy.permissions({ envoy: users.envoy, target: address(targets.dummy) });

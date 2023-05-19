@@ -3,7 +3,7 @@ pragma solidity >=0.8.19 <=0.9.0;
 
 import { Base_Test } from "../Base.t.sol";
 
-contract Helpers_Test is Base_Test {
+contract Annex_Test is Base_Test {
     /*//////////////////////////////////////////////////////////////////////////
                                      VARIABLES
     //////////////////////////////////////////////////////////////////////////*/
@@ -11,7 +11,7 @@ contract Helpers_Test is Base_Test {
     address internal owner;
 
     /*//////////////////////////////////////////////////////////////////////////
-                                   SETUP FUNCTION
+                                  SET-UP FUNCTION
     //////////////////////////////////////////////////////////////////////////*/
 
     function setUp() public virtual override {

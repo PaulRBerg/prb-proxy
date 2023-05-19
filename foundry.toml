@@ -3,7 +3,7 @@
   bytecode_hash = "none"
   cbor_metadata = false
   fs_permissions = [{ access = "read", path = "./optimized-out" }]
-  gas_reports = ["PRBProxy", "PRBProxyHelpers", "PRBProxyRegistry"]
+  gas_reports = ["PRBProxy", "PRBProxyAnnex", "PRBProxyRegistry"]
   ignored_error_codes = [
     5159, # ignore selfdestruct warning
   ]

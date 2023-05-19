@@ -2,7 +2,7 @@
 pragma solidity >=0.8.18;
 
 import { PRBProxyStorage } from "./abstracts/PRBProxyStorage.sol";
-import { IPRBProxyHelpers } from "./interfaces/IPRBProxyHelpers.sol";
+import { IPRBProxyAnnex } from "./interfaces/IPRBProxyAnnex.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 
 /*
@@ -14,33 +14,33 @@ import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 ██║     ██║  ██║██████╔╝██║     ██║  ██║╚██████╔╝██╔╝ ██╗   ██║
 ╚═╝     ╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝
 
-██╗  ██╗███████╗██╗     ██████╗ ███████╗██████╗ ███████╗
-██║  ██║██╔════╝██║     ██╔══██╗██╔════╝██╔══██╗██╔════╝
-███████║█████╗  ██║     ██████╔╝█████╗  ██████╔╝███████╗
-██╔══██║██╔══╝  ██║     ██╔═══╝ ██╔══╝  ██╔══██╗╚════██║
-██║  ██║███████╗███████╗██║     ███████╗██║  ██║███████║
-╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝╚══════╝
+ █████╗ ███╗   ██╗███╗   ██╗███████╗██╗  ██╗
+██╔══██╗████╗  ██║████╗  ██║██╔════╝╚██╗██╔╝
+███████║██╔██╗ ██║██╔██╗ ██║█████╗   ╚███╔╝
+██╔══██║██║╚██╗██║██║╚██╗██║██╔══╝   ██╔██╗
+██║  ██║██║ ╚████║██║ ╚████║███████╗██╔╝ ██╗
+╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝
 
 */
 
-/// @title PRBProxyHelpers
-/// @dev See the documentation in {IPRBProxyHelpers}.
-contract PRBProxyHelpers is
-    IPRBProxyHelpers, // 0 inherited components
+/// @title PRBProxyAnnex
+/// @dev See the documentation in {IPRBProxyAnnex}.
+contract PRBProxyAnnex is
+    IPRBProxyAnnex, // 0 inherited components
     PRBProxyStorage // 1 inherited component
 {
     /*//////////////////////////////////////////////////////////////////////////
                                    PUBLIC STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IPRBProxyHelpers
+    /// @inheritdoc IPRBProxyAnnex
     string public constant override VERSION = "4.0.0-beta.3";
 
     /*//////////////////////////////////////////////////////////////////////////
                                NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IPRBProxyHelpers
+    /// @inheritdoc IPRBProxyAnnex
     function installPlugin(IPRBProxyPlugin plugin) external override {
         // Get the method list to install.
         bytes4[] memory methodList = plugin.methodList();
@@ -63,7 +63,7 @@ contract PRBProxyHelpers is
         emit InstallPlugin(plugin);
     }
 
-    /// @inheritdoc IPRBProxyHelpers
+    /// @inheritdoc IPRBProxyAnnex
     function setMinGasReserve(uint256 newMinGasReserve) external override {
         // Load the current minimum gas reserve.
         uint256 oldMinGasReserve = minGasReserve;
@@ -75,13 +75,13 @@ contract PRBProxyHelpers is
         emit SetMinGasReserve(oldMinGasReserve, newMinGasReserve);
     }
 
-    /// @inheritdoc IPRBProxyHelpers
+    /// @inheritdoc IPRBProxyAnnex
     function setPermission(address envoy, address target, bool permission) external override {
         permissions[envoy][target] = permission;
         emit SetPermission(envoy, target, permission);
     }
 
-    /// @inheritdoc IPRBProxyHelpers
+    /// @inheritdoc IPRBProxyAnnex
     function uninstallPlugin(IPRBProxyPlugin plugin) external {
         // Get the method list to uninstall.
         bytes4[] memory methodList = plugin.methodList();

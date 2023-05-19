@@ -8,7 +8,7 @@ import { IPRBProxyPlugin } from "../../src/interfaces/IPRBProxyPlugin.sol";
 /// @notice Abstract contract containing all the events emitted by the protocol.
 abstract contract Events {
     /*//////////////////////////////////////////////////////////////////////////
-                                      HELPERS
+                                       ANNEX
     //////////////////////////////////////////////////////////////////////////*/
 
     event InstallPlugin(IPRBProxyPlugin indexed plugin);
