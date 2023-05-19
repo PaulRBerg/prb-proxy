@@ -5,8 +5,8 @@ import { Annex_Test } from "../Annex.t.sol";
 
 contract Version_Test is Annex_Test {
     function test_Versions() external {
-        string memory annexVersion = annex.VERSION();
-        string memory registryVersion = registry.VERSION();
-        assertEq(annexVersion, registryVersion, "Annex version does not match registry version");
+        string memory actualVersion = annex.VERSION();
+        string memory expectedVersion = "4.0.0-beta.4";
+        assertEq(actualVersion, expectedVersion, "annex version mismatch");
     }
 }

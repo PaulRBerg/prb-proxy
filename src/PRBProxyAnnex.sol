@@ -34,7 +34,7 @@ contract PRBProxyAnnex is
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyAnnex
-    string public constant override VERSION = "4.0.0-beta.3";
+    string public constant override VERSION = "4.0.0-beta.4";
 
     /*//////////////////////////////////////////////////////////////////////////
                                NON-CONSTANT FUNCTIONS
