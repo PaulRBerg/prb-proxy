@@ -38,7 +38,7 @@
   "scripts": {
     "build": "forge build",
     "build:optimized": "FOUNDRY_PROFILE=optimized forge build",
-    "clean": "rm -rf broadcast cache out",
+    "clean": "rm -rf artifacts broadcast cache docs optimized-out out",
     "lint": "pnpm lint:sol && pnpm prettier:check",
     "lint:sol": "forge fmt --check && pnpm solhint \"{script,src,test}/**/*.sol\"",
     "gas:report": "forge test --gas-report --no-match-test \"test(Fuzz)?_RevertWhen_\"",
