@@ -10,7 +10,7 @@
     "url": "https://github.com/PaulRBerg/prb-proxy/issues"
   },
   "devDependencies": {
-    "prettier": "^2.8.4",
+    "prettier": "^2.8.8",
     "solhint": "^3.4.0"
   },
   "files": [
