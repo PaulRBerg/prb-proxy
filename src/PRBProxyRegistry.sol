@@ -38,7 +38,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
-    mapping(address eoa => bytes32 seed) public override nextSeeds;
+    mapping(address origin => bytes32 seed) public override nextSeeds;
 
     /// @inheritdoc IPRBProxyRegistry
     mapping(address owner => IPRBProxy proxy) public override proxies;
