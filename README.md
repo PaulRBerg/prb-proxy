@@ -56,14 +56,14 @@ However, PRBProxy eliminates this risk entirely, allowing users to even safely s
 First, run the install step:
 
 ```sh
-forge install PaulRBerg/prb-proxy@v4
+forge install PaulRBerg/prb-proxy@release-v4
 ```
 
 Your `.gitmodules` file should now contain the following entry:
 
 ```toml
 [submodule "lib/prb-proxy"]
-  branch = "v4"
+  branch = "release-v4"
   path = "lib/prb-proxy"
   url = "https://github.com/PaulRBerg/prb-proxy"
 ```
