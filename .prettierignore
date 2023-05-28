@@ -3,7 +3,7 @@ broadcast
 cache
 lib
 node_modules
-optimized-out
+out-optimized
 out
 
 # files

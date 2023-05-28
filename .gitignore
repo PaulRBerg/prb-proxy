@@ -3,7 +3,7 @@ artifacts
 broadcast
 cache
 node_modules
-optimized-out
+out-optimized
 out
 
 # files

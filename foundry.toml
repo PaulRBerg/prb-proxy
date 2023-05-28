@@ -3,7 +3,7 @@
   bytecode_hash = "none"
   cbor_metadata = false
   evm_version = "paris"
-  fs_permissions = [{ access = "read", path = "./optimized-out" }]
+  fs_permissions = [{ access = "read", path = "./out-optimized" }]
   gas_reports = ["PRBProxy", "PRBProxyAnnex", "PRBProxyRegistry"]
   ignored_error_codes = [
     5159, # ignore selfdestruct warning
@@ -32,7 +32,7 @@
 # Compile only the production code with IR
 [profile.optimized]
   ignored_error_codes = []
-  out = "optimized-out"
+  out = "out-optimized"
   test = "src"
   via_ir = true
 

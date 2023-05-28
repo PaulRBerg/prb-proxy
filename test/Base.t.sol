@@ -159,12 +159,12 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
 
     /// @dev Deploys {PRBProxyAnnex} from a source precompiled with `--via-ir`.
     function deployPrecompiledAnnex() internal returns (IPRBProxyAnnex annex_) {
-        annex_ = IPRBProxyAnnex(deployCode("optimized-out/PRBProxyAnnex.sol/PRBProxyAnnex.json"));
+        annex_ = IPRBProxyAnnex(deployCode("out-optimized/PRBProxyAnnex.sol/PRBProxyAnnex.json"));
     }
 
     /// @dev Deploys {PRBProxyRegistry} from a source precompiled with `--via-ir`.
     function deployPrecompiledRegistry() internal returns (IPRBProxyRegistry registry_) {
-        registry_ = IPRBProxyRegistry(deployCode("optimized-out/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
+        registry_ = IPRBProxyRegistry(deployCode("out-optimized/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
     }
 
     /// @dev Conditionally deploy the proxy system either normally or from a source precompiled with `--via-ir`..
@@ -184,7 +184,7 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     /// @dev Reads the proxy bytecode either normally or from precompiled source.
     function getProxyBytecode() internal returns (bytes memory bytecode) {
         if (isTestOptimizedProfile()) {
-            bytecode = vm.getCode("optimized-out/PRBProxy.sol/PRBProxy.json");
+            bytecode = vm.getCode("out-optimized/PRBProxy.sol/PRBProxy.json");
         } else {
             bytecode = type(PRBProxy).creationCode;
         }
