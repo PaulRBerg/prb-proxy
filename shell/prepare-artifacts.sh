@@ -21,16 +21,16 @@ mkdir $artifacts "$artifacts/interfaces"
 FOUNDRY_PROFILE=optimized forge build
 
 # Copy the production artifacts
-cp optimized-out/PRBProxy.sol/PRBProxy.json $artifacts
-cp optimized-out/PRBProxyAnnex.sol/PRBProxyAnnex.json $artifacts
-cp optimized-out/PRBProxyRegistry.sol/PRBProxyRegistry.json $artifacts
+cp out-optimized/PRBProxy.sol/PRBProxy.json $artifacts
+cp out-optimized/PRBProxyAnnex.sol/PRBProxyAnnex.json $artifacts
+cp out-optimized/PRBProxyRegistry.sol/PRBProxyRegistry.json $artifacts
 
 interfaces=./artifacts/interfaces
-cp optimized-out/IPRBProxy.sol/IPRBProxy.json $interfaces
-cp optimized-out/IPRBProxyAnnex.sol/IPRBProxyAnnex.json $interfaces
-cp optimized-out/IPRBProxyPlugin.sol/IPRBProxyPlugin.json $interfaces
-cp optimized-out/IPRBProxyRegistry.sol/IPRBProxyRegistry.json $interfaces
-cp optimized-out/IPRBProxyStorage.sol/IPRBProxyStorage.json $interfaces
+cp out-optimized/IPRBProxy.sol/IPRBProxy.json $interfaces
+cp out-optimized/IPRBProxyAnnex.sol/IPRBProxyAnnex.json $interfaces
+cp out-optimized/IPRBProxyPlugin.sol/IPRBProxyPlugin.json $interfaces
+cp out-optimized/IPRBProxyRegistry.sol/IPRBProxyRegistry.json $interfaces
+cp out-optimized/IPRBProxyStorage.sol/IPRBProxyStorage.json $interfaces
 
 # Format the artifacts with Prettier
 pnpm prettier --write ./artifacts
