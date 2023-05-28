@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19 <0.9.0;
 
-import { IPRBProxy } from "../../src/interfaces/IPRBProxy.sol";
-import { IPRBProxyAnnex } from "../../src/interfaces/IPRBProxyAnnex.sol";
+import { IPRBProxy } from "../src/interfaces/IPRBProxy.sol";
+import { IPRBProxyAnnex } from "../src/interfaces/IPRBProxyAnnex.sol";
 
-import { BaseScript } from "../shared/Base.s.sol";
+import { BaseScript } from "./Base.s.sol";
 
 /// @notice Bootstraps the proxy system by giving permission to an envoy and installing a plugin.
 contract SetPermission is BaseScript {

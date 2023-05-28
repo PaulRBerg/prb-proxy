@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19 <0.9.0;
 
-import { PRBProxyAnnex } from "../../src/PRBProxyAnnex.sol";
-import { PRBProxyRegistry } from "../../src/PRBProxyRegistry.sol";
+import { PRBProxyAnnex } from "../src/PRBProxyAnnex.sol";
+import { PRBProxyRegistry } from "../src/PRBProxyRegistry.sol";
 
-import { BaseScript } from "../shared/Base.s.sol";
+import { BaseScript } from "./Base.s.sol";
 
 /// @dev Deploys {PRBProxyAnnex} and {PRBProxyRegistry} at deterministic addresses across chains.
 /// @dev Reverts if any contract has already been deployed.
