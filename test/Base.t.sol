@@ -5,13 +5,14 @@ import { eqString } from "@prb/test/Helpers.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 import { StdUtils } from "forge-std/StdUtils.sol";
 
-import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
-import { IPRBProxyAnnex } from "src/interfaces/IPRBProxyAnnex.sol";
-import { IPRBProxyPlugin } from "src/interfaces/IPRBProxyPlugin.sol";
-import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
-import { PRBProxy } from "src/PRBProxy.sol";
-import { PRBProxyAnnex } from "src/PRBProxyAnnex.sol";
-import { PRBProxyRegistry } from "src/PRBProxyRegistry.sol";
+import { DeploySystem } from "../script/DeploySystem.s.sol";
+import { IPRBProxy } from "../src/interfaces/IPRBProxy.sol";
+import { IPRBProxyAnnex } from "../src/interfaces/IPRBProxyAnnex.sol";
+import { IPRBProxyPlugin } from "../src/interfaces/IPRBProxyPlugin.sol";
+import { IPRBProxyRegistry } from "../src/interfaces/IPRBProxyRegistry.sol";
+import { PRBProxy } from "../src/PRBProxy.sol";
+import { PRBProxyAnnex } from "../src/PRBProxyAnnex.sol";
+import { PRBProxyRegistry } from "../src/PRBProxyRegistry.sol";
 
 import { PluginChangeOwner } from "./mocks/plugins/PluginChangeOwner.sol";
 import { PluginDummy } from "./mocks/plugins/PluginDummy.sol";
@@ -126,15 +127,11 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
             selfDestructer: new TargetSelfDestructer()
         });
 
-        // Make Alice both the caller and the origin.
-        vm.startPrank({ msgSender: users.alice, txOrigin: users.alice });
-
         // Deploy the proxy system.
         deploySystemConditionally();
 
-        // Labels the contracts most relevant for testing.
-        vm.label({ account: address(annex), newLabel: "Annex" });
-        vm.label({ account: address(registry), newLabel: "Registry" });
+        // Make Alice both the caller and the origin.
+        vm.startPrank({ msgSender: users.alice, txOrigin: users.alice });
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -142,12 +139,11 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev Computes the proxy address without deploying it.
-    function computeProxyAddress(address origin, bytes32 seed) internal returns (address proxyAddress) {
+    function computeProxyAddress(address origin, bytes32 seed) internal returns (address) {
         bytes32 salt = keccak256(abi.encode(origin, seed));
         bytes32 creationBytecodeHash = keccak256(getProxyBytecode());
         // Use the Create2 utility from Forge Std.
-        proxyAddress =
-            computeCreate2Address({ salt: salt, initcodeHash: creationBytecodeHash, deployer: address(registry) });
+        return computeCreate2Address({ salt: salt, initcodeHash: creationBytecodeHash, deployer: address(registry) });
     }
 
     /// @dev Generates an address by hashing the name, labels the address and funds it with test assets.
@@ -156,43 +152,42 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
         vm.deal({ account: addr, newBalance: 100 ether });
     }
 
-    /// @dev Deploys {PRBProxyAnnex} from a source precompiled with `--via-ir`.
+    /// @dev Deploys {Annex} from a source precompiled with `--via-ir`.
     function deployPrecompiledAnnex() internal returns (IPRBProxyAnnex annex_) {
         annex_ = IPRBProxyAnnex(deployCode("out-optimized/PRBProxyAnnex.sol/PRBProxyAnnex.json"));
     }
 
-    /// @dev Deploys {PRBProxyRegistry} from a source precompiled with `--via-ir`.
+    /// @dev Deploys {Registry} from a source precompiled with `--via-ir`.
     function deployPrecompiledRegistry() internal returns (IPRBProxyRegistry registry_) {
         registry_ = IPRBProxyRegistry(deployCode("out-optimized/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
     }
 
-    /// @dev Conditionally deploy the proxy system either normally or from a source precompiled with `--via-ir`..
+    /// @dev Conditionally deploy the proxy system either normally or from a source precompiled with `--via-ir`.
     function deploySystemConditionally() internal {
-        // We deploy from precompiled source if the Foundry profile is "test-optimized".
-        if (isTestOptimizedProfile()) {
+        if (!isTestOptimizedProfile()) {
+            (annex, registry) = new DeploySystem().run();
+        } else {
             annex = deployPrecompiledAnnex();
             registry = deployPrecompiledRegistry();
         }
-        // We deploy normally for all other profiles.
-        else {
-            annex = new PRBProxyAnnex();
-            registry = new PRBProxyRegistry();
-        }
+
+        vm.label({ account: address(annex), newLabel: "Annex" });
+        vm.label({ account: address(registry), newLabel: "Registry" });
     }
 
     /// @dev Reads the proxy bytecode either normally or from precompiled source.
-    function getProxyBytecode() internal returns (bytes memory bytecode) {
-        if (isTestOptimizedProfile()) {
-            bytecode = vm.getCode("out-optimized/PRBProxy.sol/PRBProxy.json");
+    function getProxyBytecode() internal returns (bytes memory) {
+        if (!isTestOptimizedProfile()) {
+            return type(PRBProxy).creationCode;
         } else {
-            bytecode = type(PRBProxy).creationCode;
+            return vm.getCode("out-optimized/PRBProxy.sol/PRBProxy.json");
         }
     }
 
     /// @dev Checks if the Foundry profile is "test-optimized".
-    function isTestOptimizedProfile() internal returns (bool result) {
+    function isTestOptimizedProfile() internal returns (bool) {
         string memory profile = vm.envOr("FOUNDRY_PROFILE", string(""));
-        result = eqString(profile, "test-optimized");
+        return eqString(profile, "test-optimized");
     }
 
     /*//////////////////////////////////////////////////////////////////////////
