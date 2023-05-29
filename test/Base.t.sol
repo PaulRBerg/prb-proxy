@@ -31,7 +31,6 @@ import { TargetSelfDestructer } from "./mocks/targets/TargetSelfDestructer.sol";
 import { Assertions } from "./utils/Assertions.sol";
 import { Events } from "./utils/Events.sol";
 
-/// @title Base_Test
 /// @notice Base test contract with common logic needed by all test contracts.
 abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     /*//////////////////////////////////////////////////////////////////////////
