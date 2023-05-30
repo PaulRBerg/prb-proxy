@@ -31,7 +31,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
-    string public constant override VERSION = "4.0.0-beta.4";
+    string public constant override VERSION = "4.0.0-beta.5";
 
     /*//////////////////////////////////////////////////////////////////////////
                                    PUBLIC STORAGE

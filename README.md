@@ -108,8 +108,8 @@ The registry and the enshrined target are deployed at the same address on the fo
 
 | Contract | Chain                   | [Chain ID](https://chainlist.org/) | Address                                                                                                                           |
 | -------- | ----------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Annex    | Ethereum Goerli Testnet | 5                                  | [0xB82EC38478FDC4A7517BC04E79af9a05B50aAB3d](https://goerli.etherscan.io/address/0xB82EC38478FDC4A7517BC04E79af9a05B50aAB3d#code) |
-| Registry | Ethereum Goerli Testnet | 5                                  | [0xFA1D45343396F5640B1a677Ea93D808748714706](https://goerli.etherscan.io/address/0xFA1D45343396F5640B1a677Ea93D808748714706#code) |
+| Registry | Ethereum Goerli Testnet | 5                                  | [0xa87bc4C1Bc54E1C1B28d2dD942A094A6B665B8C9](https://goerli.etherscan.io/address/0xa87bc4C1Bc54E1C1B28d2dD942A094A6B665B8C9#code) |
+| Annex    | Ethereum Goerli Testnet | 5                                  | [0x0254C4467cBbdbe8d5E01e68de0DF7b20dD2A167](https://goerli.etherscan.io/address/0x0254C4467cBbdbe8d5E01e68de0DF7b20dD2A167#code) |
 
 ### Targets
 

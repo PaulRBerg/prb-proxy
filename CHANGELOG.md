@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[4.0.0-beta.5]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.4...v4.0.0-beta.5
 [4.0.0-beta.4]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.3...v4.0.0-beta.4
 [4.0.0-beta.3]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.2...v4.0.0-beta.3
 [4.0.0-beta.2]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.1...v4.0.0-beta.2
@@ -12,6 +13,16 @@ The format is based on [Common Changelog](https://common-changelog.org/), and th
 [2.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/PaulRBerg/prb-proxy/releases/tag/v1.0.0
+
+## [4.0.0-beta.5] - 2023-05-30
+
+### Changed
+
+- Change key name in `nextSeeds` (@PaulRBerg)
+- Simplify nesting structure in `script` (@PaulRBerg)
+- Revert with reason strings in precompiles (@PaulRBerg)
+- Various small improvements (@PaulRBerg)
+- Use relative paths in imports in `script` and `test` (@PaulRBerg)
 
 ## [4.0.0-beta.4] - 2023-05-19
 
