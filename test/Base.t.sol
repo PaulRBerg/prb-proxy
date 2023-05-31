@@ -152,12 +152,12 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
         vm.deal({ account: addr, newBalance: 100 ether });
     }
 
-    /// @dev Deploys {Annex} from a source precompiled with `--via-ir`.
+    /// @dev Deploys {PRBProxyAnnex} from a source precompiled with `--via-ir`.
     function deployPrecompiledAnnex() internal returns (IPRBProxyAnnex annex_) {
         annex_ = IPRBProxyAnnex(deployCode("out-optimized/PRBProxyAnnex.sol/PRBProxyAnnex.json"));
     }
 
-    /// @dev Deploys {Registry} from a source precompiled with `--via-ir`.
+    /// @dev Deploys {PRBProxyRegistry} from a source precompiled with `--via-ir`.
     function deployPrecompiledRegistry() internal returns (IPRBProxyRegistry registry_) {
         registry_ = IPRBProxyRegistry(deployCode("out-optimized/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
     }
