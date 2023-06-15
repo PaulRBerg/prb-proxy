@@ -11,9 +11,6 @@ abstract contract PRBProxyStorage is IPRBProxyStorage {
     address public override owner;
 
     /// @inheritdoc IPRBProxyStorage
-    uint256 public override minGasReserve;
-
-    /// @inheritdoc IPRBProxyStorage
     mapping(bytes4 method => IPRBProxyPlugin plugin) public plugins;
 
     /// @inheritdoc IPRBProxyStorage

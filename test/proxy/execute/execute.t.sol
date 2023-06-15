@@ -56,30 +56,7 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    function test_RevertWhen_GasStipendCalculationUnderflows() external whenCallerAuthorized whenTargetContract {
-        // Set the min gas reserve.
-        uint256 gasLimit = 10_000;
-        proxy.execute(
-            address(targets.minGasReserve),
-            abi.encodeWithSelector(targets.minGasReserve.setMinGasReserve.selector, gasLimit + 1)
-        );
-
-        // Run the test.
-        bytes memory data = abi.encode(targets.echo.echoUint256.selector, 1729);
-        vm.expectRevert(stdError.arithmeticError);
-        proxy.execute{ gas: gasLimit }(address(targets.echo), data);
-    }
-
-    modifier whenGasStipendCalculationDoesNotUnderflow() {
-        _;
-    }
-
-    function test_RevertWhen_OwnerChangedDuringDelegateCall()
-        external
-        whenCallerAuthorized
-        whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
-    {
+    function test_RevertWhen_OwnerChangedDuringDelegateCall() external whenCallerAuthorized whenTargetContract {
         bytes memory data = bytes.concat(targets.changeOwner.changeIt.selector);
         vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(1729)));
         proxy.execute(address(targets.changeOwner), data);
@@ -97,7 +74,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -110,7 +86,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -123,7 +98,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -136,7 +110,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -149,7 +122,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -162,7 +134,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -175,7 +146,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -188,7 +158,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -201,7 +170,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -218,7 +186,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
     {
@@ -237,7 +204,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -279,7 +245,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -296,7 +261,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -313,7 +277,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -330,7 +293,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -347,7 +309,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -364,7 +325,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -381,7 +341,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -398,7 +357,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -415,7 +373,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent

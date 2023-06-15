@@ -34,34 +34,7 @@ contract RunPlugin_Test is Proxy_Test {
         _;
     }
 
-    function test_RevertWhen_GasStipendCalculationUnderflows() external whenPluginInstalled {
-        // Install the dummy plugin.
-        installPlugin(plugins.dummy);
-
-        // Set the min gas reserve.
-        uint256 gasLimit = 10_000;
-        proxy.execute(
-            address(targets.minGasReserve),
-            abi.encodeWithSelector(targets.minGasReserve.setMinGasReserve.selector, gasLimit + 1)
-        );
-
-        // Except an arithmetic underflow.
-        vm.expectRevert(stdError.arithmeticError);
-
-        // Run the plugin.
-        (bool success,) = address(proxy).call{ gas: gasLimit }(abi.encodeWithSelector(plugins.dummy.foo.selector));
-        success;
-    }
-
-    modifier whenGasStipendCalculationDoesNotUnderflow() {
-        _;
-    }
-
-    function test_RevertWhen_OwnerChangedDuringDelegateCall()
-        external
-        whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
-    {
+    function test_RevertWhen_OwnerChangedDuringDelegateCall() external whenPluginInstalled {
         installPlugin(plugins.changeOwner);
         vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(1729)));
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.changeOwner.changeIt.selector));
@@ -79,7 +52,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_Panic_FailedAssertion()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -92,7 +64,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_Panic_ArithmeticOverflow()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -105,7 +76,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_Panic_DivisionByZero()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -118,7 +88,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_Panic_IndexOOB()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -131,7 +100,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_Error_EmptyRevertStatement()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -144,7 +112,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_Error_CustomError()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -157,7 +124,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_Error_Require()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -170,7 +136,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_Error_ReasonString()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
@@ -187,7 +152,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RunPlugin_EtherSent()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
         whenDelegateCallDoesNotRevert
@@ -207,7 +171,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RunPlugin_PluginSelfDestructs()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
         whenDelegateCallDoesNotRevert
@@ -239,7 +202,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RunPlugin()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
         whenDelegateCallDoesNotRevert
@@ -255,7 +217,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RunPlugin_Event()
         external
         whenPluginInstalled
-        whenGasStipendCalculationDoesNotUnderflow
         whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
         whenDelegateCallDoesNotRevert
