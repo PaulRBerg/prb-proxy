@@ -83,21 +83,43 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         noProxy(msg.sender)
         returns (IPRBProxy proxy, bytes memory response)
     {
-        (proxy, response) = _deployAndExecute({ owner: msg.sender, target: target, data: data });
-    }
+        // Load the next seed.
+        bytes32 seed = nextSeeds[tx.origin];
 
-    /// @inheritdoc IPRBProxyRegistry
-    function deployAndExecuteFor(
-        address owner,
-        address target,
-        bytes calldata data
-    )
-        public
-        override
-        noProxy(owner)
-        returns (IPRBProxy proxy, bytes memory response)
-    {
-        (proxy, response) = _deployAndExecute(owner, target, data);
+        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
+        bytes32 salt = keccak256(abi.encode(tx.origin, seed));
+
+        // Deploy the proxy with CREATE2. The registry will temporarily be the owner of the proxy.
+        transientProxyOwner = address(this);
+        proxy = new PRBProxy{ salt: salt }();
+        delete transientProxyOwner;
+
+        // Set the proxy for the caller.
+        address owner = msg.sender;
+        proxies[owner] = proxy;
+
+        // Increment the seed.
+        // We're using unchecked arithmetic here because this cannot realistically overflow, ever.
+        unchecked {
+            nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
+        }
+
+        // Delegate call to the target contract.
+        response = proxy.execute(target, data);
+
+        // Transfer the ownership to the specified owner.
+        proxy.transferOwnership(owner);
+
+        // Log the proxy via en event.
+        // forgefmt: disable-next-line
+        emit DeployProxy({
+            origin: tx.origin,
+            operator: msg.sender,
+            owner: owner,
+            seed: seed,
+            salt: salt,
+            proxy: proxy
+        });
     }
 
     /// @inheritdoc IPRBProxyRegistry
@@ -146,53 +168,6 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         unchecked {
             nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
         }
-
-        // Log the proxy via en event.
-        // forgefmt: disable-next-line
-        emit DeployProxy({
-            origin: tx.origin,
-            operator: msg.sender,
-            owner: owner,
-            seed: seed,
-            salt: salt,
-            proxy: proxy
-        });
-    }
-
-    /// @dev See the documentation for the public functions that call this internal function.
-    function _deployAndExecute(
-        address owner,
-        address target,
-        bytes calldata data
-    )
-        internal
-        returns (IPRBProxy proxy, bytes memory response)
-    {
-        // Load the next seed.
-        bytes32 seed = nextSeeds[tx.origin];
-
-        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
-        bytes32 salt = keccak256(abi.encode(tx.origin, seed));
-
-        // Deploy the proxy with CREATE2. The registry will temporarily be the owner of the proxy.
-        transientProxyOwner = address(this);
-        proxy = new PRBProxy{ salt: salt }();
-        delete transientProxyOwner;
-
-        // Set the proxy for the owner.
-        proxies[owner] = proxy;
-
-        // Increment the seed.
-        // We're using unchecked arithmetic here because this cannot realistically overflow, ever.
-        unchecked {
-            nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
-        }
-
-        // Delegate call to the target contract.
-        response = proxy.execute(target, data);
-
-        // Transfer the ownership to the specified owner.
-        proxy.transferOwnership(owner);
 
         // Log the proxy via en event.
         // forgefmt: disable-next-line
