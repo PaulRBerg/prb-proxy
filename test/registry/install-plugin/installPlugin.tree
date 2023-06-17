@@ -1,0 +1,12 @@
+installPlugin.t.sol
+├── when the caller doesn't have a proxy
+│  └── it should revert
+└── when the caller has a proxy
+   ├── when the plugin list is empty
+   │  └── it should revert
+   └── when the plugin list is not empty
+      ├── when the plugin has been installed before
+      │  └── it should do nothing
+      └── when the plugin has not been installed
+         ├── it should install the plugin
+         └── it should emit an {InstallPlugin} event

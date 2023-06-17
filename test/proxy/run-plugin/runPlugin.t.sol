@@ -33,56 +33,56 @@ contract RunPlugin_Test is Proxy_Test {
     }
 
     function test_RevertWhen_Panic_FailedAssertion() external whenPluginInstalled whenDelegateCallReverts {
-        installPlugin(plugins.panic);
+        registry.installPlugin(plugins.panic);
         vm.expectRevert(stdError.assertionError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.failedAssertion.selector));
         success;
     }
 
     function test_RevertWhen_Panic_ArithmeticOverflow() external whenPluginInstalled whenDelegateCallReverts {
-        installPlugin(plugins.panic);
+        registry.installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.arithmeticOverflow.selector));
         success;
     }
 
     function test_RevertWhen_Panic_DivisionByZero() external whenPluginInstalled whenDelegateCallReverts {
-        installPlugin(plugins.panic);
+        registry.installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.divisionByZero.selector));
         success;
     }
 
     function test_RevertWhen_Panic_IndexOOB() external whenPluginInstalled whenDelegateCallReverts {
-        installPlugin(plugins.panic);
+        registry.installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.indexOOB.selector));
         success;
     }
 
     function test_RevertWhen_Error_EmptyRevertStatement() external whenPluginInstalled whenDelegateCallReverts {
-        installPlugin(plugins.reverter);
+        registry.installPlugin(plugins.reverter);
         vm.expectRevert(IPRBProxy.PRBProxy_PluginReverted.selector);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withNothing.selector));
         success;
     }
 
     function test_RevertWhen_Error_CustomError() external whenPluginInstalled whenDelegateCallReverts {
-        installPlugin(plugins.reverter);
+        registry.installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withCustomError.selector));
         success;
     }
 
     function test_RevertWhen_Error_Require() external whenPluginInstalled whenDelegateCallReverts {
-        installPlugin(plugins.reverter);
+        registry.installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withRequire.selector));
         success;
     }
 
     function test_RevertWhen_Error_ReasonString() external whenPluginInstalled whenDelegateCallReverts {
-        installPlugin(plugins.reverter);
+        registry.installPlugin(plugins.reverter);
         vm.expectRevert("You shall not pass");
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withReasonString.selector));
         success;
@@ -98,7 +98,7 @@ contract RunPlugin_Test is Proxy_Test {
         whenDelegateCallReverts
         whenDelegateCallDoesNotRevert
     {
-        installPlugin(plugins.echo);
+        registry.installPlugin(plugins.echo);
         uint256 amount = 0.1 ether;
         (, bytes memory actualResponse) =
             address(proxy).call{ value: amount }(abi.encodeWithSelector(plugins.echo.echoMsgValue.selector));
@@ -125,7 +125,7 @@ contract RunPlugin_Test is Proxy_Test {
         vm.deal({ account: address(proxy), newBalance: proxyBalance });
 
         // Install the plugin and run it.
-        installPlugin(plugins.selfDestructer);
+        registry.installPlugin(plugins.selfDestructer);
         (bool success,) =
             address(proxy).call(abi.encodeWithSelector(plugins.selfDestructer.destroyMe.selector, users.bob));
         success;
@@ -148,7 +148,7 @@ contract RunPlugin_Test is Proxy_Test {
         whenNoEtherSent
         whenPluginDoesNotSelfDestruct
     {
-        installPlugin(plugins.dummy);
+        registry.installPlugin(plugins.dummy);
         (, bytes memory actualResponse) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
         bytes memory expectedResponse = abi.encode(bytes("foo"));
         assertEq(actualResponse, expectedResponse, "dummy.foo response mismatch");
@@ -162,7 +162,7 @@ contract RunPlugin_Test is Proxy_Test {
         whenNoEtherSent
         whenPluginDoesNotSelfDestruct
     {
-        installPlugin(plugins.dummy);
+        registry.installPlugin(plugins.dummy);
         vm.expectEmit({ emitter: address(proxy) });
         emit RunPlugin({
             plugin: plugins.dummy,

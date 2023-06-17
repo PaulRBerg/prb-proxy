@@ -90,15 +90,8 @@ There are multiple ways to deploy a proxy:
 - Call the `deployFor` function, which accepts the owner as an argument.
 - Call the `deployAndExecute` function, which deploys the proxy and executes a delegate call to a target contract in a single transaction.
 
-Once the proxy is deployed, you can start interacting with target contracts. PRBProxy ships with an "enshrined" target contract called
-`PRBProxyAnnex`, which provides several auxiliary functions, including:
-
-- `installPlugin`
-- `setPermission`
-- `uninstallPlugin`
-
-You call the functions above by ABI-encoding their calldata and calling `execute` on the proxy. The logic in `PRBProxyAnnex` is kept separate from the
-proxy itself to reduce deployment costs.
+Once the proxy is deployed, you can start interacting with target contracts by ABI-encoding the target's functions and pass the data to the `execute`
+function on the proxy.
 
 ### Addresses
 
@@ -107,7 +100,6 @@ The registry and the enshrined target are deployed at the same address on the fo
 | Contract | Chain                   | [Chain ID](https://chainlist.org/) | Address                                                                                                                           |
 | -------- | ----------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | Registry | Ethereum Goerli Testnet | 5                                  | [0xa87bc4C1Bc54E1C1B28d2dD942A094A6B665B8C9](https://goerli.etherscan.io/address/0xa87bc4C1Bc54E1C1B28d2dD942A094A6B665B8C9#code) |
-| Annex    | Ethereum Goerli Testnet | 5                                  | [0x0254C4467cBbdbe8d5E01e68de0DF7b20dD2A167](https://goerli.etherscan.io/address/0x0254C4467cBbdbe8d5E01e68de0DF7b20dD2A167#code) |
 
 ### Targets
 

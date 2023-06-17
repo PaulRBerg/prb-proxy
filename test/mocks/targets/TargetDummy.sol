@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
-import { PRBProxyStorage } from "../../../src/abstracts/PRBProxyStorage.sol";
-
-contract TargetDummy is PRBProxyStorage {
+contract TargetDummy {
     function foo() external pure returns (string memory) {
         return "foo";
     }

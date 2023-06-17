@@ -1,0 +1,5 @@
+getPluginByProxy.t.sol
+├── when the plugin is not installed
+│  └── it should return the zero address
+└── when the plugin is installed
+   └── it should return the plugin

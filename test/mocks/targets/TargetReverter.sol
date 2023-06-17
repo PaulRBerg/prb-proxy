@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
-import { PRBProxyStorage } from "../../../src/abstracts/PRBProxyStorage.sol";
-
-contract TargetReverter is PRBProxyStorage {
+contract TargetReverter {
     error SomeError();
 
     function withNothing() external pure {

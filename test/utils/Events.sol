@@ -7,16 +7,6 @@ import { IPRBProxyPlugin } from "../../src/interfaces/IPRBProxyPlugin.sol";
 /// @notice Abstract contract containing all the events emitted by the protocol.
 abstract contract Events {
     /*//////////////////////////////////////////////////////////////////////////
-                                       ANNEX
-    //////////////////////////////////////////////////////////////////////////*/
-
-    event InstallPlugin(IPRBProxyPlugin indexed plugin);
-
-    event SetPermission(address indexed envoy, address indexed target, bool permission);
-
-    event UninstallPlugin(IPRBProxyPlugin indexed plugin);
-
-    /*//////////////////////////////////////////////////////////////////////////
                                        PROXY
     //////////////////////////////////////////////////////////////////////////*/
 
@@ -36,4 +26,12 @@ abstract contract Events {
         bytes32 salt,
         IPRBProxy proxy
     );
+
+    event InstallPlugin(address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin);
+
+    event SetPermission(
+        address indexed owner, IPRBProxy indexed proxy, address indexed envoy, address target, bool permission
+    );
+
+    event UninstallPlugin(address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin);
 }

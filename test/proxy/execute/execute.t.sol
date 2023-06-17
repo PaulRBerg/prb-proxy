@@ -31,7 +31,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     function test_RevertWhen_PermissionDifferentTarget() external whenCallerUnauthorized {
-        setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
         changePrank({ msgSender: users.envoy });
 
         bytes memory data = bytes.concat(targets.dummy.foo.selector);
@@ -200,7 +200,7 @@ contract Execute_Test is Proxy_Test {
     }
 
     modifier whenTargetDoesNotSelfDestruct() {
-        setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
         _;
     }
 
