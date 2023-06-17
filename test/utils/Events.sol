@@ -36,6 +36,4 @@ abstract contract Events {
         bytes32 salt,
         IPRBProxy proxy
     );
-
-    event TransferOwnership(IPRBProxy proxy, address indexed oldOwner, address indexed newOwner);
 }

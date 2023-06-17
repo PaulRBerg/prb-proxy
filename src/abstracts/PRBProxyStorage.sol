@@ -8,9 +8,6 @@ import { IPRBProxyStorage } from "../interfaces/IPRBProxyStorage.sol";
 /// @dev This is meant to be inherited by plugins and targets. See the documentation in {IPRBProxyStorage}.
 abstract contract PRBProxyStorage is IPRBProxyStorage {
     /// @inheritdoc IPRBProxyStorage
-    address public override owner;
-
-    /// @inheritdoc IPRBProxyStorage
     mapping(bytes4 method => IPRBProxyPlugin plugin) public plugins;
 
     /// @inheritdoc IPRBProxyStorage

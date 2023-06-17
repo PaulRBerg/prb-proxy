@@ -7,7 +7,7 @@ contract SetPermission_Test is Annex_Test {
     function test_SetPermission_PermissionNotSet() external {
         setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
         bool permission = proxy.permissions({ envoy: users.envoy, target: address(targets.dummy) });
-        assertTrue(permission);
+        assertTrue(permission, "permission mismatch");
     }
 
     modifier whenPermissionSet() {
@@ -18,7 +18,7 @@ contract SetPermission_Test is Annex_Test {
     function test_SetPermission_ResetPermission() external whenPermissionSet {
         setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
         bool permission = proxy.permissions({ envoy: users.envoy, target: address(targets.dummy) });
-        assertTrue(permission);
+        assertTrue(permission, "permission mismatch");
     }
 
     function test_SetPermission_ResetPermission_Event() external whenPermissionSet {

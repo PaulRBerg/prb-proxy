@@ -28,17 +28,25 @@ contract PRBProxy is
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxy
+    address public immutable override owner;
+
+    /// @inheritdoc IPRBProxy
     IPRBProxyRegistry public immutable override registry;
 
     /*//////////////////////////////////////////////////////////////////////////
                                      CONSTRUCTOR
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Constructs the proxy by fetching the params from the registry.
-    /// @dev This is implemented like this so that the proxy's CREATE2 address doesn't depend on the constructor params.
+    /// @notice Creates the proxy by fetching the constructor params from the registry, optionally delegate calling
+    /// to a target contract if one is provided.
+    /// @dev The rationale of this approach is to have the proxy's CREATE2 address not depend on any constructor params.
     constructor() {
         registry = IPRBProxyRegistry(msg.sender);
-        owner = registry.transientProxyOwner();
+        (address owner_, address target, bytes memory data) = registry.constructorParams();
+        owner = owner_;
+        if (target != address(0)) {
+            _execute(target, data);
+        }
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -56,7 +64,7 @@ contract PRBProxy is
 
         // Delegate call to the plugin.
         bool success;
-        (success, response) = _safeDelegateCall(address(plugin), data);
+        (success, response) = address(plugin).delegatecall(data);
 
         // Log the plugin run.
         emit RunPlugin(plugin, data, response);
@@ -89,6 +97,17 @@ contract PRBProxy is
             revert PRBProxy_ExecutionUnauthorized({ owner: owner, caller: msg.sender, target: target });
         }
 
+        // Delegate call to the target contract, and handle the response.
+        response = _execute(target, data);
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                          INTERNAL NON-CONSTANT FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Executes a DELEGATECALL to the provided `target` with the provided `data`.
+    /// @dev Shared logic between the constructor and the `execute` function.
+    function _execute(address target, bytes memory data) internal returns (bytes memory response) {
         // Check that the target is a contract.
         if (target.code.length == 0) {
             revert PRBProxy_TargetNotContract(target);
@@ -96,7 +115,7 @@ contract PRBProxy is
 
         // Delegate call to the target contract.
         bool success;
-        (success, response) = _safeDelegateCall(target, data);
+        (success, response) = target.delegatecall(data);
 
         // Log the execution.
         emit Execute(target, data, response);
@@ -113,36 +132,6 @@ contract PRBProxy is
             } else {
                 revert PRBProxy_ExecutionReverted();
             }
-        }
-    }
-
-    /// @inheritdoc IPRBProxy
-    function transferOwnership(address newOwner) external override {
-        // Check that the caller is the registry.
-        if (address(registry) != msg.sender) {
-            revert PRBProxy_CallerNotRegistry({ registry: registry, caller: msg.sender });
-        }
-
-        // Effects: update the owner.
-        owner = newOwner;
-    }
-
-    /*//////////////////////////////////////////////////////////////////////////
-                          INTERNAL NON-CONSTANT FUNCTIONS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    /// @notice Performs a DELEGATECALL to the provided address with the provided data.
-    /// @dev Shared logic between the {execute} and the {fallback} functions.
-    function _safeDelegateCall(address to, bytes memory data) internal returns (bool success, bytes memory response) {
-        // Save the owner address in memory so that this variable cannot be modified during the DELEGATECALL.
-        address owner_ = owner;
-
-        // Delegate call to the provided contract.
-        (success, response) = to.delegatecall(data);
-
-        // Check that the owner has not been changed.
-        if (owner_ != owner) {
-            revert PRBProxy_OwnerChanged(owner_, owner);
         }
     }
 }

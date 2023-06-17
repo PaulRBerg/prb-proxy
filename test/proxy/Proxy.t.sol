@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18 <0.9.0;
 
-import { PRBProxy } from "src/PRBProxy.sol";
-
 import { Base_Test } from "../Base.t.sol";
 
 contract Proxy_Test is Base_Test {
@@ -24,6 +22,6 @@ contract Proxy_Test is Base_Test {
 
         // Deploy and label the default proxy.
         proxy = registry.deployFor({ owner: users.alice });
-        vm.label({ account: address(proxy), newLabel: "Default Proxy" });
+        vm.label({ account: address(proxy), newLabel: "Alice Proxy" });
     }
 }

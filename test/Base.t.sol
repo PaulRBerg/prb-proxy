@@ -14,14 +14,12 @@ import { PRBProxy } from "../src/PRBProxy.sol";
 import { PRBProxyAnnex } from "../src/PRBProxyAnnex.sol";
 import { PRBProxyRegistry } from "../src/PRBProxyRegistry.sol";
 
-import { PluginChangeOwner } from "./mocks/plugins/PluginChangeOwner.sol";
 import { PluginDummy } from "./mocks/plugins/PluginDummy.sol";
 import { PluginEcho } from "./mocks/plugins/PluginEcho.sol";
 import { PluginEmpty } from "./mocks/plugins/PluginEmpty.sol";
 import { PluginPanic } from "./mocks/plugins/PluginPanic.sol";
 import { PluginReverter } from "./mocks/plugins/PluginReverter.sol";
 import { PluginSelfDestructer } from "./mocks/plugins/PluginSelfDestructer.sol";
-import { TargetChangeOwner } from "./mocks/targets/TargetChangeOwner.sol";
 import { TargetDummy } from "./mocks/targets/TargetDummy.sol";
 import { TargetDummyWithFallback } from "./mocks/targets/TargetDummyWithFallback.sol";
 import { TargetEcho } from "./mocks/targets/TargetEcho.sol";
@@ -38,7 +36,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     //////////////////////////////////////////////////////////////////////////*/
 
     struct Plugins {
-        PluginChangeOwner changeOwner;
         PluginDummy dummy;
         PluginEcho echo;
         PluginEmpty empty;
@@ -48,7 +45,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     }
 
     struct Targets {
-        TargetChangeOwner changeOwner;
         TargetDummy dummy;
         TargetDummyWithFallback dummyWithFallback;
         TargetEcho echo;
@@ -104,7 +100,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
 
         // Create the plugins.
         plugins = Plugins({
-            changeOwner: new PluginChangeOwner(),
             dummy: new PluginDummy(),
             echo: new PluginEcho(),
             empty: new PluginEmpty(),
@@ -115,7 +110,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
 
         // Create the targets.
         targets = Targets({
-            changeOwner: new TargetChangeOwner(),
             dummy: new TargetDummy(),
             dummyWithFallback: new TargetDummyWithFallback(),
             echo: new TargetEcho(),
