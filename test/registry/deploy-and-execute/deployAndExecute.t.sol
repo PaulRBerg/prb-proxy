@@ -20,8 +20,12 @@ contract DeployAndExecute_Test is Registry_Test {
         target = address(targets.echo);
     }
 
-    function test_RevertWhen_OwnerHasProxy() external {
-        (IPRBProxy proxy,) = registry.deployAndExecute(target, data);
+    modifier whenNoReentrancy() {
+        _;
+    }
+
+    function test_RevertWhen_OwnerHasProxy() external whenNoReentrancy {
+        IPRBProxy proxy = registry.deployAndExecute(target, data);
         vm.expectRevert(
             abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerHasProxy.selector, users.alice, proxy)
         );
@@ -32,12 +36,33 @@ contract DeployAndExecute_Test is Registry_Test {
         _;
     }
 
-    function testFuzz_DeployAndExecute_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecute_ProxyAddress(
+        address origin,
+        address owner
+    )
+        external
+        whenOwnerDoesNotHaveProxy
+        whenNoReentrancy
+    {
         changePrank({ txOrigin: origin, msgSender: owner });
-
-        (IPRBProxy actualProxy,) = registry.deployAndExecute(target, data);
+        IPRBProxy actualProxy = registry.deployAndExecute(target, data);
         address expectedProxy = computeProxyAddress(origin, SEED_ZERO);
-        assertEq(address(actualProxy), expectedProxy, "deployed proxy address");
+        assertEq(address(actualProxy), expectedProxy, "deployed proxy address mismatch");
+    }
+
+    function testFuzz_DeployAndExecute_ProxyOwner(
+        address origin,
+        address owner
+    )
+        external
+        whenOwnerDoesNotHaveProxy
+        whenNoReentrancy
+    {
+        changePrank({ txOrigin: origin, msgSender: owner });
+        IPRBProxy proxy = registry.deployAndExecute(target, data);
+        address actualOwner = proxy.owner();
+        address expectedOwner = owner;
+        assertEq(actualOwner, expectedOwner, "proxy owner mismatch");
     }
 
     function testFuzz_DeployAndExecute_UpdateNextSeeds(
@@ -46,13 +71,14 @@ contract DeployAndExecute_Test is Registry_Test {
     )
         external
         whenOwnerDoesNotHaveProxy
+        whenNoReentrancy
     {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deployAndExecute(target, data);
 
         bytes32 actualNextSeed = registry.nextSeeds(origin);
         bytes32 expectedNextSeed = SEED_ONE;
-        assertEq(actualNextSeed, expectedNextSeed, "next seed");
+        assertEq(actualNextSeed, expectedNextSeed, "next seed mismatch");
     }
 
     function testFuzz_DeployAndExecute_UpdateProxies(
@@ -61,23 +87,24 @@ contract DeployAndExecute_Test is Registry_Test {
     )
         external
         whenOwnerDoesNotHaveProxy
+        whenNoReentrancy
     {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deployAndExecute(target, data);
 
         address actualProxyAddress = address(registry.proxies(owner));
         address expectedProxyAddress = computeProxyAddress(origin, SEED_ZERO);
-        assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
+        assertEq(actualProxyAddress, expectedProxyAddress, "proxy address mismatch");
     }
 
-    function testFuzz_DeployAndExecute_Execute(address origin, address owner) external whenOwnerDoesNotHaveProxy {
-        changePrank({ txOrigin: origin, msgSender: owner });
-        (, bytes memory actualResponse) = registry.deployAndExecute(target, data);
-        bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse, "echo.echoUint256 response");
-    }
-
-    function testFuzz_DeployAndExecute_Event_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecute_Event_DeployProxy(
+        address origin,
+        address owner
+    )
+        external
+        whenOwnerDoesNotHaveProxy
+        whenNoReentrancy
+    {
         changePrank({ txOrigin: origin, msgSender: owner });
 
         vm.expectEmit({ emitter: address(registry) });
@@ -98,6 +125,7 @@ contract DeployAndExecute_Test is Registry_Test {
     )
         external
         whenOwnerDoesNotHaveProxy
+        whenNoReentrancy
     {
         changePrank({ txOrigin: origin, msgSender: owner });
 

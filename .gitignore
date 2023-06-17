@@ -2,6 +2,7 @@
 artifacts
 broadcast
 cache
+coverage
 node_modules
 out-optimized
 out

@@ -5,12 +5,6 @@ import { stdError } from "forge-std/StdError.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
-import { PluginChangeOwner } from "../../mocks/plugins/PluginChangeOwner.sol";
-import { PluginEcho } from "../../mocks/plugins/PluginEcho.sol";
-import { PluginDummy } from "../../mocks/plugins/PluginDummy.sol";
-import { PluginPanic } from "../../mocks/plugins/PluginPanic.sol";
-import { PluginReverter } from "../../mocks/plugins/PluginReverter.sol";
-import { PluginSelfDestructer } from "../../mocks/plugins/PluginSelfDestructer.sol";
 import { TargetDummy } from "../../mocks/targets/TargetDummy.sol";
 import { TargetReverter } from "../../mocks/targets/TargetReverter.sol";
 import { Proxy_Test } from "../Proxy.t.sol";
@@ -34,111 +28,60 @@ contract RunPlugin_Test is Proxy_Test {
         _;
     }
 
-    function test_RevertWhen_OwnerChangedDuringDelegateCall() external whenPluginInstalled {
-        installPlugin(plugins.changeOwner);
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(1729)));
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.changeOwner.changeIt.selector));
-        success;
-    }
-
-    modifier whenOwnerNotChangedDuringDelegateCall() {
-        _;
-    }
-
     modifier whenDelegateCallReverts() {
         _;
     }
 
-    function test_RevertWhen_Panic_FailedAssertion()
-        external
-        whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Panic_FailedAssertion() external whenPluginInstalled whenDelegateCallReverts {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.assertionError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.failedAssertion.selector));
         success;
     }
 
-    function test_RevertWhen_Panic_ArithmeticOverflow()
-        external
-        whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Panic_ArithmeticOverflow() external whenPluginInstalled whenDelegateCallReverts {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.arithmeticOverflow.selector));
         success;
     }
 
-    function test_RevertWhen_Panic_DivisionByZero()
-        external
-        whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Panic_DivisionByZero() external whenPluginInstalled whenDelegateCallReverts {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.divisionByZero.selector));
         success;
     }
 
-    function test_RevertWhen_Panic_IndexOOB()
-        external
-        whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Panic_IndexOOB() external whenPluginInstalled whenDelegateCallReverts {
         installPlugin(plugins.panic);
         vm.expectRevert(stdError.arithmeticError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.indexOOB.selector));
         success;
     }
 
-    function test_RevertWhen_Error_EmptyRevertStatement()
-        external
-        whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Error_EmptyRevertStatement() external whenPluginInstalled whenDelegateCallReverts {
         installPlugin(plugins.reverter);
         vm.expectRevert(IPRBProxy.PRBProxy_PluginReverted.selector);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withNothing.selector));
         success;
     }
 
-    function test_RevertWhen_Error_CustomError()
-        external
-        whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Error_CustomError() external whenPluginInstalled whenDelegateCallReverts {
         installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withCustomError.selector));
         success;
     }
 
-    function test_RevertWhen_Error_Require()
-        external
-        whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Error_Require() external whenPluginInstalled whenDelegateCallReverts {
         installPlugin(plugins.reverter);
         vm.expectRevert(TargetReverter.SomeError.selector);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withRequire.selector));
         success;
     }
 
-    function test_RevertWhen_Error_ReasonString()
-        external
-        whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Error_ReasonString() external whenPluginInstalled whenDelegateCallReverts {
         installPlugin(plugins.reverter);
         vm.expectRevert("You shall not pass");
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withReasonString.selector));
@@ -152,7 +95,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RunPlugin_EtherSent()
         external
         whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
         whenDelegateCallDoesNotRevert
     {
@@ -161,7 +103,7 @@ contract RunPlugin_Test is Proxy_Test {
         (, bytes memory actualResponse) =
             address(proxy).call{ value: amount }(abi.encodeWithSelector(plugins.echo.echoMsgValue.selector));
         bytes memory expectedResponse = abi.encode(amount);
-        assertEq(actualResponse, expectedResponse, "echo.echoMsgValue response");
+        assertEq(actualResponse, expectedResponse, "echo.echoMsgValue response mismatch");
     }
 
     modifier whenNoEtherSent() {
@@ -171,7 +113,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RunPlugin_PluginSelfDestructs()
         external
         whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -192,7 +133,7 @@ contract RunPlugin_Test is Proxy_Test {
         // Assert that Bob's balance has increased by the contract's balance.
         uint256 actualBobBalance = users.bob.balance;
         uint256 expectedAliceBalance = initialBobBalance + proxyBalance;
-        assertEq(actualBobBalance, expectedAliceBalance, "selfDestructer.destroyMe balance");
+        assertEq(actualBobBalance, expectedAliceBalance, "selfDestructer.destroyMe balance mismatch");
     }
 
     modifier whenPluginDoesNotSelfDestruct() {
@@ -202,7 +143,6 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RunPlugin()
         external
         whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
@@ -211,13 +151,12 @@ contract RunPlugin_Test is Proxy_Test {
         installPlugin(plugins.dummy);
         (, bytes memory actualResponse) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
         bytes memory expectedResponse = abi.encode(bytes("foo"));
-        assertEq(actualResponse, expectedResponse, "dummy.foo response");
+        assertEq(actualResponse, expectedResponse, "dummy.foo response mismatch");
     }
 
     function test_RunPlugin_Event()
         external
         whenPluginInstalled
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
