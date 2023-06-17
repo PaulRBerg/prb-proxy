@@ -50,7 +50,7 @@ contract Deploy_Test is Registry_Test {
     function testFuzz_Deploy_UpdateProxies(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deploy();
-        address actualProxy = address(registry.proxies(owner));
+        address actualProxy = address(registry.getProxy(owner));
         address expectedProxy = computeProxyAddress({ origin: origin, seed: SEED_ZERO });
         assertEq(actualProxy, expectedProxy, "proxy mapping mismatch");
     }
