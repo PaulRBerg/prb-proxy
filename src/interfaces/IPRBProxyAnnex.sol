@@ -24,9 +24,6 @@ interface IPRBProxyAnnex {
     /// @notice Emitted when a plugin is installed.
     event InstallPlugin(IPRBProxyPlugin indexed plugin);
 
-    /// @notice Emitted when the minimum gas reserve is updated.
-    event SetMinGasReserve(uint256 oldMinGasReserve, uint256 newMinGasReserve);
-
     /// @notice Emitted when the permission is updated for an (envoy,target) tuple.
     event SetPermission(address indexed envoy, address indexed target, bool permission);
 
@@ -60,13 +57,6 @@ interface IPRBProxyAnnex {
     /// @param plugin The address of the plugin to install.
     function installPlugin(IPRBProxyPlugin plugin) external;
 
-    /// @notice Sets a new value for the minimum gas reserve.
-    ///
-    /// @dev Emits a {SetMinGasReserve} event.
-    ///
-    /// @param newMinGasReserve The new minimum gas reserve.
-    function setMinGasReserve(uint256 newMinGasReserve) external;
-
     /// @notice Gives or takes a permission from an envoy to call the provided target contract and function selector
     /// on behalf of the proxy owner.
     ///
@@ -89,7 +79,6 @@ interface IPRBProxyAnnex {
     ///
     /// Requirements:
     /// - The plugin must have at least one implemented method.
-    ///
     ///
     /// @param plugin The address of the plugin to uninstall.
     function uninstallPlugin(IPRBProxyPlugin plugin) external;

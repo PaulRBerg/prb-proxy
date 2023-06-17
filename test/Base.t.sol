@@ -25,7 +25,6 @@ import { TargetChangeOwner } from "./mocks/targets/TargetChangeOwner.sol";
 import { TargetDummy } from "./mocks/targets/TargetDummy.sol";
 import { TargetDummyWithFallback } from "./mocks/targets/TargetDummyWithFallback.sol";
 import { TargetEcho } from "./mocks/targets/TargetEcho.sol";
-import { TargetMinGasReserve } from "./mocks/targets/TargetMinGasReserve.sol";
 import { TargetPanic } from "./mocks/targets/TargetPanic.sol";
 import { TargetReverter } from "./mocks/targets/TargetReverter.sol";
 import { TargetSelfDestructer } from "./mocks/targets/TargetSelfDestructer.sol";
@@ -53,7 +52,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
         TargetDummy dummy;
         TargetDummyWithFallback dummyWithFallback;
         TargetEcho echo;
-        TargetMinGasReserve minGasReserve;
         TargetPanic panic;
         TargetReverter reverter;
         TargetSelfDestructer selfDestructer;
@@ -121,7 +119,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
             dummy: new TargetDummy(),
             dummyWithFallback: new TargetDummyWithFallback(),
             echo: new TargetEcho(),
-            minGasReserve: new TargetMinGasReserve(),
             panic: new TargetPanic(),
             reverter: new TargetReverter(),
             selfDestructer: new TargetSelfDestructer()
@@ -197,12 +194,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     /// @dev ABI encodes the parameters and calls {PRBProxyAnnex.installPlugin}.
     function installPlugin(IPRBProxyPlugin plugin) internal {
         bytes memory data = abi.encodeCall(annex.installPlugin, (plugin));
-        proxy.execute({ target: address(annex), data: data });
-    }
-
-    /// @dev ABI encodes the parameters and calls {PRBProxyAnnex.setMinGasReserve}.
-    function setMinGasReserve(uint256 newMinGasReserve) internal {
-        bytes memory data = abi.encodeCall(annex.setMinGasReserve, (newMinGasReserve));
         proxy.execute({ target: address(annex), data: data });
     }
 

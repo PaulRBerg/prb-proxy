@@ -62,7 +62,6 @@ interface IPRBProxy is IPRBProxyStorage {
     /// Requirements:
     /// - The caller must be either an owner or an envoy with permission.
     /// - `target` must be a contract.
-    /// - The gas stipend must be greater than or equal to `minGasReserve`.
     /// - The owner must not be changed during the DELEGATECALL.
     ///
     /// @param target The address of the target contract.

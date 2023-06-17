@@ -12,8 +12,6 @@ abstract contract Events {
 
     event InstallPlugin(IPRBProxyPlugin indexed plugin);
 
-    event SetMinGasReserve(uint256 oldMinGasReserve, uint256 newMinGasReserve);
-
     event SetPermission(address indexed envoy, address indexed target, bool permission);
 
     event UninstallPlugin(IPRBProxyPlugin indexed plugin);

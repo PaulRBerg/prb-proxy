@@ -37,7 +37,6 @@ contract PRBProxy is
     /// @notice Constructs the proxy by fetching the params from the registry.
     /// @dev This is implemented like this so that the proxy's CREATE2 address doesn't depend on the constructor params.
     constructor() {
-        minGasReserve = 5000;
         registry = IPRBProxyRegistry(msg.sender);
         owner = registry.transientProxyOwner();
     }
@@ -138,11 +137,8 @@ contract PRBProxy is
         // Save the owner address in memory so that this variable cannot be modified during the DELEGATECALL.
         address owner_ = owner;
 
-        // Reserve some gas to ensure that the contract call will not run out of gas.
-        uint256 stipend = gasleft() - minGasReserve;
-
         // Delegate call to the provided contract.
-        (success, response) = to.delegatecall{ gas: stipend }(data);
+        (success, response) = to.delegatecall(data);
 
         // Check that the owner has not been changed.
         if (owner_ != owner) {

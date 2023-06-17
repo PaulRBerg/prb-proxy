@@ -64,18 +64,6 @@ contract PRBProxyAnnex is
     }
 
     /// @inheritdoc IPRBProxyAnnex
-    function setMinGasReserve(uint256 newMinGasReserve) external override {
-        // Load the current minimum gas reserve.
-        uint256 oldMinGasReserve = minGasReserve;
-
-        // Update the minimum gas reserve.
-        minGasReserve = newMinGasReserve;
-
-        // Log the minimum gas reserve update.
-        emit SetMinGasReserve(oldMinGasReserve, newMinGasReserve);
-    }
-
-    /// @inheritdoc IPRBProxyAnnex
     function setPermission(address envoy, address target, bool permission) external override {
         permissions[envoy][target] = permission;
         emit SetPermission(envoy, target, permission);

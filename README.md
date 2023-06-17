@@ -95,7 +95,6 @@ Once the proxy is deployed, you can start interacting with target contracts. PRB
 `PRBProxyAnnex`. This contract provides several auxiliary functions, including:
 
 - `installPlugin`
-- `setMinGasReserve`
 - `setPermission`
 - `uninstallPlugin`
 
