@@ -31,32 +31,24 @@ contract InstallPlugin_Test is Registry_Test {
         _;
     }
 
-    function test_InstallPlugin_PluginInstalledBefore()
-        external
-        whenCallerHasProxy
-        whenPluginListNotEmpty
-        whenPluginNotInstalled
-    {
-        // Install a dummy plugin that has some methods.
-        registry.installPlugin(plugins.dummy);
-
-        // Install the same plugin again.
-        registry.installPlugin(plugins.dummy);
-
-        // Assert that every plugin method has been installed.
-        bytes4[] memory pluginMethods = plugins.dummy.methodList();
-        for (uint256 i = 0; i < pluginMethods.length; ++i) {
-            IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: users.alice, method: pluginMethods[i] });
-            IPRBProxyPlugin expectedPlugin = plugins.dummy;
-            assertEq(actualPlugin, expectedPlugin, "plugin method not installed");
-        }
+    function test_RevertWhen_MethodCollision() external whenCallerHasProxy whenPluginListNotEmpty {
+        registry.installPlugin(plugins.sablier);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                IPRBProxyRegistry.PRBProxyRegistry_PluginMethodCollision.selector,
+                plugins.sablier,
+                plugins.collider,
+                plugins.sablier.onStreamCanceled.selector
+            )
+        );
+        registry.installPlugin(plugins.collider);
     }
 
-    modifier whenPluginNotInstalled() {
+    modifier whenNoMethodCollision() {
         _;
     }
 
-    function test_InstallPlugin() external whenCallerHasProxy whenPluginListNotEmpty whenPluginNotInstalled {
+    function test_InstallPlugin() external whenCallerHasProxy whenPluginListNotEmpty whenNoMethodCollision {
         // Install a dummy plugin that has some methods.
         registry.installPlugin(plugins.dummy);
 
@@ -69,7 +61,7 @@ contract InstallPlugin_Test is Registry_Test {
         }
     }
 
-    function test_InstallPlugin_Event() external whenCallerHasProxy whenPluginListNotEmpty whenPluginNotInstalled {
+    function test_InstallPlugin_Event() external whenCallerHasProxy whenPluginListNotEmpty whenNoMethodCollision {
         vm.expectEmit({ emitter: address(registry) });
         emit InstallPlugin({ owner: users.alice, proxy: proxy, plugin: plugins.dummy });
         registry.installPlugin(plugins.dummy);

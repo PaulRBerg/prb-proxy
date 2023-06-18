@@ -10,11 +10,13 @@ import { IPRBProxyRegistry } from "../src/interfaces/IPRBProxyRegistry.sol";
 import { PRBProxy } from "../src/PRBProxy.sol";
 import { PRBProxyRegistry } from "../src/PRBProxyRegistry.sol";
 
+import { PluginCollider } from "./mocks/plugins/PluginCollider.sol";
 import { PluginDummy } from "./mocks/plugins/PluginDummy.sol";
 import { PluginEcho } from "./mocks/plugins/PluginEcho.sol";
 import { PluginEmpty } from "./mocks/plugins/PluginEmpty.sol";
 import { PluginPanic } from "./mocks/plugins/PluginPanic.sol";
 import { PluginReverter } from "./mocks/plugins/PluginReverter.sol";
+import { PluginSablier } from "./mocks/plugins/PluginSablier.sol";
 import { PluginSelfDestructer } from "./mocks/plugins/PluginSelfDestructer.sol";
 import { TargetDummy } from "./mocks/targets/TargetDummy.sol";
 import { TargetDummyWithFallback } from "./mocks/targets/TargetDummyWithFallback.sol";
@@ -32,11 +34,13 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     //////////////////////////////////////////////////////////////////////////*/
 
     struct Plugins {
+        PluginCollider collider;
         PluginDummy dummy;
         PluginEcho echo;
         PluginEmpty empty;
         PluginPanic panic;
         PluginReverter reverter;
+        PluginSablier sablier;
         PluginSelfDestructer selfDestructer;
     }
 
@@ -95,11 +99,13 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
 
         // Create the plugins.
         plugins = Plugins({
+            collider: new PluginCollider(),
             dummy: new PluginDummy(),
             echo: new PluginEcho(),
             empty: new PluginEmpty(),
             panic: new PluginPanic(),
             reverter: new PluginReverter(),
+            sablier: new PluginSablier(),
             selfDestructer: new PluginSelfDestructer()
         });
 

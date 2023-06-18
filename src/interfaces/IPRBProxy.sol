@@ -56,13 +56,13 @@ interface IPRBProxy {
                                NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Delegate calls to the provided target contract, forwarding the data. It returns the data it
+    /// @notice Delegate calls to the provided target contract by forwarding the data. It returns the data it
     /// gets back, and bubbles up any potential revert.
     ///
     /// @dev Emits an {Execute} event.
     ///
     /// Requirements:
-    /// - The caller must be either an owner or an envoy with permission.
+    /// - The caller must be either the owner or an envoy with permission.
     /// - `target` must be a contract.
     ///
     /// @param target The address of the target contract.
