@@ -18,8 +18,14 @@ interface IPRBProxyRegistry {
     /// @notice Thrown when an action requires the owner to not have a proxy.
     error PRBProxyRegistry_OwnerHasProxy(address owner, IPRBProxy proxy);
 
-    /// @notice Thrown when installing or uninstall a plugin, and the plugin doesn't implement any method.
+    /// @notice Thrown when trying to install or uninstall a plugin, and the plugin doesn't implement any method.
     error PRBProxyRegistry_PluginEmptyMethodList(IPRBProxyPlugin plugin);
+
+    /// @notice Thrown when trying to install a plugin that implements a method that is already implemented by another
+    /// installed plugin.
+    error PRBProxyRegistry_PluginMethodCollision(
+        IPRBProxyPlugin currentPlugin, IPRBProxyPlugin newPlugin, bytes4 method
+    );
 
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS
@@ -135,13 +141,13 @@ interface IPRBProxyRegistry {
     function deploy() external returns (IPRBProxy proxy);
 
     /// @notice Deploys a new proxy via CREATE2 by setting the caller as the owner, and delegate calls to the provided
-    /// target contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
+    /// target contract by forwarding the data. It returns the data it gets back, and bubbles up any potential revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.
     ///
     /// Requirements:
     /// - The caller must not have a proxy.
-    /// - All from {PRBProxy.execute}.
+    /// - `target` must be a contract.
     ///
     /// @param target The address of the target contract.
     /// @param data Function selector plus ABI encoded data.
@@ -164,13 +170,14 @@ interface IPRBProxyRegistry {
     /// @dev Emits an {InstallPlugin} event.
     ///
     /// Notes:
-    /// - Does not revert if the plugin is installed.
     /// - Installing a plugin is a potentially dangerous operation, because anyone will be able to run the plugin.
+    /// - Plugin methods that have the same selector as {PRBProxy.execute} will be installed, but they will never be run
+    /// by the proxy.
     ///
     /// Requirements:
     /// - The caller must have a proxy.
     /// - The plugin must have at least one implemented method.
-    /// - By design, the plugin cannot implement any method that is also implemented by the proxy itself.
+    /// - There must be no method collision with any other installed plugin.
     ///
     /// @param plugin The address of the plugin to install.
     function installPlugin(IPRBProxyPlugin plugin) external;

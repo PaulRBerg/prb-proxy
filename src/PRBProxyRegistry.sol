@@ -193,7 +193,16 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         // Install every method in the list.
         address owner = msg.sender;
         for (uint256 i = 0; i < length;) {
-            _plugins[owner][methodList[i]] = plugin;
+            // Check for collisions.
+            bytes4 method = methodList[i];
+            if (address(_plugins[owner][method]) != address(0)) {
+                revert PRBProxyRegistry_PluginMethodCollision({
+                    currentPlugin: _plugins[owner][method],
+                    newPlugin: plugin,
+                    method: method
+                });
+            }
+            _plugins[owner][method] = plugin;
             unchecked {
                 i += 1;
             }

@@ -5,8 +5,8 @@ installPlugin.t.sol
    ├── when the plugin list is empty
    │  └── it should revert
    └── when the plugin list is not empty
-      ├── when the plugin has been installed before
-      │  └── it should do nothing
-      └── when the plugin has not been installed
+      ├── when there is a method collision
+      │  └── it should revert
+      └── when there is no method collision
          ├── it should install the plugin
          └── it should emit an {InstallPlugin} event
