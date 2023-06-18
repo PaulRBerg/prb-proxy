@@ -87,35 +87,13 @@ interface IPRBProxyRegistry {
     ///
     /// Requirements:
     /// - The caller must not have a proxy.
-    /// - All from {PRBProxy::execute}.
+    /// - All from {IPRBProxy.execute}.
     ///
     /// @param target The address of the target contract.
     /// @param data Function selector plus ABI encoded data.
     /// @return proxy The address of the newly deployed proxy contract.
     /// @return response The response received from the target contract.
     function deployAndExecute(
-        address target,
-        bytes calldata data
-    )
-        external
-        returns (IPRBProxy proxy, bytes memory response);
-
-    /// @notice Deploys a new proxy with CREATE2 for the provided owner, and delegate calls to the provided target
-    /// contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
-    ///
-    /// @dev Emits a {DeployProxy} and an {Execute} event.
-    ///
-    /// Requirements:
-    /// - The owner must not have a proxy.
-    /// - All from {PRBProxy::execute}.
-    ///
-    /// @param owner The owner of the proxy.
-    /// @param target The address of the target contract.
-    /// @param data Function selector plus ABI encoded data.
-    /// @return proxy The address of the newly deployed proxy contract.
-    /// @return response The response received from the target contract.
-    function deployAndExecuteFor(
-        address owner,
         address target,
         bytes calldata data
     )

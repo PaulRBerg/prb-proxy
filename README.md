@@ -88,11 +88,10 @@ There are multiple ways to deploy a proxy:
 
 - Call the `deploy` function.
 - Call the `deployFor` function, which accepts the owner as an argument.
-- Call the `deployAndExecute` or the `deployAndExecuteFor` function, which would deploy the proxy and execute a delegate call to a target contract in
-  a single transaction.
+- Call the `deployAndExecute` function, which deploys the proxy and executes a delegate call to a target contract in a single transaction.
 
-Once the proxy is deployed, you can start interacting with target contracts. PRBProxy ships with one "enshrined" target contract called
-`PRBProxyAnnex`. This contract provides several auxiliary functions, including:
+Once the proxy is deployed, you can start interacting with target contracts. PRBProxy ships with an "enshrined" target contract called
+`PRBProxyAnnex`, which provides several auxiliary functions, including:
 
 - `installPlugin`
 - `setPermission`
