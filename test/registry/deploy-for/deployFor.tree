@@ -4,6 +4,5 @@ deployFor.t.sol
 └── when the owner does not have a proxy
    ├── it should generate the correct address
    ├── it should initialize the owner
-   ├── it should update the next seeds mapping
    ├── it should update the proxies mapping
    └── it should emit a {DeployProxy} event

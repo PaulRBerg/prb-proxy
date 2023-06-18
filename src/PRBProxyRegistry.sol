@@ -41,9 +41,6 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     /// @inheritdoc IPRBProxyRegistry
     ConstructorParams public override constructorParams;
 
-    /// @inheritdoc IPRBProxyRegistry
-    mapping(address origin => bytes32 seed) public override nextSeeds;
-
     /*//////////////////////////////////////////////////////////////////////////
                                   INTERNAL STORAGE
     //////////////////////////////////////////////////////////////////////////*/
@@ -139,39 +136,20 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         noProxy(msg.sender)
         returns (IPRBProxy proxy)
     {
-        // Load the next seed.
-        bytes32 seed = nextSeeds[tx.origin];
-
-        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
-        bytes32 salt = keccak256(abi.encode(tx.origin, seed));
-
-        // Set the constructor params.
+        // Use the address of the owner as the CREATE2 salt.
         address owner = msg.sender;
-        constructorParams = ConstructorParams({ owner: owner, target: target, data: data });
+        bytes32 salt = bytes32(abi.encodePacked(owner));
 
-        // Deploy the proxy with CREATE2.
+        // Deploy the proxy with CREATE2, and execute the delegate call in the constructor.
+        constructorParams = ConstructorParams({ owner: owner, target: target, data: data });
         proxy = new PRBProxy{ salt: salt }();
         delete constructorParams;
 
-        // Associate the the owner with the proxy in the mapping.
+        // Associate the owner and the proxy.
         _proxies[owner] = proxy;
 
-        // Increment the seed.
-        // Using unchecked arithmetic here because this cannot realistically overflow, ever.
-        unchecked {
-            nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
-        }
-
-        // Log the proxy via en event.
-        // forgefmt: disable-next-line
-        emit DeployProxy({
-            origin: tx.origin,
-            operator: msg.sender,
-            owner: owner,
-            seed: seed,
-            salt: salt,
-            proxy: proxy
-        });
+        // Log the creation of the proxy.
+        emit DeployProxy({ operator: msg.sender, owner: owner, proxy: proxy });
     }
 
     /// @inheritdoc IPRBProxyRegistry
@@ -249,11 +227,8 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     /// @dev See the documentation for the user-facing functions that call this internal function.
     function _deploy(address owner) internal returns (IPRBProxy proxy) {
-        // Load the next seed.
-        bytes32 seed = nextSeeds[tx.origin];
-
-        // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
-        bytes32 salt = keccak256(abi.encode(tx.origin, seed));
+        // Use the address of the owner as the CREATE2 salt.
+        bytes32 salt = bytes32(abi.encodePacked(owner));
 
         // Set the owner and empty out the target and the data to prevent reentrancy.
         constructorParams = ConstructorParams({ owner: owner, target: address(0), data: "" });
@@ -262,24 +237,10 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         proxy = new PRBProxy{ salt: salt }();
         delete constructorParams;
 
-        // Associate the the owner with the proxy in the mapping.
+        // Associate the owner and the proxy.
         _proxies[owner] = proxy;
 
-        // Increment the seed.
-        // We're using unchecked arithmetic here because this cannot realistically overflow, ever.
-        unchecked {
-            nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
-        }
-
-        // Log the proxy via en event.
-        // forgefmt: disable-next-line
-        emit DeployProxy({
-            origin: tx.origin,
-            operator: msg.sender,
-            owner: owner,
-            seed: seed,
-            salt: salt,
-            proxy: proxy
-        });
+        // Log the creation of the proxy.
+        emit DeployProxy({ operator: msg.sender, owner: owner, proxy: proxy });
     }
 }

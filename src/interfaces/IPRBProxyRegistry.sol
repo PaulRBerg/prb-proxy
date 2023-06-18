@@ -32,14 +32,7 @@ interface IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Emitted when a new proxy is deployed.
-    event DeployProxy(
-        address indexed origin,
-        address indexed operator,
-        address indexed owner,
-        bytes32 seed,
-        bytes32 salt,
-        IPRBProxy proxy
-    );
+    event DeployProxy(address indexed operator, address indexed owner, IPRBProxy proxy);
 
     /// @notice Emitted when a plugin is installed.
     event InstallPlugin(address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin);
@@ -122,15 +115,11 @@ interface IPRBProxyRegistry {
     /// @param owner The user address to make the query for.
     function getProxy(address owner) external view returns (IPRBProxy proxy);
 
-    /// @notice The seed that will be used to deploy the next proxy for the provided origin.
-    /// @param origin The externally owned account (EOA) that is part of the CREATE2 salt.
-    function nextSeeds(address origin) external view returns (bytes32 seed);
-
     /*//////////////////////////////////////////////////////////////////////////
                                NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Deploys a new proxy with CREATE2 by setting the caller as the owner.
+    /// @notice Deploys a new proxy with CREATE2, using the caller as the owner.
     ///
     /// @dev Emits a {DeployProxy} event.
     ///
@@ -140,8 +129,9 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy contract.
     function deploy() external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy via CREATE2 by setting the caller as the owner, and delegate calls to the provided
-    /// target contract by forwarding the data. It returns the data it gets back, and bubbles up any potential revert.
+    /// @notice Deploys a new proxy via CREATE2, using the caller as the owner. It delegate calls to the provided
+    /// target contract by forwarding the data. Then, it returns the data it gets back, and bubbles up any potential
+    /// revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.
     ///
@@ -170,9 +160,8 @@ interface IPRBProxyRegistry {
     /// @dev Emits an {InstallPlugin} event.
     ///
     /// Notes:
-    /// - Installing a plugin is a potentially dangerous operation, because anyone will be able to run the plugin.
-    /// - Plugin methods that have the same selector as {PRBProxy.execute} will be installed, but they will never be run
-    /// by the proxy.
+    /// - Installing a plugin is a potentially dangerous operation, because anyone can run the plugin.
+    /// - Plugin methods that have the same selector as {PRBProxy.execute} can be installed, but they can never be run.
     ///
     /// Requirements:
     /// - The caller must have a proxy.
@@ -193,7 +182,7 @@ interface IPRBProxyRegistry {
     /// Requirements:
     /// - The caller must have a proxy.
     ///
-    /// @param envoy The address of the envoy account.
+    /// @param envoy The address of the account given permission to call the target contract.
     /// @param target The address of the target contract.
     /// @param permission The boolean permission to set.
     function setPermission(address envoy, address target, bool permission) external;
