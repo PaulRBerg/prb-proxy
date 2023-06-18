@@ -61,15 +61,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                      CONSTANTS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    uint256 internal constant DEFAULT_MIN_GAS_RESERVE = 5000;
-    bytes32 internal constant SEED_ONE = bytes32(uint256(0x01));
-    bytes32 internal constant SEED_TWO = bytes32(uint256(0x02));
-    bytes32 internal constant SEED_ZERO = bytes32(uint256(0x00));
-
-    /*//////////////////////////////////////////////////////////////////////////
                                      VARIABLES
     //////////////////////////////////////////////////////////////////////////*/
 
@@ -123,7 +114,7 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
         deployRegistryConditionally();
 
         // Make Alice both the caller and the origin.
-        vm.startPrank({ msgSender: users.alice, txOrigin: users.alice });
+        vm.startPrank({ msgSender: users.alice });
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -131,8 +122,8 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev Computes the proxy address without deploying it.
-    function computeProxyAddress(address origin, bytes32 seed) internal returns (address) {
-        bytes32 salt = keccak256(abi.encode(origin, seed));
+    function computeProxyAddress(address owner) internal returns (address) {
+        bytes32 salt = bytes32(abi.encodePacked(owner));
         bytes32 creationBytecodeHash = keccak256(getProxyBytecode());
         // Use the Create2 utility from Forge Std.
         return computeCreate2Address({ salt: salt, initcodeHash: creationBytecodeHash, deployer: address(registry) });

@@ -23,86 +23,35 @@ contract DeployFor_Test is Registry_Test {
         _;
     }
 
-    function testFuzz_DeployFor_ProxyAddress(
-        address origin,
-        address operator,
-        address owner
-    )
-        external
-        whenOwnerDoesNotHaveProxy
-    {
-        changePrank({ txOrigin: origin, msgSender: operator });
+    function testFuzz_DeployFor_ProxyAddress(address operator, address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: operator });
         address actualProxy = address(registry.deployFor(owner));
-        address expectedProxy = computeProxyAddress(origin, SEED_ZERO);
+        address expectedProxy = computeProxyAddress(owner);
         assertEq(actualProxy, expectedProxy, "deployed proxy address mismatch");
     }
 
-    function testFuzz_DeployFor_ProxyOwner(
-        address origin,
-        address operator,
-        address owner
-    )
-        external
-        whenOwnerDoesNotHaveProxy
-    {
-        changePrank({ txOrigin: origin, msgSender: operator });
+    function testFuzz_DeployFor_ProxyOwner(address operator, address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: operator });
         IPRBProxy proxy = registry.deployFor(owner);
         address actualOwner = proxy.owner();
         address expectedOwner = owner;
         assertEq(actualOwner, expectedOwner, "proxy owner mismatch");
     }
 
-    function testFuzz_DeployFor_UpdateNextSeeds(
-        address origin,
-        address operator,
-        address owner
-    )
-        external
-        whenOwnerDoesNotHaveProxy
-    {
-        changePrank({ txOrigin: origin, msgSender: operator });
-        registry.deployFor(owner);
-
-        bytes32 actualNextSeed = registry.nextSeeds(origin);
-        bytes32 expectedNextSeed = SEED_ONE;
-        assertEq(actualNextSeed, expectedNextSeed, "next seed mismatch");
-    }
-
-    function testFuzz_DeployFor_UpdateProxies(
-        address origin,
-        address operator,
-        address owner
-    )
-        external
-        whenOwnerDoesNotHaveProxy
-    {
-        changePrank({ txOrigin: origin, msgSender: operator });
+    function testFuzz_DeployFor_UpdateProxies(address operator, address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: operator });
         registry.deployFor(owner);
 
         address actualProxyAddress = address(registry.getProxy(owner));
-        address expectedProxyAddress = computeProxyAddress(origin, SEED_ZERO);
+        address expectedProxyAddress = computeProxyAddress(owner);
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address mismatch");
     }
 
-    function testFuzz_DeployFor_Event(
-        address origin,
-        address operator,
-        address owner
-    )
-        external
-        whenOwnerDoesNotHaveProxy
-    {
-        changePrank({ txOrigin: origin, msgSender: operator });
+    function testFuzz_DeployFor_Event(address operator, address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: operator });
 
         vm.expectEmit({ emitter: address(registry) });
-        emit DeployProxy({
-            origin: origin,
-            operator: operator,
-            owner: owner,
-            seed: SEED_ZERO,
-            salt: keccak256(abi.encode(origin, SEED_ZERO)),
-            proxy: IPRBProxy(computeProxyAddress(origin, SEED_ZERO))
-        });
+        emit DeployProxy({ operator: operator, owner: owner, proxy: IPRBProxy(computeProxyAddress(owner)) });
         registry.deployFor(owner);
     }
 }

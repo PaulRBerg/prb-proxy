@@ -18,14 +18,7 @@ abstract contract Events {
                                       REGISTRY
     //////////////////////////////////////////////////////////////////////////*/
 
-    event DeployProxy(
-        address indexed origin,
-        address indexed operator,
-        address indexed owner,
-        bytes32 seed,
-        bytes32 salt,
-        IPRBProxy proxy
-    );
+    event DeployProxy(address indexed operator, address indexed owner, IPRBProxy proxy);
 
     event InstallPlugin(address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin);
 
