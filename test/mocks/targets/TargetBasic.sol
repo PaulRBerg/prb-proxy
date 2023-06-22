@@ -1,15 +1,7 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.18 <0.9.0;
+pragma solidity >=0.8.18;
 
-contract TargetDummyWithFallback {
-    event LogFallback();
-
-    fallback() external payable {
-        emit LogFallback();
-    }
-
-    receive() external payable { }
-
+contract TargetBasic {
     function foo() external pure returns (string memory) {
         return "foo";
     }

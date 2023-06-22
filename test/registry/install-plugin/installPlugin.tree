@@ -2,11 +2,12 @@ installPlugin.t.sol
 ├── when the caller doesn't have a proxy
 │  └── it should revert
 └── when the caller has a proxy
-   ├── when the plugin list is empty
+   ├── when the plugin doesn't implement any method
    │  └── it should revert
-   └── when the plugin list is not empty
-      ├── when there is a method collision
+   └── when the plugin implements at least one method
+      ├── when there are method collisions
       │  └── it should revert
-      └── when there is no method collision
+      └── when there aren't any method collisions
          ├── it should install the plugin
+         ├── it should save the methods in the reverse mapping
          └── it should emit an {InstallPlugin} event

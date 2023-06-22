@@ -20,18 +20,18 @@ contract InstallPlugin_Test is Registry_Test {
         _;
     }
 
-    function test_RevertWhen_PluginEmptyMethodList() external whenCallerHasProxy {
+    function test_RevertWhen_PluginDoesNotImplementAnyMethod() external whenCallerHasProxy {
         vm.expectRevert(
-            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_PluginEmptyMethodList.selector, plugins.empty)
+            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_PluginWithZeroMethods.selector, plugins.empty)
         );
         registry.installPlugin(plugins.empty);
     }
 
-    modifier whenPluginListNotEmpty() {
+    modifier whenPluginImplementsMethods() {
         _;
     }
 
-    function test_RevertWhen_MethodCollision() external whenCallerHasProxy whenPluginListNotEmpty {
+    function test_RevertWhen_MethodCollisions() external whenCallerHasProxy whenPluginImplementsMethods {
         registry.installPlugin(plugins.sablier);
         vm.expectRevert(
             abi.encodeWithSelector(
@@ -44,26 +44,48 @@ contract InstallPlugin_Test is Registry_Test {
         registry.installPlugin(plugins.collider);
     }
 
-    modifier whenNoMethodCollision() {
+    modifier whenNoMethodCollisions() {
         _;
     }
 
-    function test_InstallPlugin() external whenCallerHasProxy whenPluginListNotEmpty whenNoMethodCollision {
-        // Install a dummy plugin that has some methods.
-        registry.installPlugin(plugins.dummy);
+    function test_InstallPlugin() external whenCallerHasProxy whenPluginImplementsMethods whenNoMethodCollisions {
+        // Install a basic plugin with some methods.
+        registry.installPlugin(plugins.basic);
 
         // Assert that every plugin method has been installed.
-        bytes4[] memory pluginMethods = plugins.dummy.methodList();
+        bytes4[] memory pluginMethods = plugins.basic.getMethods();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
             IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: users.alice, method: pluginMethods[i] });
-            IPRBProxyPlugin expectedPlugin = plugins.dummy;
+            IPRBProxyPlugin expectedPlugin = plugins.basic;
             assertEq(actualPlugin, expectedPlugin, "plugin method not installed");
         }
     }
 
-    function test_InstallPlugin_Event() external whenCallerHasProxy whenPluginListNotEmpty whenNoMethodCollision {
+    function test_InstallPlugin_ReverseMapping()
+        external
+        whenCallerHasProxy
+        whenPluginImplementsMethods
+        whenNoMethodCollisions
+    {
+        registry.installPlugin(plugins.basic);
+        bytes4[] memory actualMethods = registry.getMethodsByOwner({ owner: users.alice, plugin: plugins.basic });
+        bytes4[] memory expectedMethods = plugins.basic.getMethods();
+        assertEq(actualMethods, expectedMethods, "methods not saved in reverse mapping");
+    }
+
+    function test_InstallPlugin_Event()
+        external
+        whenCallerHasProxy
+        whenPluginImplementsMethods
+        whenNoMethodCollisions
+    {
         vm.expectEmit({ emitter: address(registry) });
-        emit InstallPlugin({ owner: users.alice, proxy: proxy, plugin: plugins.dummy });
-        registry.installPlugin(plugins.dummy);
+        emit InstallPlugin({
+            owner: users.alice,
+            proxy: proxy,
+            plugin: plugins.basic,
+            methods: plugins.basic.getMethods()
+        });
+        registry.installPlugin(plugins.basic);
     }
 }

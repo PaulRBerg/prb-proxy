@@ -10,16 +10,15 @@ import { IPRBProxyRegistry } from "../src/interfaces/IPRBProxyRegistry.sol";
 import { PRBProxy } from "../src/PRBProxy.sol";
 import { PRBProxyRegistry } from "../src/PRBProxyRegistry.sol";
 
+import { PluginBasic } from "./mocks/plugins/PluginBasic.sol";
 import { PluginCollider } from "./mocks/plugins/PluginCollider.sol";
-import { PluginDummy } from "./mocks/plugins/PluginDummy.sol";
 import { PluginEcho } from "./mocks/plugins/PluginEcho.sol";
 import { PluginEmpty } from "./mocks/plugins/PluginEmpty.sol";
 import { PluginPanic } from "./mocks/plugins/PluginPanic.sol";
 import { PluginReverter } from "./mocks/plugins/PluginReverter.sol";
 import { PluginSablier } from "./mocks/plugins/PluginSablier.sol";
 import { PluginSelfDestructer } from "./mocks/plugins/PluginSelfDestructer.sol";
-import { TargetDummy } from "./mocks/targets/TargetDummy.sol";
-import { TargetDummyWithFallback } from "./mocks/targets/TargetDummyWithFallback.sol";
+import { TargetBasic } from "./mocks/targets/TargetBasic.sol";
 import { TargetEcho } from "./mocks/targets/TargetEcho.sol";
 import { TargetPanic } from "./mocks/targets/TargetPanic.sol";
 import { TargetReverter } from "./mocks/targets/TargetReverter.sol";
@@ -34,8 +33,8 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     //////////////////////////////////////////////////////////////////////////*/
 
     struct Plugins {
+        PluginBasic basic;
         PluginCollider collider;
-        PluginDummy dummy;
         PluginEcho echo;
         PluginEmpty empty;
         PluginPanic panic;
@@ -45,8 +44,7 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     }
 
     struct Targets {
-        TargetDummy dummy;
-        TargetDummyWithFallback dummyWithFallback;
+        TargetBasic basic;
         TargetEcho echo;
         TargetPanic panic;
         TargetReverter reverter;
@@ -90,8 +88,8 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
 
         // Create the plugins.
         plugins = Plugins({
+            basic: new PluginBasic(),
             collider: new PluginCollider(),
-            dummy: new PluginDummy(),
             echo: new PluginEcho(),
             empty: new PluginEmpty(),
             panic: new PluginPanic(),
@@ -102,8 +100,7 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
 
         // Create the targets.
         targets = Targets({
-            dummy: new TargetDummy(),
-            dummyWithFallback: new TargetDummyWithFallback(),
+            basic: new TargetBasic(),
             echo: new TargetEcho(),
             panic: new TargetPanic(),
             reverter: new TargetReverter(),
