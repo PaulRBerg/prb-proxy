@@ -6,7 +6,7 @@ import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
 import { TargetEcho } from "../targets/TargetEcho.sol";
 
 contract PluginEcho is IPRBProxyPlugin, TargetEcho {
-    function methodList() external pure override returns (bytes4[] memory) {
+    function getMethods() external pure override returns (bytes4[] memory) {
         bytes4[] memory methods = new bytes4[](9);
 
         methods[0] = this.echoAddress.selector;

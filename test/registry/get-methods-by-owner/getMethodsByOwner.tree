@@ -1,0 +1,5 @@
+getMethodsByOwner.t.sol
+├── when the plugin is unknown
+│  └── it should return an empty array
+└── when the plugin is known
+   └── it should return the methods
