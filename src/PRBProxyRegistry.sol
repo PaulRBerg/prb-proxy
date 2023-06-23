@@ -89,9 +89,11 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
         bytes32 salt = keccak256(abi.encode(tx.origin, seed));
 
-        // Deploy the proxy with CREATE2, and execute the delegate call in the constructor.
+        // Set the constructor params.
         address owner = msg.sender;
         constructorParams = ConstructorParams({ owner: owner, target: target, data: data });
+
+        // Deploy the proxy with CREATE2.
         proxy = new PRBProxy{ salt: salt }();
         delete constructorParams;
 
@@ -128,8 +130,10 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
         bytes32 salt = keccak256(abi.encode(tx.origin, seed));
 
+        // Set the owner and empty out the target and the data to prevent reentrancy.
+        constructorParams = ConstructorParams({ owner: owner, target: address(0), data: "" });
+
         // Deploy the proxy with CREATE2.
-        constructorParams.owner = owner;
         proxy = new PRBProxy{ salt: salt }();
         delete constructorParams;
 
