@@ -31,7 +31,34 @@ contract InstallPlugin_Test is Registry_Test {
         _;
     }
 
-    function test_RevertWhen_MethodCollisions() external whenCallerHasProxy whenPluginImplementsMethods {
+    function test_RevertWhen_PluginAlreadyInstalled()
+        external
+        whenCallerHasProxy
+        whenPluginImplementsMethods
+        whenPluginNotAlreadyInstalled
+    {
+        registry.installPlugin(plugins.basic);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                IPRBProxyRegistry.PRBProxyRegistry_PluginMethodCollision.selector,
+                plugins.basic,
+                plugins.basic,
+                plugins.basic.foo.selector
+            )
+        );
+        registry.installPlugin(plugins.basic);
+    }
+
+    modifier whenPluginNotAlreadyInstalled() {
+        _;
+    }
+
+    function test_RevertWhen_MethodCollisions()
+        external
+        whenCallerHasProxy
+        whenPluginImplementsMethods
+        whenPluginNotAlreadyInstalled
+    {
         registry.installPlugin(plugins.sablier);
         vm.expectRevert(
             abi.encodeWithSelector(
@@ -48,11 +75,14 @@ contract InstallPlugin_Test is Registry_Test {
         _;
     }
 
-    function test_InstallPlugin() external whenCallerHasProxy whenPluginImplementsMethods whenNoMethodCollisions {
-        // Install a basic plugin with some methods.
+    function test_InstallPlugin()
+        external
+        whenCallerHasProxy
+        whenPluginImplementsMethods
+        whenPluginNotAlreadyInstalled
+        whenNoMethodCollisions
+    {
         registry.installPlugin(plugins.basic);
-
-        // Assert that every plugin method has been installed.
         bytes4[] memory pluginMethods = plugins.basic.getMethods();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
             IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: users.alice, method: pluginMethods[i] });
@@ -65,6 +95,7 @@ contract InstallPlugin_Test is Registry_Test {
         external
         whenCallerHasProxy
         whenPluginImplementsMethods
+        whenPluginNotAlreadyInstalled
         whenNoMethodCollisions
     {
         registry.installPlugin(plugins.basic);
@@ -77,6 +108,7 @@ contract InstallPlugin_Test is Registry_Test {
         external
         whenCallerHasProxy
         whenPluginImplementsMethods
+        whenPluginNotAlreadyInstalled
         whenNoMethodCollisions
     {
         vm.expectEmit({ emitter: address(registry) });

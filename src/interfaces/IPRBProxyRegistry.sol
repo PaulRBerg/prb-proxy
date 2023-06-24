@@ -5,8 +5,9 @@ import { IPRBProxy } from "./IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
 
 /// @title IPRBProxyRegistry
-/// @notice Deploys new proxies with CREATE2 and keeps a registry of owners to proxies. Owners can only
-/// have only one proxy at a time.
+/// @notice Deploys new proxies via CREATE2 and keeps a registry of owners to proxies. Proxies can only be deployed
+/// once per owner, and they cannot be transferred. The registry also supports installing plugins, which are used
+/// for extending the functionality of the proxy.
 interface IPRBProxyRegistry {
     /*//////////////////////////////////////////////////////////////////////////
                                        ERRORS
@@ -144,7 +145,7 @@ interface IPRBProxyRegistry {
                                NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Deploys a new proxy with CREATE2, using the caller as the owner.
+    /// @notice Deploys a new proxy for the caller.
     ///
     /// @dev Emits a {DeployProxy} event.
     ///
@@ -154,9 +155,8 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy.
     function deploy() external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy via CREATE2, using the caller as the owner. It delegate calls to the provided
-    /// target by forwarding the data. Then, it returns the data it gets back, and bubbles up any potential
-    /// revert.
+    /// @notice Deploys a new proxy for the caller, and delegate calls to the provided target by forwarding the data.
+    /// Then, it returns the data it gets back, and bubbles up any potential revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.
     ///
@@ -169,7 +169,19 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy.
     function deployAndExecute(address target, bytes calldata data) external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy with CREATE2 for the provided owner.
+    /// @notice Deploys a new proxy for the caller, and installs the provided plugin on the newly deployed proxy.
+    ///
+    /// @dev Emits a {DeployProxy} and an {InstallPlugin} event.
+    ///
+    /// Requirements:
+    /// - The caller must not have a proxy.
+    /// - See the requirements in `installPlugin`.
+    ///
+    /// @param plugin The address of the plugin to install.
+    /// @return proxy The address of the newly deployed proxy.
+    function deployAndInstallPlugin(IPRBProxyPlugin plugin) external returns (IPRBProxy proxy);
+
+    /// @notice Deploys a new proxy for the provided owner.
     ///
     /// @dev Emits a {DeployProxy} event.
     ///

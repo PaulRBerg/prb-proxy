@@ -178,38 +178,13 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     /// @inheritdoc IPRBProxyRegistry
     function installPlugin(IPRBProxyPlugin plugin) external override onlyCallerWithProxy {
-        // Retrieve the methods to install.
-        bytes4[] memory methods = plugin.getMethods();
+        _installPlugin(plugin);
+    }
 
-        // The plugin must have at least one listed method.
-        uint256 length = methods.length;
-        if (length == 0) {
-            revert PRBProxyRegistry_PluginWithZeroMethods(plugin);
-        }
-
-        // Install every method in the list.
-        address owner = msg.sender;
-        for (uint256 i = 0; i < length;) {
-            // Check for collisions.
-            bytes4 method = methods[i];
-            if (address(_plugins[owner][method]) != address(0)) {
-                revert PRBProxyRegistry_PluginMethodCollision({
-                    currentPlugin: _plugins[owner][method],
-                    newPlugin: plugin,
-                    method: method
-                });
-            }
-            _plugins[owner][method] = plugin;
-            unchecked {
-                i += 1;
-            }
-        }
-
-        // Set the methods in the reverse mapping.
-        _methods[owner][plugin] = methods;
-
-        // Log the plugin installation.
-        emit InstallPlugin(owner, _proxies[owner], plugin, methods);
+    /// @inheritdoc IPRBProxyRegistry
+    function deployAndInstallPlugin(IPRBProxyPlugin plugin) external returns (IPRBProxy proxy) {
+        proxy = _deploy({ owner: msg.sender });
+        _installPlugin(plugin);
     }
 
     /// @inheritdoc IPRBProxyRegistry
@@ -267,5 +242,41 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
         // Log the creation of the proxy.
         emit DeployProxy({ operator: msg.sender, owner: owner, proxy: proxy });
+    }
+
+    /// @dev See the documentation for the user-facing functions that call this internal function.
+    function _installPlugin(IPRBProxyPlugin plugin) internal {
+        // Retrieve the methods to install.
+        bytes4[] memory methods = plugin.getMethods();
+
+        // The plugin must implement at least one method.
+        uint256 length = methods.length;
+        if (length == 0) {
+            revert PRBProxyRegistry_PluginWithZeroMethods(plugin);
+        }
+
+        // Install every method in the list.
+        address owner = msg.sender;
+        for (uint256 i = 0; i < length;) {
+            // Check for collisions.
+            bytes4 method = methods[i];
+            if (address(_plugins[owner][method]) != address(0)) {
+                revert PRBProxyRegistry_PluginMethodCollision({
+                    currentPlugin: _plugins[owner][method],
+                    newPlugin: plugin,
+                    method: method
+                });
+            }
+            _plugins[owner][method] = plugin;
+            unchecked {
+                i += 1;
+            }
+        }
+
+        // Set the methods in the reverse mapping.
+        _methods[owner][plugin] = methods;
+
+        // Log the plugin installation.
+        emit InstallPlugin(owner, _proxies[owner], plugin, methods);
     }
 }
