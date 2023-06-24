@@ -5,9 +5,12 @@ installPlugin.t.sol
    ├── when the plugin doesn't implement any method
    │  └── it should revert
    └── when the plugin implements at least one method
-      ├── when there are method collisions
+      ├── when the plugin is already installed
       │  └── it should revert
-      └── when there aren't any method collisions
-         ├── it should install the plugin
-         ├── it should save the methods in the reverse mapping
-         └── it should emit an {InstallPlugin} event
+      └── when the plugin is not already installed
+         ├── when there are method collisions
+         │  └── it should revert
+         └── when there aren't any method collisions
+            ├── it should install the plugin
+            ├── it should save the methods in the reverse mapping
+            └── it should emit an {InstallPlugin} event
