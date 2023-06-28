@@ -26,6 +26,6 @@ contract Receive_Test is Proxy_Test {
 
         uint256 actualBalance = address(proxy).balance;
         uint256 expectedBalance = value;
-        assertEq(actualBalance, expectedBalance, "proxy balance");
+        assertEq(actualBalance, expectedBalance, "proxy balance mismatch");
     }
 }

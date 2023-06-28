@@ -1,5 +1,0 @@
-transferOwnership.t.sol
-├── when the caller is not the registry
-│  └── it should revert
-└── when the caller is the registry
-   └── it should transfer the ownership

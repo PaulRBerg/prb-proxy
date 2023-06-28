@@ -28,7 +28,7 @@ contract InstallPlugin_Test is Annex_Test {
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
             IPRBProxyPlugin actualPlugin = proxy.plugins(pluginMethods[i]);
             IPRBProxyPlugin expectedPlugin = plugins.dummy;
-            assertEq(actualPlugin, expectedPlugin, "Plugin method not installed");
+            assertEq(actualPlugin, expectedPlugin, "plugin method not installed");
         }
     }
 
@@ -45,7 +45,7 @@ contract InstallPlugin_Test is Annex_Test {
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
             IPRBProxyPlugin actualPlugin = proxy.plugins(pluginMethods[i]);
             IPRBProxyPlugin expectedPlugin = plugins.dummy;
-            assertEq(actualPlugin, expectedPlugin, "Plugin method not installed");
+            assertEq(actualPlugin, expectedPlugin, "plugin method not installed");
         }
     }
 

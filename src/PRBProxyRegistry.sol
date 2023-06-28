@@ -38,13 +38,13 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
+    ConstructorParams public override constructorParams;
+
+    /// @inheritdoc IPRBProxyRegistry
     mapping(address origin => bytes32 seed) public override nextSeeds;
 
     /// @inheritdoc IPRBProxyRegistry
     mapping(address owner => IPRBProxy proxy) public override proxies;
-
-    /// @inheritdoc IPRBProxyRegistry
-    address public override transientProxyOwner;
 
     /*//////////////////////////////////////////////////////////////////////////
                                      MODIFIERS
@@ -81,7 +81,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         external
         override
         noProxy(msg.sender)
-        returns (IPRBProxy proxy, bytes memory response)
+        returns (IPRBProxy proxy)
     {
         // Load the next seed.
         bytes32 seed = nextSeeds[tx.origin];
@@ -89,26 +89,22 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
         bytes32 salt = keccak256(abi.encode(tx.origin, seed));
 
-        // Deploy the proxy with CREATE2. The registry will temporarily be the owner of the proxy.
-        transientProxyOwner = address(this);
-        proxy = new PRBProxy{ salt: salt }();
-        delete transientProxyOwner;
-
-        // Set the proxy for the caller.
+        // Set the constructor params.
         address owner = msg.sender;
+        constructorParams = ConstructorParams({ owner: owner, target: target, data: data });
+
+        // Deploy the proxy with CREATE2.
+        proxy = new PRBProxy{ salt: salt }();
+        delete constructorParams;
+
+        // Associate the the owner with the proxy in the mapping.
         proxies[owner] = proxy;
 
         // Increment the seed.
-        // We're using unchecked arithmetic here because this cannot realistically overflow, ever.
+        // Using unchecked arithmetic here because this cannot realistically overflow, ever.
         unchecked {
             nextSeeds[tx.origin] = bytes32(uint256(seed) + 1);
         }
-
-        // Delegate call to the target contract.
-        response = proxy.execute(target, data);
-
-        // Transfer the ownership to the specified owner.
-        proxy.transferOwnership(owner);
 
         // Log the proxy via en event.
         // forgefmt: disable-next-line
@@ -120,27 +116,6 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
             salt: salt,
             proxy: proxy
         });
-    }
-
-    /// @inheritdoc IPRBProxyRegistry
-    function transferOwnership(address newOwner) external override noProxy(newOwner) {
-        // Check that the caller has a proxy.
-        IPRBProxy proxy = proxies[msg.sender];
-        if (address(proxy) == address(0)) {
-            revert PRBProxyRegistry_OwnerDoesNotHaveProxy({ owner: msg.sender });
-        }
-
-        // Delete the proxy for the caller.
-        delete proxies[msg.sender];
-
-        // Set the proxy for the new owner.
-        proxies[newOwner] = proxy;
-
-        // Transfer the proxy.
-        proxy.transferOwnership(newOwner);
-
-        // Log the transfer of the proxy ownership.
-        emit TransferOwnership({ proxy: proxy, oldOwner: msg.sender, newOwner: newOwner });
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -155,12 +130,14 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         // Prevent front-running the salt by hashing the concatenation of "tx.origin" and the user-provided seed.
         bytes32 salt = keccak256(abi.encode(tx.origin, seed));
 
-        // Deploy the proxy with CREATE2.
-        transientProxyOwner = owner;
-        proxy = new PRBProxy{ salt: salt }();
-        delete transientProxyOwner;
+        // Set the owner and empty out the target and the data to prevent reentrancy.
+        constructorParams = ConstructorParams({ owner: owner, target: address(0), data: "" });
 
-        // Set the proxy for the owner.
+        // Deploy the proxy with CREATE2.
+        proxy = new PRBProxy{ salt: salt }();
+        delete constructorParams;
+
+        // Associate the the owner with the proxy in the mapping.
         proxies[owner] = proxy;
 
         // Increment the seed.

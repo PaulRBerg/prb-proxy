@@ -4,6 +4,7 @@ pragma solidity >=0.8.19 <=0.9.0;
 import { stdError } from "forge-std/StdError.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
+import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 
 import { TargetEcho } from "../../mocks/targets/TargetEcho.sol";
 import { TargetReverter } from "../../mocks/targets/TargetReverter.sol";
@@ -56,16 +57,6 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    function test_RevertWhen_OwnerChangedDuringDelegateCall() external whenCallerAuthorized whenTargetContract {
-        bytes memory data = bytes.concat(targets.changeOwner.changeIt.selector);
-        vm.expectRevert(abi.encodeWithSelector(IPRBProxy.PRBProxy_OwnerChanged.selector, owner, address(1729)));
-        proxy.execute(address(targets.changeOwner), data);
-    }
-
-    modifier whenOwnerNotChangedDuringDelegateCall() {
-        _;
-    }
-
     modifier whenDelegateCallReverts() {
         _;
     }
@@ -74,7 +65,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.panic.failedAssertion.selector);
@@ -86,7 +76,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.panic.arithmeticOverflow.selector);
@@ -98,7 +87,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.panic.divisionByZero.selector);
@@ -110,7 +98,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.panic.indexOOB.selector);
@@ -122,7 +109,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.reverter.withNothing.selector);
@@ -134,7 +120,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.reverter.withCustomError.selector);
@@ -142,13 +127,7 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.reverter), data);
     }
 
-    function test_RevertWhen_Error_Require()
-        external
-        whenCallerAuthorized
-        whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Error_Require() external whenCallerAuthorized whenTargetContract whenDelegateCallReverts {
         bytes memory data = bytes.concat(targets.reverter.withRequire.selector);
         vm.expectRevert();
         proxy.execute(address(targets.reverter), data);
@@ -158,7 +137,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.reverter.withReasonString.selector);
@@ -170,7 +148,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallReverts
     {
         bytes memory data = bytes.concat(targets.reverter.dueToNoPayableModifier.selector);
@@ -182,18 +159,12 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    function test_Execute_EtherSent()
-        external
-        whenCallerAuthorized
-        whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
-        whenDelegateCallDoesNotRevert
-    {
+    function test_Execute_EtherSent() external whenCallerAuthorized whenTargetContract whenDelegateCallDoesNotRevert {
         uint256 amount = 0.1 ether;
         bytes memory data = bytes.concat(targets.echo.echoMsgValue.selector);
         bytes memory actualResponse = proxy.execute{ value: amount }(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(amount);
-        assertEq(actualResponse, expectedResponse, "echo.echoMsgValue response");
+        assertEq(actualResponse, expectedResponse, "echo.echoMsgValue response mismatch");
     }
 
     modifier whenNoEtherSent() {
@@ -204,7 +175,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
     {
@@ -221,7 +191,7 @@ contract Execute_Test is Proxy_Test {
         bytes memory expectedResponse = "";
 
         // Assert that the response is empty.
-        assertEq(actualResponse, expectedResponse, "selfDestructer response");
+        assertEq(actualResponse, expectedResponse, "selfDestructer response mismatch");
 
         // Assert that Bob's balance has increased by the contract's balance.
         uint256 actualBobBalance = users.bob.balance;
@@ -245,7 +215,6 @@ contract Execute_Test is Proxy_Test {
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
         whenTargetDoesNotSelfDestruct
@@ -254,14 +223,13 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoAddress, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse, "echo.echoAddress response");
+        assertEq(actualResponse, expectedResponse, "echo.echoAddress response mismatch");
     }
 
     function testFuzz_Execute_ReturnBytesArray(bytes memory input)
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
         whenTargetDoesNotSelfDestruct
@@ -270,14 +238,13 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoBytesArray, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse, "echo.echoBytesArray response");
+        assertEq(actualResponse, expectedResponse, "echo.echoBytesArray response mismatch");
     }
 
     function testFuzz_Execute_ReturnBytes32(bytes32 input)
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
         whenTargetDoesNotSelfDestruct
@@ -286,14 +253,13 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoBytes32, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse, "echo.echoBytes32 response");
+        assertEq(actualResponse, expectedResponse, "echo.echoBytes32 response mismatch");
     }
 
     function testFuzz_Execute_ReturnString(string memory input)
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
         whenTargetDoesNotSelfDestruct
@@ -302,14 +268,13 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoString, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse, "echo.echoString response");
+        assertEq(actualResponse, expectedResponse, "echo.echoString response mismatch");
     }
 
     function testFuzz_Execute_ReturnStruct(TargetEcho.SomeStruct memory input)
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
         whenTargetDoesNotSelfDestruct
@@ -318,14 +283,13 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoStruct, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse, "echo.echoStruct response");
+        assertEq(actualResponse, expectedResponse, "echo.echoStruct response mismatch");
     }
 
     function testFuzz_Execute_ReturnUint8(uint8 input)
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
         whenTargetDoesNotSelfDestruct
@@ -334,14 +298,13 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoUint8, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse, "echo.echoUint8 response");
+        assertEq(actualResponse, expectedResponse, "echo.echoUint8 response mismatch");
     }
 
     function testFuzz_Execute_ReturnUint256(uint256 input)
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
         whenTargetDoesNotSelfDestruct
@@ -350,14 +313,13 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoUint256, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse, "echo.echoUint256 response");
+        assertEq(actualResponse, expectedResponse, "echo.echoUint256 response mismatch");
     }
 
     function testFuzz_Execute_ReturnUint256Array(uint256[] memory input)
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
         whenTargetDoesNotSelfDestruct
@@ -366,14 +328,13 @@ contract Execute_Test is Proxy_Test {
         bytes memory data = abi.encodeCall(targets.echo.echoUint256Array, (input));
         bytes memory actualResponse = proxy.execute(address(targets.echo), data);
         bytes memory expectedResponse = abi.encode(input);
-        assertEq(actualResponse, expectedResponse, "echo.echoUint256Array response");
+        assertEq(actualResponse, expectedResponse, "echo.echoUint256Array response mismatch");
     }
 
     function testFuzz_Execute_Event(uint256 input)
         external
         whenCallerAuthorized
         whenTargetContract
-        whenOwnerNotChangedDuringDelegateCall
         whenDelegateCallDoesNotRevert
         whenNoEtherSent
         whenTargetDoesNotSelfDestruct

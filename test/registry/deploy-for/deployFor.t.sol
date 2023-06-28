@@ -23,11 +23,33 @@ contract DeployFor_Test is Registry_Test {
         _;
     }
 
-    function testFuzz_DeployFor(address origin, address operator, address owner) external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployFor_ProxyAddress(
+        address origin,
+        address operator,
+        address owner
+    )
+        external
+        whenOwnerDoesNotHaveProxy
+    {
         changePrank({ txOrigin: origin, msgSender: operator });
         address actualProxy = address(registry.deployFor(owner));
         address expectedProxy = computeProxyAddress(origin, SEED_ZERO);
-        assertEq(actualProxy, expectedProxy, "deployed proxy address");
+        assertEq(actualProxy, expectedProxy, "deployed proxy address mismatch");
+    }
+
+    function testFuzz_DeployFor_ProxyOwner(
+        address origin,
+        address operator,
+        address owner
+    )
+        external
+        whenOwnerDoesNotHaveProxy
+    {
+        changePrank({ txOrigin: origin, msgSender: operator });
+        IPRBProxy proxy = registry.deployFor(owner);
+        address actualOwner = proxy.owner();
+        address expectedOwner = owner;
+        assertEq(actualOwner, expectedOwner, "proxy owner mismatch");
     }
 
     function testFuzz_DeployFor_UpdateNextSeeds(
@@ -43,7 +65,7 @@ contract DeployFor_Test is Registry_Test {
 
         bytes32 actualNextSeed = registry.nextSeeds(origin);
         bytes32 expectedNextSeed = SEED_ONE;
-        assertEq(actualNextSeed, expectedNextSeed, "next seed");
+        assertEq(actualNextSeed, expectedNextSeed, "next seed mismatch");
     }
 
     function testFuzz_DeployFor_UpdateProxies(
@@ -59,7 +81,7 @@ contract DeployFor_Test is Registry_Test {
 
         address actualProxyAddress = address(registry.proxies(owner));
         address expectedProxyAddress = computeProxyAddress(origin, SEED_ZERO);
-        assertEq(actualProxyAddress, expectedProxyAddress, "proxy address");
+        assertEq(actualProxyAddress, expectedProxyAddress, "proxy address mismatch");
     }
 
     function testFuzz_DeployFor_Event(

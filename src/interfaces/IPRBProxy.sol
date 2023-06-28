@@ -21,9 +21,6 @@ interface IPRBProxy is IPRBProxyStorage {
     /// @notice Thrown when the caller to be the owner.
     error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target);
 
-    /// @notice Thrown when the owner changes during the delegate call.
-    error PRBProxy_OwnerChanged(address originalOwner, address newOwner);
-
     /// @notice Thrown when a plugin execution reverts without a specified reason.
     error PRBProxy_PluginReverted(IPRBProxyPlugin plugin);
 
@@ -32,6 +29,9 @@ interface IPRBProxy is IPRBProxyStorage {
 
     /// @notice Thrown when a non-contract address is passed as the target.
     error PRBProxy_TargetNotContract(address target);
+
+    /// @notice Thrown when the registry is passed as the target.
+    error PRBProxy_TargetRegistry();
 
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS
@@ -46,6 +46,9 @@ interface IPRBProxy is IPRBProxyStorage {
     /*//////////////////////////////////////////////////////////////////////////
                                  CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice The address of the owner account or contract, which controls the proxy.
+    function owner() external view returns (address);
 
     /// @notice The address of the registry that has deployed this proxy.
     function registry() external view returns (IPRBProxyRegistry);
@@ -62,18 +65,9 @@ interface IPRBProxy is IPRBProxyStorage {
     /// Requirements:
     /// - The caller must be either an owner or an envoy with permission.
     /// - `target` must be a contract.
-    /// - The owner must not be changed during the DELEGATECALL.
     ///
     /// @param target The address of the target contract.
     /// @param data Function selector plus ABI encoded data.
     /// @return response The response received from the target contract.
     function execute(address target, bytes calldata data) external payable returns (bytes memory response);
-
-    /// @notice Transfers the owner of the contract to a new account.
-    ///
-    /// @dev Requirements:
-    /// - The caller must be the owner.
-    ///
-    /// @param newOwner The address of the new owner account.
-    function transferOwnership(address newOwner) external;
 }

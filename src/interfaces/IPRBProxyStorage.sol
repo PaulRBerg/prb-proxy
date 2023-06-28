@@ -6,9 +6,6 @@ import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
 /// @title IPRBProxyStorage
 /// @dev Interface for accessing the proxy's storage.
 interface IPRBProxyStorage {
-    /// @notice The address of the owner account or contract.
-    function owner() external view returns (address);
-
     /// @notice The address of the plugin contract installed for the provided method.
     /// @dev The zero address is returned if no plugin contract is installed.
     /// @param method The method's signature for the query.

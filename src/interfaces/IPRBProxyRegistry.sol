@@ -31,8 +31,18 @@ interface IPRBProxyRegistry {
         IPRBProxy proxy
     );
 
-    /// @notice Emitted when the owner transfers ownership of the proxy.
-    event TransferOwnership(IPRBProxy proxy, address indexed oldOwner, address indexed newOwner);
+    /*//////////////////////////////////////////////////////////////////////////
+                                      STRUCTS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @param owner The address of the user who will own the proxy.
+    /// @param target The address of the target contract to delegate call to. Can be set to zero.
+    /// @param data The address of the call data to pass to the target contract. Can be set to zero.
+    struct ConstructorParams {
+        address owner;
+        address target;
+        bytes data;
+    }
 
     /*//////////////////////////////////////////////////////////////////////////
                                  CONSTANT FUNCTIONS
@@ -42,6 +52,11 @@ interface IPRBProxyRegistry {
     /// @dev This is stored in the registry rather than the proxy to save gas for end users.
     function VERSION() external view returns (string memory);
 
+    /// @notice The parameters used in constructing the proxy, which the registry sets transiently during proxy
+    /// deployment.
+    /// @dev The proxy constructor fetches these parameters.
+    function constructorParams() external view returns (address owner, address target, bytes memory data);
+
     /// @notice The seed that will be used to deploy the next proxy for the provided origin.
     /// @param origin The externally owned account (EOA) that is part of the CREATE2 salt.
     function nextSeeds(address origin) external view returns (bytes32 seed);
@@ -49,11 +64,6 @@ interface IPRBProxyRegistry {
     /// @notice The address of the current proxy for the provided owner.
     /// @param owner The address of the user to make the query for.
     function proxies(address owner) external view returns (IPRBProxy proxy);
-
-    /// @notice Gets the owner to be used in constructing the proxy. This is set transiently during proxy deployment.
-    /// @dev This is called by the proxy constructor to fetch the address of the owner.
-    /// @return owner The address of the owner of the proxy.
-    function transientProxyOwner() external view returns (address owner);
 
     /*//////////////////////////////////////////////////////////////////////////
                                NON-CONSTANT FUNCTIONS
@@ -69,6 +79,20 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy contract.
     function deploy() external returns (IPRBProxy proxy);
 
+    /// @notice Deploys a new proxy via CREATE2 by setting the caller as the owner, and delegate calls to the provided
+    /// target contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
+    ///
+    /// @dev Emits a {DeployProxy} and an {Execute} event.
+    ///
+    /// Requirements:
+    /// - The caller must not have a proxy.
+    /// - All from {PRBProxy.execute}.
+    ///
+    /// @param target The address of the target contract.
+    /// @param data Function selector plus ABI encoded data.
+    /// @return proxy The address of the newly deployed proxy contract.
+    function deployAndExecute(address target, bytes calldata data) external returns (IPRBProxy proxy);
+
     /// @notice Deploys a new proxy with CREATE2 for the provided owner.
     ///
     /// @dev Emits a {DeployProxy} event.
@@ -79,35 +103,4 @@ interface IPRBProxyRegistry {
     /// @param owner The owner of the proxy.
     /// @return proxy The address of the newly deployed proxy contract.
     function deployFor(address owner) external returns (IPRBProxy proxy);
-
-    /// @notice Deploys a new proxy via CREATE2 by setting the caller as the owner, and delegate calls to the provided
-    /// target contract by forwarding the data. It returns the data it gets back, bubbling up any potential revert.
-    ///
-    /// @dev Emits a {DeployProxy} and an {Execute} event.
-    ///
-    /// Requirements:
-    /// - The caller must not have a proxy.
-    /// - All from {IPRBProxy.execute}.
-    ///
-    /// @param target The address of the target contract.
-    /// @param data Function selector plus ABI encoded data.
-    /// @return proxy The address of the newly deployed proxy contract.
-    /// @return response The response received from the target contract.
-    function deployAndExecute(
-        address target,
-        bytes calldata data
-    )
-        external
-        returns (IPRBProxy proxy, bytes memory response);
-
-    /// @notice Transfers the owner of the proxy to a new account.
-    ///
-    /// @dev Emits a {TransferOwnership} event.
-    ///
-    /// Requirements:
-    /// - The caller must have a proxy.
-    /// - The new owner must not have a proxy.
-    ///
-    /// @param newOwner The address of the new owner account.
-    function transferOwnership(address newOwner) external;
 }

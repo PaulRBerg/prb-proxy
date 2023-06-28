@@ -23,11 +23,19 @@ contract Deploy_Test is Registry_Test {
         _;
     }
 
-    function testFuzz_Deploy(address origin, address owner) external whenOwnerDoesNotHaveProxy {
+    function testFuzz_Deploy_ProxyAddress(address origin, address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ txOrigin: origin, msgSender: owner });
         address actualProxy = address(registry.deploy());
         address expectedProxy = computeProxyAddress({ origin: origin, seed: SEED_ZERO });
-        assertEq(actualProxy, expectedProxy, "deployed proxy address");
+        assertEq(actualProxy, expectedProxy, "deployed proxy address mismatch");
+    }
+
+    function testFuzz_Deploy_ProxyOwner(address origin, address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ txOrigin: origin, msgSender: owner });
+        IPRBProxy proxy = registry.deploy();
+        address actualOwner = proxy.owner();
+        address expectedOwner = owner;
+        assertEq(actualOwner, expectedOwner, "proxy owner mismatch");
     }
 
     function testFuzz_Deploy_UpdateNextSeeds(address origin, address owner) external whenOwnerDoesNotHaveProxy {
@@ -36,7 +44,7 @@ contract Deploy_Test is Registry_Test {
 
         bytes32 actualNextSeed = registry.nextSeeds(origin);
         bytes32 expectedNextSeed = SEED_ONE;
-        assertEq(actualNextSeed, expectedNextSeed, "next seed");
+        assertEq(actualNextSeed, expectedNextSeed, "next seed mismatch");
     }
 
     function testFuzz_Deploy_UpdateProxies(address origin, address owner) external whenOwnerDoesNotHaveProxy {
@@ -44,7 +52,7 @@ contract Deploy_Test is Registry_Test {
         registry.deploy();
         address actualProxy = address(registry.proxies(owner));
         address expectedProxy = computeProxyAddress({ origin: origin, seed: SEED_ZERO });
-        assertEq(actualProxy, expectedProxy, "proxy mapping");
+        assertEq(actualProxy, expectedProxy, "proxy mapping mismatch");
     }
 
     function testFuzz_Deploy_Event(address origin, address owner) external whenOwnerDoesNotHaveProxy {
