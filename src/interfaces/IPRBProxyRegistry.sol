@@ -57,13 +57,13 @@ interface IPRBProxyRegistry {
     /// @dev The proxy constructor fetches these parameters.
     function constructorParams() external view returns (address owner, address target, bytes memory data);
 
+    /// @notice Retrieves the proxy for the provided owner.
+    /// @param owner The address of the user to make the query for.
+    function getProxy(address owner) external view returns (IPRBProxy proxy);
+
     /// @notice The seed that will be used to deploy the next proxy for the provided origin.
     /// @param origin The externally owned account (EOA) that is part of the CREATE2 salt.
     function nextSeeds(address origin) external view returns (bytes32 seed);
-
-    /// @notice The address of the current proxy for the provided owner.
-    /// @param owner The address of the user to make the query for.
-    function proxies(address owner) external view returns (IPRBProxy proxy);
 
     /*//////////////////////////////////////////////////////////////////////////
                                NON-CONSTANT FUNCTIONS

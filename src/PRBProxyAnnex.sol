@@ -30,7 +30,7 @@ contract PRBProxyAnnex is
     PRBProxyStorage // 1 inherited component
 {
     /*//////////////////////////////////////////////////////////////////////////
-                                   PUBLIC STORAGE
+                                USER-FACING STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyAnnex

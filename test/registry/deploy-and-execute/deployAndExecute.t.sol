@@ -72,7 +72,7 @@ contract DeployAndExecute_Test is Registry_Test {
         changePrank({ txOrigin: origin, msgSender: owner });
         registry.deployAndExecute(target, data);
 
-        address actualProxyAddress = address(registry.proxies(owner));
+        address actualProxyAddress = address(registry.getProxy(owner));
         address expectedProxyAddress = computeProxyAddress(origin, SEED_ZERO);
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address mismatch");
     }

@@ -34,7 +34,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     string public constant override VERSION = "4.0.0-beta.5";
 
     /*//////////////////////////////////////////////////////////////////////////
-                                   PUBLIC STORAGE
+                                USER-FACING STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
@@ -43,8 +43,12 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     /// @inheritdoc IPRBProxyRegistry
     mapping(address origin => bytes32 seed) public override nextSeeds;
 
-    /// @inheritdoc IPRBProxyRegistry
-    mapping(address owner => IPRBProxy proxy) public override proxies;
+    /*//////////////////////////////////////////////////////////////////////////
+                                  INTERNAL STORAGE
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev Maps owner addresses to proxy contracts.
+    mapping(address owner => IPRBProxy proxy) internal _proxies;
 
     /*//////////////////////////////////////////////////////////////////////////
                                      MODIFIERS
@@ -52,11 +56,20 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     /// @notice Check that the owner does not have a proxy.
     modifier noProxy(address owner) {
-        IPRBProxy proxy = proxies[owner];
+        IPRBProxy proxy = _proxies[owner];
         if (address(proxy) != address(0)) {
             revert PRBProxyRegistry_OwnerHasProxy(owner, proxy);
         }
         _;
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                           USER-FACING CONSTANT FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @inheritdoc IPRBProxyRegistry
+    function getProxy(address owner) external view returns (IPRBProxy proxy) {
+        proxy = _proxies[owner];
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -66,11 +79,6 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     /// @inheritdoc IPRBProxyRegistry
     function deploy() external override noProxy(msg.sender) returns (IPRBProxy proxy) {
         proxy = _deploy({ owner: msg.sender });
-    }
-
-    /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner) public override noProxy(owner) returns (IPRBProxy proxy) {
-        proxy = _deploy(owner);
     }
 
     /// @inheritdoc IPRBProxyRegistry
@@ -98,7 +106,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         delete constructorParams;
 
         // Associate the the owner with the proxy in the mapping.
-        proxies[owner] = proxy;
+        _proxies[owner] = proxy;
 
         // Increment the seed.
         // Using unchecked arithmetic here because this cannot realistically overflow, ever.
@@ -118,11 +126,16 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         });
     }
 
+    /// @inheritdoc IPRBProxyRegistry
+    function deployFor(address owner) public override noProxy(owner) returns (IPRBProxy proxy) {
+        proxy = _deploy(owner);
+    }
+
     /*//////////////////////////////////////////////////////////////////////////
                           INTERNAL NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @dev See the documentation for the public functions that call this internal function.
+    /// @dev See the documentation for the user-facing functions that call this internal function.
     function _deploy(address owner) internal returns (IPRBProxy proxy) {
         // Load the next seed.
         bytes32 seed = nextSeeds[tx.origin];
@@ -138,7 +151,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         delete constructorParams;
 
         // Associate the the owner with the proxy in the mapping.
-        proxies[owner] = proxy;
+        _proxies[owner] = proxy;
 
         // Increment the seed.
         // We're using unchecked arithmetic here because this cannot realistically overflow, ever.
