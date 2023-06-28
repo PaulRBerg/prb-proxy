@@ -4,13 +4,24 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-devDependencies:
-  prettier:
-    specifier: ^2.8.8
-    version: 2.8.8
-  solhint:
-    specifier: ^3.4.0
-    version: 3.4.1
+importers:
+
+  .:
+    devDependencies:
+      prettier:
+        specifier: ^2.8.8
+        version: 2.8.8
+      solhint:
+        specifier: ^3.4.0
+        version: 3.4.1
+
+  packages/proxy: {}
+
+  packages/sdk: {}
+
+  packages/subgraph: {}
+
+  packages/targets: {}
 
 packages:
 
