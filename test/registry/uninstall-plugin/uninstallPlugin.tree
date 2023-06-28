@@ -2,9 +2,9 @@ uninstallPlugin.t.sol
 ├── when the caller is not the owner
 │  └── it should revert
 └── when the caller is the owner
-   ├── when the plugin has no methods
+   ├── when the plugin list is empty
    │  └── it should revert
-   └── when the plugin has methods
+   └── when the plugin list is not empty
       ├── when the plugin has not been installed before
       │  └── it should do nothing
       └── when the plugin has been installed

@@ -1,0 +1,5 @@
+getPermissionByProxy.t.sol
+├── when the envoy does not have permission
+│  └── it should return false
+└── when the envoy has permission
+   └── it should return true

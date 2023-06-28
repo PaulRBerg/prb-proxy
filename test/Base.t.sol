@@ -5,13 +5,9 @@ import { eqString } from "@prb/test/Helpers.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 import { StdUtils } from "forge-std/StdUtils.sol";
 
-import { DeploySystem } from "../script/DeploySystem.s.sol";
 import { IPRBProxy } from "../src/interfaces/IPRBProxy.sol";
-import { IPRBProxyAnnex } from "../src/interfaces/IPRBProxyAnnex.sol";
-import { IPRBProxyPlugin } from "../src/interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "../src/interfaces/IPRBProxyRegistry.sol";
 import { PRBProxy } from "../src/PRBProxy.sol";
-import { PRBProxyAnnex } from "../src/PRBProxyAnnex.sol";
 import { PRBProxyRegistry } from "../src/PRBProxyRegistry.sol";
 
 import { PluginDummy } from "./mocks/plugins/PluginDummy.sol";
@@ -81,7 +77,6 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
                                    TEST CONTRACTS
     //////////////////////////////////////////////////////////////////////////*/
 
-    IPRBProxyAnnex internal annex;
     IPRBProxy internal proxy;
     IPRBProxyRegistry internal registry;
 
@@ -118,8 +113,8 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
             selfDestructer: new TargetSelfDestructer()
         });
 
-        // Deploy the proxy system.
-        deploySystemConditionally();
+        // Deploy the proxy registry.
+        deployRegistryConditionally();
 
         // Make Alice both the caller and the origin.
         vm.startPrank({ msgSender: users.alice, txOrigin: users.alice });
@@ -143,26 +138,19 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
         vm.deal({ account: addr, newBalance: 100 ether });
     }
 
-    /// @dev Deploys {PRBProxyAnnex} from a source precompiled with `--via-ir`.
-    function deployPrecompiledAnnex() internal returns (IPRBProxyAnnex annex_) {
-        annex_ = IPRBProxyAnnex(deployCode("out-optimized/PRBProxyAnnex.sol/PRBProxyAnnex.json"));
-    }
-
     /// @dev Deploys {PRBProxyRegistry} from a source precompiled with `--via-ir`.
     function deployPrecompiledRegistry() internal returns (IPRBProxyRegistry registry_) {
         registry_ = IPRBProxyRegistry(deployCode("out-optimized/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
     }
 
-    /// @dev Conditionally deploy the proxy system either normally or from a source precompiled with `--via-ir`.
-    function deploySystemConditionally() internal {
+    /// @dev Conditionally deploy the registry either normally or from a source precompiled with `--via-ir`.
+    function deployRegistryConditionally() internal {
         if (!isTestOptimizedProfile()) {
-            (annex, registry) = new DeploySystem().run();
+            registry = new PRBProxyRegistry();
         } else {
-            annex = deployPrecompiledAnnex();
             registry = deployPrecompiledRegistry();
         }
 
-        vm.label({ account: address(annex), newLabel: "Annex" });
         vm.label({ account: address(registry), newLabel: "Registry" });
     }
 
@@ -179,27 +167,5 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     function isTestOptimizedProfile() internal returns (bool) {
         string memory profile = vm.envOr("FOUNDRY_PROFILE", string(""));
         return eqString(profile, "test-optimized");
-    }
-
-    /*//////////////////////////////////////////////////////////////////////////
-                                    ABI ENCODERS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    /// @dev ABI encodes the parameters and calls {PRBProxyAnnex.installPlugin}.
-    function installPlugin(IPRBProxyPlugin plugin) internal {
-        bytes memory data = abi.encodeCall(annex.installPlugin, (plugin));
-        proxy.execute({ target: address(annex), data: data });
-    }
-
-    /// @dev ABI encodes the parameters and calls {PRBProxyAnnex.setPermission}.
-    function setPermission(address envoy, address target, bool permission) internal {
-        bytes memory data = abi.encodeCall(annex.setPermission, (envoy, target, permission));
-        proxy.execute({ target: address(annex), data: data });
-    }
-
-    /// @dev ABI encodes the parameters and calls {PRBProxyAnnex.uninstallPlugin}.
-    function uninstallPlugin(IPRBProxyPlugin plugin) internal {
-        bytes memory data = abi.encodeCall(annex.uninstallPlugin, (plugin));
-        proxy.execute({ target: address(annex), data: data });
     }
 }

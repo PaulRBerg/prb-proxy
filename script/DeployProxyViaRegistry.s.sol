@@ -2,7 +2,6 @@
 pragma solidity >=0.8.19 <0.9.0;
 
 import { IPRBProxy } from "../src/interfaces/IPRBProxy.sol";
-import { PRBProxyAnnex } from "../src/PRBProxyAnnex.sol";
 import { IPRBProxyRegistry } from "../src/interfaces/IPRBProxyRegistry.sol";
 
 import { BaseScript } from "./Base.s.sol";

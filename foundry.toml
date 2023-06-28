@@ -4,7 +4,7 @@
   cbor_metadata = false
   evm_version = "paris"
   fs_permissions = [{ access = "read", path = "./out-optimized" }]
-  gas_reports = ["PRBProxy", "PRBProxyAnnex", "PRBProxyRegistry"]
+  gas_reports = ["PRBProxy", "PRBProxyRegistry"]
   ignored_error_codes = [
     5159, # ignore selfdestruct warning
   ]

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
-import { PRBProxyStorage } from "./abstracts/PRBProxyStorage.sol";
 import { IPRBProxy } from "./interfaces/IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./interfaces/IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
@@ -19,10 +18,7 @@ import { IPRBProxyRegistry } from "./interfaces/IPRBProxyRegistry.sol";
 
 /// @title PRBProxy
 /// @dev See the documentation in {IPRBProxy}.
-contract PRBProxy is
-    PRBProxyStorage, // 1 inherited component
-    IPRBProxy // 1 inherited component
-{
+contract PRBProxy is IPRBProxy {
     /*//////////////////////////////////////////////////////////////////////////
                                      CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -56,10 +52,10 @@ contract PRBProxy is
     /// @notice Fallback function used to run plugins.
     /// @dev WARNING: anyone can call this function and thus run any installed plugin.
     fallback(bytes calldata data) external payable returns (bytes memory response) {
-        // Check if the function signature exists in the installed plugins mapping.
-        IPRBProxyPlugin plugin = plugins[msg.sig];
+        // Check if the function signature points to a known installed plugin.
+        IPRBProxyPlugin plugin = registry.getPluginByOwner({ owner: owner, method: msg.sig });
         if (address(plugin) == address(0)) {
-            revert PRBProxy_PluginNotInstalledForMethod({ caller: msg.sender, selector: msg.sig });
+            revert PRBProxy_PluginNotInstalledForMethod({ caller: msg.sender, owner: owner, method: msg.sig });
         }
 
         // Delegate call to the plugin.
@@ -93,8 +89,11 @@ contract PRBProxy is
     /// @inheritdoc IPRBProxy
     function execute(address target, bytes calldata data) external payable override returns (bytes memory response) {
         // Check that the caller is either the owner or an envoy with permission.
-        if (owner != msg.sender && !permissions[msg.sender][target]) {
-            revert PRBProxy_ExecutionUnauthorized({ owner: owner, caller: msg.sender, target: target });
+        if (owner != msg.sender) {
+            bool permission = registry.getPermissionByOwner({ owner: owner, envoy: msg.sender, target: target });
+            if (!permission) {
+                revert PRBProxy_ExecutionUnauthorized({ owner: owner, caller: msg.sender, target: target });
+            }
         }
 
         // Delegate call to the target contract, and handle the response.
@@ -105,7 +104,7 @@ contract PRBProxy is
                           INTERNAL NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Executes a DELEGATECALL to the provided `target` with the provided `data`.
+    /// @notice Executes a DELEGATECALL to the provided target with the provided data.
     /// @dev Shared logic between the constructor and the `execute` function.
     function _execute(address target, bytes memory data) internal returns (bytes memory response) {
         // Check that the target is a contract.

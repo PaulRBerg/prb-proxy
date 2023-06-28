@@ -3,11 +3,10 @@ pragma solidity >=0.8.4;
 
 import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
 import { IPRBProxyRegistry } from "./IPRBProxyRegistry.sol";
-import { IPRBProxyStorage } from "./IPRBProxyStorage.sol";
 
 /// @title IPRBProxy
-/// @notice Proxy contract to compose transactions on owner's behalf.
-interface IPRBProxy is IPRBProxyStorage {
+/// @notice Proxy contract to compose transactions on behalf of the owner.
+interface IPRBProxy {
     /*//////////////////////////////////////////////////////////////////////////
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
@@ -21,11 +20,11 @@ interface IPRBProxy is IPRBProxyStorage {
     /// @notice Thrown when the caller to be the owner.
     error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target);
 
+    /// @notice Thrown when the fallback function fails to find an installed plugin for the method selector.
+    error PRBProxy_PluginNotInstalledForMethod(address caller, address owner, bytes4 method);
+
     /// @notice Thrown when a plugin execution reverts without a specified reason.
     error PRBProxy_PluginReverted(IPRBProxyPlugin plugin);
-
-    /// @notice Thrown when the fallback function fails to find an installed plugin for the called method.
-    error PRBProxy_PluginNotInstalledForMethod(address caller, bytes4 selector);
 
     /// @notice Thrown when a non-contract address is passed as the target.
     error PRBProxy_TargetNotContract(address target);
