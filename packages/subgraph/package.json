@@ -1,9 +1,16 @@
 {
   "name": "@prb/proxy-subgraph",
-  "version": "1.0.0",
   "description": "",
-  "scripts": {},
-  "keywords": [],
+  "version": "1.0.0",
   "author": "",
-  "license": "MIT"
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {}
 }
