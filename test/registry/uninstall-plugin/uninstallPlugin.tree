@@ -7,6 +7,6 @@ uninstallPlugin.t.sol
    └── when the plugin list is not empty
       ├── when the plugin has not been installed before
       │  └── it should do nothing
-      └── when the plugin has been installed
+      └── when the plugin has been installed before
          ├── it should uninstall the plugin
          └── it should emit an {UninstallPlugin} event
