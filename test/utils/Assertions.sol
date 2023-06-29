@@ -4,7 +4,6 @@ pragma solidity >=0.8.18;
 import { PRBTest } from "@prb/test/PRBTest.sol";
 
 import { IPRBProxyPlugin } from "../../src/interfaces/IPRBProxyPlugin.sol";
-import { IPRBProxyRegistry } from "../../src/interfaces/IPRBProxyRegistry.sol";
 
 abstract contract Assertions is PRBTest {
     /// @dev Compares two {IPRBProxyPlugin} addresses.

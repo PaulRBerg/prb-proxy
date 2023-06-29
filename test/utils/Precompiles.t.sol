@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.18;
 
-import { IPRBProxyRegistry } from "../../src/interfaces/IPRBProxyRegistry.sol";
-
 import { Base_Test } from "../Base.t.sol";
 import { Precompiles } from "./Precompiles.sol";
 

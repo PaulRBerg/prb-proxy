@@ -4,7 +4,6 @@ pragma solidity >=0.8.19 <=0.9.0;
 import { stdError } from "forge-std/StdError.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
-import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 
 import { TargetEcho } from "../../mocks/targets/TargetEcho.sol";
 import { TargetReverter } from "../../mocks/targets/TargetReverter.sol";
