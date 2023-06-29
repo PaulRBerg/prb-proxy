@@ -18,6 +18,9 @@ on:
 jobs:
   lint:
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: "packages/proxy"
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
@@ -49,6 +52,9 @@ jobs:
 
   build:
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: "packages/proxy"
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
@@ -100,6 +106,9 @@ jobs:
     env:
       FOUNDRY_FUZZ_RUNS: 5000
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: "packages/proxy"
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
@@ -127,6 +136,9 @@ jobs:
   coverage:
     needs: ["lint", "build"]
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: "packages/proxy"
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
@@ -152,6 +164,9 @@ jobs:
   slither:
     needs: ["lint", "build"]
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: "packages/proxy"
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
