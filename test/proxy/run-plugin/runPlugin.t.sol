@@ -5,7 +5,7 @@ import { stdError } from "forge-std/StdError.sol";
 
 import { IPRBProxy } from "src/interfaces/IPRBProxy.sol";
 
-import { TargetDummy } from "../../mocks/targets/TargetDummy.sol";
+import { TargetBasic } from "../../mocks/targets/TargetBasic.sol";
 import { TargetReverter } from "../../mocks/targets/TargetReverter.sol";
 import { Proxy_Test } from "../Proxy.t.sol";
 
@@ -17,10 +17,10 @@ contract RunPlugin_Test is Proxy_Test {
     function test_RevertWhen_PluginNotInstalled() external {
         vm.expectRevert(
             abi.encodeWithSelector(
-                IPRBProxy.PRBProxy_PluginNotInstalledForMethod.selector, address(owner), plugins.dummy.foo.selector
+                IPRBProxy.PRBProxy_PluginNotInstalledForMethod.selector, address(owner), plugins.basic.foo.selector
             )
         );
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.basic.foo.selector));
         success;
     }
 
@@ -148,10 +148,10 @@ contract RunPlugin_Test is Proxy_Test {
         whenNoEtherSent
         whenPluginDoesNotSelfDestruct
     {
-        registry.installPlugin(plugins.dummy);
-        (, bytes memory actualResponse) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
+        registry.installPlugin(plugins.basic);
+        (, bytes memory actualResponse) = address(proxy).call(abi.encodeWithSelector(plugins.basic.foo.selector));
         bytes memory expectedResponse = abi.encode(bytes("foo"));
-        assertEq(actualResponse, expectedResponse, "dummy.foo response mismatch");
+        assertEq(actualResponse, expectedResponse, "basic.foo response mismatch");
     }
 
     function test_RunPlugin_Event()
@@ -162,14 +162,14 @@ contract RunPlugin_Test is Proxy_Test {
         whenNoEtherSent
         whenPluginDoesNotSelfDestruct
     {
-        registry.installPlugin(plugins.dummy);
+        registry.installPlugin(plugins.basic);
         vm.expectEmit({ emitter: address(proxy) });
         emit RunPlugin({
-            plugin: plugins.dummy,
-            data: abi.encodeWithSelector(TargetDummy.foo.selector),
+            plugin: plugins.basic,
+            data: abi.encodeWithSelector(TargetBasic.foo.selector),
             response: abi.encode(bytes("foo"))
         });
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.dummy.foo.selector));
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.basic.foo.selector));
         success;
     }
 }

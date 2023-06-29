@@ -6,7 +6,7 @@ import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
 import { TargetReverter } from "../targets/TargetReverter.sol";
 
 contract PluginReverter is IPRBProxyPlugin, TargetReverter {
-    function methodList() external pure override returns (bytes4[] memory) {
+    function getMethods() external pure override returns (bytes4[] memory) {
         bytes4[] memory methods = new bytes4[](5);
 
         methods[0] = this.withNothing.selector;

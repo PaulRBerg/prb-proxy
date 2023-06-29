@@ -11,18 +11,18 @@ contract GetPermissionByOwner_Test is Registry_Test {
 
     function test_GetPermissionByOwner_EnvoyDoesNotHavePermission() external {
         bool permission =
-            registry.getPermissionByProxy({ proxy: proxy, envoy: users.envoy, target: address(targets.dummy) });
+            registry.getPermissionByProxy({ proxy: proxy, envoy: users.envoy, target: address(targets.basic) });
         assertFalse(permission, "permission mismatch");
     }
 
     modifier whenEnvoyHasPermission() {
-        registry.setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
         _;
     }
 
     function test_GetPermissionByOwner() external whenEnvoyHasPermission {
         bool permission =
-            registry.getPermissionByProxy({ proxy: proxy, envoy: users.envoy, target: address(targets.dummy) });
+            registry.getPermissionByProxy({ proxy: proxy, envoy: users.envoy, target: address(targets.basic) });
         assertTrue(permission, "permission mismatch");
     }
 }

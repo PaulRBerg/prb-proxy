@@ -11,7 +11,7 @@ contract SetPermission_Test is Registry_Test {
             abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_CallerDoesNotHaveProxy.selector, users.bob)
         );
         changePrank({ msgSender: users.bob });
-        registry.setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
     }
 
     modifier whenCallerHasProxy() {
@@ -20,21 +20,21 @@ contract SetPermission_Test is Registry_Test {
     }
 
     function test_SetPermission_PermissionNotSet() external whenCallerHasProxy {
-        registry.setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
         bool permission =
-            registry.getPermissionByOwner({ owner: users.alice, envoy: users.envoy, target: address(targets.dummy) });
+            registry.getPermissionByOwner({ owner: users.alice, envoy: users.envoy, target: address(targets.basic) });
         assertTrue(permission, "permission mismatch");
     }
 
     modifier whenPermissionSet() {
-        registry.setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
         _;
     }
 
     function test_SetPermission_ResetPermission() external whenCallerHasProxy whenPermissionSet {
-        registry.setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
         bool permission =
-            registry.getPermissionByOwner({ owner: users.alice, envoy: users.envoy, target: address(targets.dummy) });
+            registry.getPermissionByOwner({ owner: users.alice, envoy: users.envoy, target: address(targets.basic) });
         assertTrue(permission, "permission mismatch");
     }
 
@@ -44,14 +44,14 @@ contract SetPermission_Test is Registry_Test {
             owner: users.alice,
             proxy: proxy,
             envoy: users.envoy,
-            target: address(targets.dummy),
+            target: address(targets.basic),
             permission: true
         });
-        registry.setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: true });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
     }
 
     function test_SetPermission_UnsetPermission() external whenCallerHasProxy whenPermissionSet {
-        registry.setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: false });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: false });
     }
 
     function test_SetPermission_UnsetPermission_Event() external whenCallerHasProxy whenPermissionSet {
@@ -60,9 +60,9 @@ contract SetPermission_Test is Registry_Test {
             owner: users.alice,
             proxy: proxy,
             envoy: users.envoy,
-            target: address(targets.dummy),
+            target: address(targets.basic),
             permission: false
         });
-        registry.setPermission({ envoy: users.envoy, target: address(targets.dummy), permission: false });
+        registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: false });
     }
 }

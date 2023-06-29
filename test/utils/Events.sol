@@ -20,11 +20,15 @@ abstract contract Events {
 
     event DeployProxy(address indexed operator, address indexed owner, IPRBProxy proxy);
 
-    event InstallPlugin(address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin);
+    event InstallPlugin(
+        address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin, bytes4[] methods
+    );
 
     event SetPermission(
         address indexed owner, IPRBProxy indexed proxy, address indexed envoy, address target, bool permission
     );
 
-    event UninstallPlugin(address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin);
+    event UninstallPlugin(
+        address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin, bytes4[] methods
+    );
 }

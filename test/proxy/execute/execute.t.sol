@@ -20,26 +20,26 @@ contract Execute_Test is Proxy_Test {
 
     function test_RevertWhen_NoPermission() external whenCallerUnauthorized {
         changePrank({ msgSender: users.eve });
-        bytes memory data = bytes.concat(targets.dummy.foo.selector);
+        bytes memory data = bytes.concat(targets.basic.foo.selector);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, users.eve, address(targets.dummy)
+                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, users.eve, address(targets.basic)
             )
         );
-        proxy.execute(address(targets.dummy), data);
+        proxy.execute(address(targets.basic), data);
     }
 
     function test_RevertWhen_PermissionDifferentTarget() external whenCallerUnauthorized {
         registry.setPermission({ envoy: users.envoy, target: address(targets.echo), permission: true });
         changePrank({ msgSender: users.envoy });
 
-        bytes memory data = bytes.concat(targets.dummy.foo.selector);
+        bytes memory data = bytes.concat(targets.basic.foo.selector);
         vm.expectRevert(
             abi.encodeWithSelector(
-                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, users.envoy, address(targets.dummy)
+                IPRBProxy.PRBProxy_ExecutionUnauthorized.selector, owner, users.envoy, address(targets.basic)
             )
         );
-        proxy.execute(address(targets.dummy), data);
+        proxy.execute(address(targets.basic), data);
     }
 
     modifier whenCallerAuthorized() {

@@ -10,19 +10,19 @@ contract GetPluginByProxy_Test is Registry_Test {
     }
 
     function test_GetPluginByProxy_Uninstalled() external {
-        address actualPlugin = address(registry.getPluginByProxy({ proxy: proxy, method: plugins.dummy.foo.selector }));
+        address actualPlugin = address(registry.getPluginByProxy({ proxy: proxy, method: plugins.basic.foo.selector }));
         address expectedPlugin = address(0);
         assertEq(actualPlugin, expectedPlugin, "plugin not zero address");
     }
 
     modifier whenPluginInstalled() {
-        registry.installPlugin(plugins.dummy);
+        registry.installPlugin(plugins.basic);
         _;
     }
 
     function test_GetPluginByProxy() external whenPluginInstalled {
-        address actualPlugin = address(registry.getPluginByProxy({ proxy: proxy, method: plugins.dummy.foo.selector }));
-        address expectedPlugin = address(plugins.dummy);
+        address actualPlugin = address(registry.getPluginByProxy({ proxy: proxy, method: plugins.basic.foo.selector }));
+        address expectedPlugin = address(plugins.basic);
         assertEq(actualPlugin, expectedPlugin, "plugin address mismatch");
     }
 }

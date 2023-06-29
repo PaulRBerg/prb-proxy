@@ -5,8 +5,9 @@ import { IPRBProxy } from "./IPRBProxy.sol";
 import { IPRBProxyPlugin } from "./IPRBProxyPlugin.sol";
 
 /// @title IPRBProxyRegistry
-/// @notice Deploys new proxies with CREATE2 and keeps a registry of owners to proxies. Owners can only
-/// have only one proxy at a time.
+/// @notice Deploys new proxies via CREATE2 and keeps a registry of owners to proxies. Proxies can only be deployed
+/// once per owner, and they cannot be transferred. The registry also supports installing plugins, which are used
+/// for extending the functionality of the proxy.
 interface IPRBProxyRegistry {
     /*//////////////////////////////////////////////////////////////////////////
                                        ERRORS
@@ -18,14 +19,17 @@ interface IPRBProxyRegistry {
     /// @notice Thrown when an action requires the owner to not have a proxy.
     error PRBProxyRegistry_OwnerHasProxy(address owner, IPRBProxy proxy);
 
-    /// @notice Thrown when trying to install or uninstall a plugin, and the plugin doesn't implement any method.
-    error PRBProxyRegistry_PluginEmptyMethodList(IPRBProxyPlugin plugin);
-
-    /// @notice Thrown when trying to install a plugin that implements a method that is already implemented by another
+    /// @notice Thrown when trying to install a plugin that implements a method already implemented by another
     /// installed plugin.
     error PRBProxyRegistry_PluginMethodCollision(
         IPRBProxyPlugin currentPlugin, IPRBProxyPlugin newPlugin, bytes4 method
     );
+
+    /// @notice Thrown when trying to uninstall an unknown plugin.
+    error PRBProxyRegistry_PluginUnknown(IPRBProxyPlugin plugin);
+
+    /// @notice Thrown when trying to install a plugin that doesn't implement any method.
+    error PRBProxyRegistry_PluginWithZeroMethods(IPRBProxyPlugin plugin);
 
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS
@@ -35,7 +39,9 @@ interface IPRBProxyRegistry {
     event DeployProxy(address indexed operator, address indexed owner, IPRBProxy proxy);
 
     /// @notice Emitted when a plugin is installed.
-    event InstallPlugin(address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin);
+    event InstallPlugin(
+        address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin, bytes4[] methods
+    );
 
     /// @notice Emitted when an envoy permission is updated.
     event SetPermission(
@@ -43,15 +49,17 @@ interface IPRBProxyRegistry {
     );
 
     /// @notice Emitted when a plugin is uninstalled.
-    event UninstallPlugin(address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin);
+    event UninstallPlugin(
+        address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin, bytes4[] methods
+    );
 
     /*//////////////////////////////////////////////////////////////////////////
                                       STRUCTS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @param owner The address of the user who will own the proxy.
-    /// @param target The address of the target contract to delegate call to. Can be set to zero.
-    /// @param data The address of the call data to pass to the target contract. Can be set to zero.
+    /// @param target The address of the target to delegate call to. Can be set to zero.
+    /// @param data The address of the call data to pass to the target. Can be set to zero.
     struct ConstructorParams {
         address owner;
         address target;
@@ -71,11 +79,29 @@ interface IPRBProxyRegistry {
     /// @dev The proxy constructor fetches these parameters.
     function constructorParams() external view returns (address owner, address target, bytes memory data);
 
+    /// @notice Retrieves the list of installed methods for the provided plugin.
+    /// @dev An empty array is returned if the plugin is unknown.
+    /// @param owner The proxy owner for the query.
+    /// @param plugin The plugin for the query.
+    function getMethodsByOwner(address owner, IPRBProxyPlugin plugin) external view returns (bytes4[] memory methods);
+
+    /// @notice Retrieves the list of installed methods for the provided plugin.
+    /// @dev An empty array is returned if the plugin is unknown.
+    /// @param proxy The proxy for the query.
+    /// @param plugin The plugin for the query.
+    function getMethodsByProxy(
+        IPRBProxy proxy,
+        IPRBProxyPlugin plugin
+    )
+        external
+        view
+        returns (bytes4[] memory methods);
+
     /// @notice Retrieves a boolean flag that indicates whether the provided envoy has permission to call the provided
-    /// target contract.
-    /// @param owner The proxy owner to make the query for.
-    /// @param envoy The address with permission to call the target contract.
-    /// @param target The address of the target contract.
+    /// target.
+    /// @param owner The proxy owner for the query.
+    /// @param envoy The address with permission to call the target.
+    /// @param target The address of the target.
     function getPermissionByOwner(
         address owner,
         address envoy,
@@ -86,10 +112,10 @@ interface IPRBProxyRegistry {
         returns (bool permission);
 
     /// @notice Retrieves a boolean flag that indicates whether the provided envoy has permission to call the provided
-    /// target contract.
-    /// @param proxy The proxy contract to make the query for.
-    /// @param envoy The address with permission to call the target contract.
-    /// @param target The address of the target contract.
+    /// target.
+    /// @param proxy The proxy for the query.
+    /// @param envoy The address with permission to call the target.
+    /// @param target The address of the target.
     function getPermissionByProxy(
         IPRBProxy proxy,
         address envoy,
@@ -99,39 +125,38 @@ interface IPRBProxyRegistry {
         view
         returns (bool permission);
 
-    /// @notice Retrieves the address of the plugin contract installed for the provided method selector.
-    /// @dev The zero address is returned if no plugin contract is installed.
-    /// @param owner The proxy owner to make the query for.
-    /// @param method The method's signature for the query.
+    /// @notice Retrieves the address of the plugin installed for the provided method selector.
+    /// @dev The zero address is returned if no plugin is installed.
+    /// @param owner The proxy owner for the query.
+    /// @param method The method signature for the query.
     function getPluginByOwner(address owner, bytes4 method) external view returns (IPRBProxyPlugin plugin);
 
-    /// @notice Retrieves the address of the plugin contract installed for the provided method selector.
-    /// @dev The zero address is returned if no plugin contract is installed.
-    /// @param proxy The proxy contract to make the query for.
-    /// @param method The method's signature for the query.
+    /// @notice Retrieves the address of the plugin installed for the provided method selector.
+    /// @dev The zero address is returned if no plugin is installed.
+    /// @param proxy The proxy for the query.
+    /// @param method The method signature for the query.
     function getPluginByProxy(IPRBProxy proxy, bytes4 method) external view returns (IPRBProxyPlugin plugin);
 
     /// @notice Retrieves the proxy for the provided owner.
-    /// @param owner The user address to make the query for.
+    /// @param owner The user address for the query.
     function getProxy(address owner) external view returns (IPRBProxy proxy);
 
     /*//////////////////////////////////////////////////////////////////////////
                                NON-CONSTANT FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Deploys a new proxy with CREATE2, using the caller as the owner.
+    /// @notice Deploys a new proxy for the caller.
     ///
     /// @dev Emits a {DeployProxy} event.
     ///
     /// Requirements:
     /// - The caller must not have a proxy.
     ///
-    /// @return proxy The address of the newly deployed proxy contract.
+    /// @return proxy The address of the newly deployed proxy.
     function deploy() external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy via CREATE2, using the caller as the owner. It delegate calls to the provided
-    /// target contract by forwarding the data. Then, it returns the data it gets back, and bubbles up any potential
-    /// revert.
+    /// @notice Deploys a new proxy for the caller, and delegate calls to the provided target by forwarding the data.
+    /// Then, it returns the data it gets back, and bubbles up any potential revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.
     ///
@@ -139,12 +164,24 @@ interface IPRBProxyRegistry {
     /// - The caller must not have a proxy.
     /// - `target` must be a contract.
     ///
-    /// @param target The address of the target contract.
+    /// @param target The address of the target.
     /// @param data Function selector plus ABI encoded data.
-    /// @return proxy The address of the newly deployed proxy contract.
+    /// @return proxy The address of the newly deployed proxy.
     function deployAndExecute(address target, bytes calldata data) external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy with CREATE2 for the provided owner.
+    /// @notice Deploys a new proxy for the caller, and installs the provided plugin on the newly deployed proxy.
+    ///
+    /// @dev Emits a {DeployProxy} and an {InstallPlugin} event.
+    ///
+    /// Requirements:
+    /// - The caller must not have a proxy.
+    /// - See the requirements in `installPlugin`.
+    ///
+    /// @param plugin The address of the plugin to install.
+    /// @return proxy The address of the newly deployed proxy.
+    function deployAndInstallPlugin(IPRBProxyPlugin plugin) external returns (IPRBProxy proxy);
+
+    /// @notice Deploys a new proxy for the provided owner.
     ///
     /// @dev Emits a {DeployProxy} event.
     ///
@@ -152,10 +189,11 @@ interface IPRBProxyRegistry {
     /// - The owner must not have a proxy.
     ///
     /// @param owner The owner of the proxy.
-    /// @return proxy The address of the newly deployed proxy contract.
+    /// @return proxy The address of the newly deployed proxy.
     function deployFor(address owner) external returns (IPRBProxy proxy);
 
-    /// @notice Installs the provided plugin contract on the proxy belonging to the caller.
+    /// @notice Installs the provided plugin on the caller's proxy, and saves the list of methods implemented by the
+    /// plugin so that they can be referenced later.
     ///
     /// @dev Emits an {InstallPlugin} event.
     ///
@@ -171,8 +209,8 @@ interface IPRBProxyRegistry {
     /// @param plugin The address of the plugin to install.
     function installPlugin(IPRBProxyPlugin plugin) external;
 
-    /// @notice Gives or takes a permission from an envoy to call the provided target contract and function selector
-    /// on behalf of the proxy belonging to the caller.
+    /// @notice Gives or takes a permission from an envoy to call the provided target and function selector
+    /// on behalf of the caller's proxy.
     ///
     /// @dev Emits a {SetPermission} event.
     ///
@@ -182,21 +220,19 @@ interface IPRBProxyRegistry {
     /// Requirements:
     /// - The caller must have a proxy.
     ///
-    /// @param envoy The address of the account given permission to call the target contract.
-    /// @param target The address of the target contract.
+    /// @param envoy The address of the account given permission to call the target.
+    /// @param target The address of the target.
     /// @param permission The boolean permission to set.
     function setPermission(address envoy, address target, bool permission) external;
 
-    /// @notice Uninstalls the provided plugin contract from the proxy belonging to the caller.
+    /// @notice Uninstalls the plugin from the caller's proxy, and removes the list of methods originally implemented by
+    /// the plugin.
     ///
     /// @dev Emits an {UninstallPlugin} event.
     ///
-    /// Notes:
-    /// - Does not revert if the plugin is not installed.
-    ///
     /// Requirements:
     /// - The caller must have a proxy.
-    /// - The plugin must have at least one implemented method.
+    /// - The plugin must be a known, previously installed plugin.
     ///
     /// @param plugin The address of the plugin to uninstall.
     function uninstallPlugin(IPRBProxyPlugin plugin) external;

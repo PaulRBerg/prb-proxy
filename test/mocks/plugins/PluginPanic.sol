@@ -5,7 +5,7 @@ import { IPRBProxyPlugin } from "../../../src/interfaces/IPRBProxyPlugin.sol";
 import { TargetPanic } from "../targets/TargetPanic.sol";
 
 contract PluginPanic is IPRBProxyPlugin, TargetPanic {
-    function methodList() external pure override returns (bytes4[] memory) {
+    function getMethods() external pure override returns (bytes4[] memory) {
         bytes4[] memory methods = new bytes4[](4);
 
         methods[0] = this.failedAssertion.selector;
