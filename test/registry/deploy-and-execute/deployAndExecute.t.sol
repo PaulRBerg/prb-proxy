@@ -32,82 +32,42 @@ contract DeployAndExecute_Test is Registry_Test {
         _;
     }
 
-    function testFuzz_DeployAndExecute_ProxyAddress(address origin, address owner) external whenOwnerDoesNotHaveProxy {
-        changePrank({ txOrigin: origin, msgSender: owner });
+    function testFuzz_DeployAndExecute_ProxyAddress(address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: owner });
         IPRBProxy actualProxy = registry.deployAndExecute(target, data);
-        address expectedProxy = computeProxyAddress(origin, SEED_ZERO);
+        address expectedProxy = computeProxyAddress(owner);
         assertEq(address(actualProxy), expectedProxy, "deployed proxy address mismatch");
     }
 
-    function testFuzz_DeployAndExecute_ProxyOwner(address origin, address owner) external whenOwnerDoesNotHaveProxy {
-        changePrank({ txOrigin: origin, msgSender: owner });
+    function testFuzz_DeployAndExecute_ProxyOwner(address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: owner });
         IPRBProxy proxy = registry.deployAndExecute(target, data);
         address actualOwner = proxy.owner();
         address expectedOwner = owner;
         assertEq(actualOwner, expectedOwner, "proxy owner mismatch");
     }
 
-    function testFuzz_DeployAndExecute_UpdateNextSeeds(
-        address origin,
-        address owner
-    )
-        external
-        whenOwnerDoesNotHaveProxy
-    {
-        changePrank({ txOrigin: origin, msgSender: owner });
-        registry.deployAndExecute(target, data);
-
-        bytes32 actualNextSeed = registry.nextSeeds(origin);
-        bytes32 expectedNextSeed = SEED_ONE;
-        assertEq(actualNextSeed, expectedNextSeed, "next seed mismatch");
-    }
-
-    function testFuzz_DeployAndExecute_UpdateProxies(
-        address origin,
-        address owner
-    )
-        external
-        whenOwnerDoesNotHaveProxy
-    {
-        changePrank({ txOrigin: origin, msgSender: owner });
+    function testFuzz_DeployAndExecute_UpdateProxies(address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: owner });
         registry.deployAndExecute(target, data);
 
         address actualProxyAddress = address(registry.getProxy(owner));
-        address expectedProxyAddress = computeProxyAddress(origin, SEED_ZERO);
+        address expectedProxyAddress = computeProxyAddress(owner);
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address mismatch");
     }
 
-    function testFuzz_DeployAndExecute_Event_DeployProxy(
-        address origin,
-        address owner
-    )
-        external
-        whenOwnerDoesNotHaveProxy
-    {
-        changePrank({ txOrigin: origin, msgSender: owner });
+    function testFuzz_DeployAndExecute_Event_DeployProxy(address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: owner });
 
         vm.expectEmit({ emitter: address(registry) });
-        emit DeployProxy({
-            origin: origin,
-            operator: owner,
-            owner: owner,
-            seed: SEED_ZERO,
-            salt: keccak256(abi.encode(origin, SEED_ZERO)),
-            proxy: IPRBProxy(computeProxyAddress(origin, SEED_ZERO))
-        });
+        emit DeployProxy({ operator: owner, owner: owner, proxy: IPRBProxy(computeProxyAddress(owner)) });
         registry.deployAndExecute(target, data);
     }
 
-    function testFuzz_DeployAndExecute_Event_Execute(
-        address origin,
-        address owner
-    )
-        external
-        whenOwnerDoesNotHaveProxy
-    {
-        changePrank({ txOrigin: origin, msgSender: owner });
+    function testFuzz_DeployAndExecute_Event_Execute(address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: owner });
 
-        vm.expectEmit({ emitter: computeProxyAddress({ origin: origin, seed: SEED_ZERO }) });
+        vm.expectEmit({ emitter: computeProxyAddress(owner) });
         emit Execute({ target: address(targets.echo), data: data, response: abi.encode(input) });
         registry.deployAndExecute(target, data);
     }
