@@ -41,12 +41,12 @@
     "build:optimized": "FOUNDRY_PROFILE=optimized forge build",
     "clean": "rm -rf artifacts broadcast cache coverage docs out out-optimized",
     "lint": "pnpm lint:sol && pnpm prettier:check",
-    "lint:sol": "forge fmt --check && pnpm solhint \"{script,src,test}/**/*.sol\"",
+    "lint:sol": "forge fmt --check && pnpm solhint --config ../../.solhint.json \"{script,src,test}/**/*.sol\"",
     "gas:report": "forge test --gas-report --no-match-test \"test(Fuzz)?_RevertWhen_\"",
     "gas:snapshot": "forge snapshot --no-match-test \"test(Fuzz)?_RevertWhen_\"",
     "prepack": "bash ./shell/prepare-artifacts.sh",
     "gas:snapshot:optimized": "pnpm build:optimized && FOUNDRY_PROFILE=test-optimized forge snapshot --no-match-test \"test(Fuzz)?_RevertWhen_\"",
-    "prettier:check": "prettier --check \"**/*.{json,md,yml}\"",
-    "prettier:write": "prettier --write \"**/*.{json,md,yml}\""
+    "prettier:check": "prettier --check --config ../../.prettierrc.yml --ignore-path ../../.prettierignore \"**/*.{json,md,yml}\"",
+    "prettier:write": "prettier --write --config ../../.prettierrc.yml --ignore-path ../../.prettierignore \"**/*.{json,md,yml}\""
   }
 }
