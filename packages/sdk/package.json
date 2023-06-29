@@ -12,5 +12,9 @@
     "type": "git",
     "url": ""
   },
-  "scripts": {}
+  "scripts": {
+    "lint": "pnpm prettier:check",
+    "prettier:check": "prettier --check --config ../../.prettierrc.yml --ignore-path ../../.prettierignore \"**/*.{json,md,yml}\"",
+    "prettier:write": "prettier --write --config ../../.prettierrc.yml --ignore-path ../../.prettierignore \"**/*.{json,md,yml}\""
+  }
 }
