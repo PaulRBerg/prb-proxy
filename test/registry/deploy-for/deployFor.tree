@@ -3,6 +3,6 @@ deployFor.t.sol
 │  └── it should revert
 └── when the owner does not have a proxy
    ├── it should generate the correct proxy address
-   ├── it should initialize the owner
+   ├── it should set the owner
    ├── it should update the proxies mapping
    └── it should emit a {DeployProxy} event

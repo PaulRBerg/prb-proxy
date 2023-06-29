@@ -155,8 +155,9 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy.
     function deploy() external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy for the caller, and delegate calls to the provided target by forwarding the data.
-    /// Then, it returns the data it gets back, and bubbles up any potential revert.
+    /// @notice This function performs two actions:
+    /// 1. Deploys a new proxy for the caller
+    /// 2. Delegate calls to the provided target, returning the data it gets back, and bubbling up any potential revert.
     ///
     /// @dev Emits a {DeployProxy} and an {Execute} event.
     ///
@@ -169,7 +170,31 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy.
     function deployAndExecute(address target, bytes calldata data) external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy for the caller, and installs the provided plugin on the newly deployed proxy.
+    /// @notice This function performs three actions:
+    /// 1. Deploys a new proxy for the caller
+    /// 2. Delegate calls to the provided target, returning the data it gets back, and bubbling up any potential revert.
+    /// 3. Installs the provided plugin on the newly deployed proxy.
+    ///
+    /// @dev Emits a {DeployProxy} and an {InstallPlugin} event.
+    ///
+    /// Requirements:
+    /// - The caller must not have a proxy.
+    /// - See the requirements in `installPlugin`.
+    /// - See the requirements in `execute`.
+    ///
+    /// @param plugin The address of the plugin to install.
+    /// @return proxy The address of the newly deployed proxy.
+    function deployAndExecuteAndInstallPlugin(
+        address target,
+        bytes calldata data,
+        IPRBProxyPlugin plugin
+    )
+        external
+        returns (IPRBProxy proxy);
+
+    /// @notice This function performs two actions:
+    /// 1. Deploys a new proxy for the caller.
+    /// 2. Installs the provided plugin on the newly deployed proxy.
     ///
     /// @dev Emits a {DeployProxy} and an {InstallPlugin} event.
     ///

@@ -142,7 +142,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     /// @inheritdoc IPRBProxyRegistry
     function deploy() external override noProxy(msg.sender) returns (IPRBProxy proxy) {
-        proxy = _deploy({ owner: msg.sender });
+        proxy = _deploy({ owner: msg.sender, target: address(0), data: "" });
     }
 
     /// @inheritdoc IPRBProxyRegistry
@@ -155,35 +155,37 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
         noProxy(msg.sender)
         returns (IPRBProxy proxy)
     {
-        // Use the address of the owner as the CREATE2 salt.
-        address owner = msg.sender;
-        bytes32 salt = bytes32(abi.encodePacked(owner));
-
-        // Deploy the proxy with CREATE2, and execute the delegate call in the constructor.
-        constructorParams = ConstructorParams({ owner: owner, target: target, data: data });
-        proxy = new PRBProxy{ salt: salt }();
-        delete constructorParams;
-
-        // Associate the owner and the proxy.
-        _proxies[owner] = proxy;
-
-        // Log the creation of the proxy.
-        emit DeployProxy({ operator: msg.sender, owner: owner, proxy: proxy });
+        proxy = _deploy({ owner: msg.sender, target: target, data: data });
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner) public override noProxy(owner) returns (IPRBProxy proxy) {
-        proxy = _deploy(owner);
+    function deployFor(address owner) external override noProxy(owner) returns (IPRBProxy proxy) {
+        proxy = _deploy({ owner: owner, target: address(0), data: "" });
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function installPlugin(IPRBProxyPlugin plugin) external override onlyCallerWithProxy {
+    function deployAndExecuteAndInstallPlugin(
+        address target,
+        bytes calldata data,
+        IPRBProxyPlugin plugin
+    )
+        external
+        override
+        noProxy(msg.sender)
+        returns (IPRBProxy proxy)
+    {
+        proxy = _deploy({ owner: msg.sender, target: target, data: data });
         _installPlugin(plugin);
     }
 
     /// @inheritdoc IPRBProxyRegistry
     function deployAndInstallPlugin(IPRBProxyPlugin plugin) external returns (IPRBProxy proxy) {
-        proxy = _deploy({ owner: msg.sender });
+        proxy = _deploy({ owner: msg.sender, target: address(0), data: "" });
+        _installPlugin(plugin);
+    }
+
+    /// @inheritdoc IPRBProxyRegistry
+    function installPlugin(IPRBProxyPlugin plugin) external override onlyCallerWithProxy {
         _installPlugin(plugin);
     }
 
@@ -226,12 +228,12 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev See the documentation for the user-facing functions that call this internal function.
-    function _deploy(address owner) internal returns (IPRBProxy proxy) {
+    function _deploy(address owner, address target, bytes memory data) internal returns (IPRBProxy proxy) {
         // Use the address of the owner as the CREATE2 salt.
         bytes32 salt = bytes32(abi.encodePacked(owner));
 
         // Set the owner and empty out the target and the data to prevent reentrancy.
-        constructorParams = ConstructorParams({ owner: owner, target: address(0), data: "" });
+        constructorParams = ConstructorParams({ owner: owner, target: target, data: data });
 
         // Deploy the proxy with CREATE2.
         proxy = new PRBProxy{ salt: salt }();

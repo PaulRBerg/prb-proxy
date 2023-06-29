@@ -6,8 +6,6 @@ import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 
 import { Registry_Test } from "../Registry.t.sol";
 
-/// @dev User roles:
-/// - Bob is the origin, operator, and owner of the proxy
 contract DeployAndExecute_Test is Registry_Test {
     bytes internal data;
     uint256 internal input = 1729;
@@ -21,7 +19,7 @@ contract DeployAndExecute_Test is Registry_Test {
     }
 
     function test_RevertWhen_OwnerHasProxy() external {
-        IPRBProxy proxy = registry.deployAndExecute(target, data);
+        IPRBProxy proxy = registry.deploy();
         vm.expectRevert(
             abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerHasProxy.selector, users.alice, proxy)
         );

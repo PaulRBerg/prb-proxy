@@ -3,7 +3,9 @@ deployAndInstallPlugin.t.sol
 │  └── it should revert
 └── when the owner does not have a proxy
    ├── it should generate the correct proxy address
+   ├── it should set the owner
+   ├── it should update the proxies mapping
    ├── it should install the plugin
-   ├── it should save the methods in the reverse mapping
+   ├── it should save the plugin methods in the reverse mapping
    ├── it should emit a {DeployProxy} event
    └── it should emit an {InstallPlugin} event
