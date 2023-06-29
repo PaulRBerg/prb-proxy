@@ -7,9 +7,16 @@ import { IPRBProxyRegistry } from "src/interfaces/IPRBProxyRegistry.sol";
 
 import { Registry_Test } from "../Registry.t.sol";
 
-contract DeployAndInstallPlugin_Test is Registry_Test {
+contract DeployAndExecuteAndInstallPlugin_Test is Registry_Test {
+    bytes internal data;
+    uint256 internal input = 1729;
+    address internal target;
+
     function setUp() public override {
         Registry_Test.setUp();
+
+        data = abi.encodeWithSelector(targets.echo.echoUint256.selector, input);
+        target = address(targets.echo);
     }
 
     function test_RevertWhen_OwnerHasProxy() external {
@@ -17,39 +24,42 @@ contract DeployAndInstallPlugin_Test is Registry_Test {
         vm.expectRevert(
             abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerHasProxy.selector, users.alice, proxy)
         );
-        registry.deploy();
+        registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
     }
 
     modifier whenOwnerDoesNotHaveProxy() {
         _;
     }
 
-    function testFuzz_DeployAndInstallPlugin_ProxyAddress(address owner) external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecuteAndInstallPlugin_ProxyAddress(address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ msgSender: owner });
-        address actualProxy = address(registry.deployAndInstallPlugin(plugins.basic));
+        IPRBProxy actualProxy = registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
         address expectedProxy = computeProxyAddress(owner);
-        assertEq(actualProxy, expectedProxy, "deployed proxy address mismatch");
+        assertEq(address(actualProxy), expectedProxy, "deployed proxy address mismatch");
     }
 
-    function testFuzz_DeployAndInstallPlugin_ProxyOwner(address owner) external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecuteAndInstallPlugin_ProxyOwner(address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ msgSender: owner });
-        IPRBProxy proxy = registry.deployAndInstallPlugin(plugins.basic);
+        IPRBProxy proxy = registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
         address actualOwner = proxy.owner();
         address expectedOwner = owner;
         assertEq(actualOwner, expectedOwner, "proxy owner mismatch");
     }
 
-    function testFuzz_DeployAndInstallPlugin_UpdateProxies(address owner) external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecuteAndInstallPlugin_UpdateProxies(address owner)
+        external
+        whenOwnerDoesNotHaveProxy
+    {
         changePrank({ msgSender: owner });
-        registry.deployAndInstallPlugin(plugins.basic);
+        registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
 
         address actualProxyAddress = address(registry.getProxy(owner));
         address expectedProxyAddress = computeProxyAddress(owner);
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address mismatch");
     }
 
-    function testFuzz_DeployAndInstallPlugin_Plugin() external whenOwnerDoesNotHaveProxy {
-        registry.deployAndInstallPlugin(plugins.basic);
+    function testFuzz_DeployAndExecuteAndInstallPlugin_Plugin() external whenOwnerDoesNotHaveProxy {
+        registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
         bytes4[] memory pluginMethods = plugins.basic.getMethods();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
             IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: users.alice, method: pluginMethods[i] });
@@ -58,22 +68,41 @@ contract DeployAndInstallPlugin_Test is Registry_Test {
         }
     }
 
-    function testFuzz_DeployAndInstallPlugin_PluginReverseMapping() external whenOwnerDoesNotHaveProxy {
-        registry.deployAndInstallPlugin(plugins.basic);
+    function testFuzz_DeployAndExecuteAndInstallPlugin_PluginReverseMapping() external whenOwnerDoesNotHaveProxy {
+        registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
         bytes4[] memory actualMethods = registry.getMethodsByOwner({ owner: users.alice, plugin: plugins.basic });
         bytes4[] memory expectedMethods = plugins.basic.getMethods();
         assertEq(actualMethods, expectedMethods, "methods not saved in reverse mapping");
     }
 
-    function testFuzz_DeployAndInstallPlugin_Event_DeployProxy(address owner) external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_DeployProxy(address owner)
+        external
+        whenOwnerDoesNotHaveProxy
+    {
         changePrank({ msgSender: owner });
+
         vm.expectEmit({ emitter: address(registry) });
         emit DeployProxy({ operator: owner, owner: owner, proxy: IPRBProxy(computeProxyAddress(owner)) });
-        registry.deployAndInstallPlugin(plugins.basic);
+        registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
     }
 
-    function testFuzz_DeployAndInstallPlugin_Event_InstallPlugin(address owner) external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_Execute(address owner)
+        external
+        whenOwnerDoesNotHaveProxy
+    {
         changePrank({ msgSender: owner });
+
+        vm.expectEmit({ emitter: computeProxyAddress(owner) });
+        emit Execute({ target: address(targets.echo), data: data, response: abi.encode(input) });
+        registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
+    }
+
+    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_InstallPlugin(address owner)
+        external
+        whenOwnerDoesNotHaveProxy
+    {
+        changePrank({ msgSender: owner });
+
         vm.expectEmit({ emitter: address(registry) });
         emit InstallPlugin({
             owner: owner,
@@ -81,6 +110,6 @@ contract DeployAndInstallPlugin_Test is Registry_Test {
             plugin: plugins.basic,
             methods: plugins.basic.getMethods()
         });
-        registry.deployAndInstallPlugin(plugins.basic);
+        registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
     }
 }
