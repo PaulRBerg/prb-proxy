@@ -1,9 +1,52 @@
 {
   "name": "@prb/proxy",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "MIT"
+  "description": "Proxy contract to compose Ethereum transactions on behalf of the owner",
+  "version": "4.0.0-beta.5",
+  "author": {
+    "name": "Paul Razvan Berg",
+    "url": "https://github.com/PaulRBerg"
+  },
+  "bugs": {
+    "url": "https://github.com/PaulRBerg/prb-proxy/issues"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.8",
+    "solhint": "^3.4.0"
+  },
+  "files": [
+    "artifacts",
+    "src",
+    "CHANGELOG.md"
+  ],
+  "homepage": "https://github.com/PaulRBerg/prb-proxy#readme",
+  "keywords": [
+    "blockchain",
+    "delegatecall",
+    "ethereum",
+    "prb-proxy",
+    "proxy",
+    "smart-contracts",
+    "solidity"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PaulRBerg/prb-proxy"
+  },
+  "scripts": {
+    "build": "forge build",
+    "build:optimized": "FOUNDRY_PROFILE=optimized forge build",
+    "clean": "rm -rf artifacts broadcast cache coverage docs out out-optimized",
+    "lint": "pnpm lint:sol && pnpm prettier:check",
+    "lint:sol": "forge fmt --check && pnpm solhint \"{script,src,test}/**/*.sol\"",
+    "gas:report": "forge test --gas-report --no-match-test \"test(Fuzz)?_RevertWhen_\"",
+    "gas:snapshot": "forge snapshot --no-match-test \"test(Fuzz)?_RevertWhen_\"",
+    "prepack": "bash ./shell/prepare-artifacts.sh",
+    "gas:snapshot:optimized": "pnpm build:optimized && FOUNDRY_PROFILE=test-optimized forge snapshot --no-match-test \"test(Fuzz)?_RevertWhen_\"",
+    "prettier:check": "prettier --check \"**/*.{json,md,yml}\"",
+    "prettier:write": "prettier --write \"**/*.{json,md,yml}\""
+  }
 }
