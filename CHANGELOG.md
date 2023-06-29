@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[4.0.0-beta.6]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.5...v4.0.0-beta.6
 [4.0.0-beta.5]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.4...v4.0.0-beta.5
 [4.0.0-beta.4]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.3...v4.0.0-beta.4
 [4.0.0-beta.3]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.2...v4.0.0-beta.3
@@ -13,6 +14,37 @@ The format is based on [Common Changelog](https://common-changelog.org/), and th
 [2.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/PaulRBerg/prb-proxy/releases/tag/v1.0.0
+
+## [4.0.0-beta.6] - 2023-06-29
+
+### Changed
+
+- Change `proxies` getter to `getProxy` ([#100](https://github.com/PaulRBerg/prb-proxy/pull/118)) (@PaulRBerg)
+- Improve documentation in NatSpec comments (@PaulRBerg)
+- Make the registry in charge of plugins ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
+- Make the `owner` an immutable variable ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
+- Rename `methodList` to `methods`
+- Use `owner` instead of `tx.origin` as CREATE2 salt ([#130](https://github.com/PaulRBerg/prb-proxy/pull/130)) (@PaulRBerg)
+
+### Added
+
+- Add `deployAndExecuteAndInstallPlugin` function ([#134](https://github.com/PaulRBerg/prb-proxy/pull/134)) (@PaulRBerg)
+- Add `deployAndInstallPlugin` function ([#131](https://github.com/PaulRBerg/prb-proxy/pull/131)) (@PaulRBerg)
+- Add new getters for reading the plugins and the permissions ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
+- Store plugin methods in reverse mapping ([#131](https://github.com/PaulRBerg/prb-proxy/pull/131)) (@PaulRBerg)
+
+### Removed
+
+- Remove `deployAndExecuteFor` function ([#113](https://github.com/PaulRBerg/prb-proxy/pull/113)) (@PaulRBerg)
+- Remove `minGasReserve` storage variable ([#114](https://github.com/PaulRBerg/prb-proxy/pull/114)) (@PaulRBerg)
+- Remove `nextSeeds` storage variable ([#130](https://github.com/PaulRBerg/prb-proxy/pull/130)) (@PaulRBerg)
+- Remove `PRBProxyAnnex` ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
+- Remove proxy storage ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
+- Remove `transferOwnership` functionality ([#119](https://github.com/PaulRBerg/prb-proxy/pull/119)) (@PaulRBerg)
+
+### Fixed
+
+- Check for plugin method collisions ([#129](https://github.com/PaulRBerg/prb-proxy/pull/129)) (@PaulRBerg)
 
 ## [4.0.0-beta.5] - 2023-05-30
 
