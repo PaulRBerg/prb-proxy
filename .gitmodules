@@ -1,0 +1,8 @@
+[submodule "packages/proxy/lib/forge-std"]
+  branch = "v1"
+  path = "packages/proxy/lib/forge-std"
+  url = "https://github.com/foundry-rs/forge-std"
+[submodule "packages/proxy/lib/prb-test"]
+  branch = "release-v0"
+  path = "packages/proxy/lib/prb-test"
+  url = "https://github.com/PaulRBerg/prb-test"
