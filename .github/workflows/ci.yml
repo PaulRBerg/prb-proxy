@@ -98,7 +98,7 @@ jobs:
   test:
     needs: ["lint", "build"]
     env:
-      FOUNDRY_FUZZ_RUNS: 5000
+      FOUNDRY_FUZZ_RUNS: "5000"
     runs-on: "ubuntu-latest"
     steps:
       - name: "Check out the repo"
