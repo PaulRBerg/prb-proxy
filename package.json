@@ -32,10 +32,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/PaulRBerg/prb-proxy"
-  },
+  "repository": "github:PaulRBerg/prb-proxy",
   "scripts": {
     "build": "forge build",
     "build:optimized": "FOUNDRY_PROFILE=optimized forge build",
