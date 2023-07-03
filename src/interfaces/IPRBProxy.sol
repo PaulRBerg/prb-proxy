@@ -14,10 +14,10 @@ interface IPRBProxy {
     /// @notice Thrown when the transfer ownership function is called directly (not via the registry).
     error PRBProxy_CallerNotRegistry(IPRBProxyRegistry registry, address caller);
 
-    /// @notice Thrown when a target contract reverts without a specified reason.
+    /// @notice Thrown when the target contract reverts without a specified reason.
     error PRBProxy_ExecutionReverted();
 
-    /// @notice Thrown when the caller to be the owner.
+    /// @notice Thrown when the execution is triggered by an unauthorized party.
     error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target);
 
     /// @notice Thrown when the fallback function fails to find an installed plugin for the method selector.
@@ -67,6 +67,6 @@ interface IPRBProxy {
     ///
     /// @param target The address of the target contract.
     /// @param data Function selector plus ABI encoded data.
-    /// @return response The response received from the target contract.
+    /// @return response The response received from the target contract, if any. Otherwise, a generic error.
     function execute(address target, bytes calldata data) external payable returns (bytes memory response);
 }

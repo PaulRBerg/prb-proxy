@@ -43,9 +43,9 @@ interface IPRBProxyRegistry {
         address indexed owner, IPRBProxy indexed proxy, IPRBProxyPlugin indexed plugin, bytes4[] methods
     );
 
-    /// @notice Emitted when an envoy permission is updated.
+    /// @notice Emitted when an envoy's permission is updated.
     event SetPermission(
-        address indexed owner, IPRBProxy indexed proxy, address indexed envoy, address target, bool permission
+        address indexed owner, IPRBProxy indexed proxy, address indexed envoy, address target, bool newPermission
     );
 
     /// @notice Emitted when a plugin is uninstalled.
@@ -59,7 +59,7 @@ interface IPRBProxyRegistry {
 
     /// @param owner The address of the user who will own the proxy.
     /// @param target The address of the target to delegate call to. Can be set to zero.
-    /// @param data The address of the call data to pass to the target. Can be set to zero.
+    /// @param data The call data to be passed to the target. Can be set to zero.
     struct ConstructorParams {
         address owner;
         address target;
@@ -97,10 +97,10 @@ interface IPRBProxyRegistry {
         view
         returns (bytes4[] memory methods);
 
-    /// @notice Retrieves a boolean flag that indicates whether the provided envoy has permission to call the provided
+    /// @notice Retrieves a boolean flag that indicates whether the envoy has permission from the owner to call the
     /// target.
     /// @param owner The proxy owner for the query.
-    /// @param envoy The address with permission to call the target.
+    /// @param envoy The address the permission of which is queried for.
     /// @param target The address of the target.
     function getPermissionByOwner(
         address owner,
@@ -111,10 +111,10 @@ interface IPRBProxyRegistry {
         view
         returns (bool permission);
 
-    /// @notice Retrieves a boolean flag that indicates whether the provided envoy has permission to call the provided
-    /// target.
+    /// @notice Retrieves a boolean flag that indicates whether the envoy has permission from the owner of the
+    /// proxy to call the target contract.
     /// @param proxy The proxy for the query.
-    /// @param envoy The address with permission to call the target.
+    /// @param envoy The address the permission of which is queried for.
     /// @param target The address of the target.
     function getPermissionByProxy(
         IPRBProxy proxy,
@@ -128,13 +128,13 @@ interface IPRBProxyRegistry {
     /// @notice Retrieves the address of the plugin installed for the provided method selector.
     /// @dev The zero address is returned if no plugin is installed.
     /// @param owner The proxy owner for the query.
-    /// @param method The method signature for the query.
+    /// @param method The method selector for the query.
     function getPluginByOwner(address owner, bytes4 method) external view returns (IPRBProxyPlugin plugin);
 
     /// @notice Retrieves the address of the plugin installed for the provided method selector.
     /// @dev The zero address is returned if no plugin is installed.
     /// @param proxy The proxy for the query.
-    /// @param method The method signature for the query.
+    /// @param method The method selector for the query.
     function getPluginByProxy(IPRBProxy proxy, bytes4 method) external view returns (IPRBProxyPlugin plugin);
 
     /// @notice Retrieves the proxy for the provided owner.
@@ -224,18 +224,19 @@ interface IPRBProxyRegistry {
     ///
     /// Notes:
     /// - Installing a plugin is a potentially dangerous operation, because anyone can run the plugin.
-    /// - Plugin methods that have the same selector as {PRBProxy.execute} can be installed, but they can never be run.
+    /// - Plugin methods that have the same selectors as {PRBProxy.execute}, {PRBProxy.owner} and {PRBProxy.registry}
+    /// can be installed, but they can never be run.
     ///
     /// Requirements:
     /// - The caller must have a proxy.
     /// - The plugin must have at least one implemented method.
-    /// - There must be no method collision with any other installed plugin.
+    /// - There must be no method collision with any other plugin installed by the caller.
     ///
     /// @param plugin The address of the plugin to install.
     function installPlugin(IPRBProxyPlugin plugin) external;
 
-    /// @notice Gives or takes a permission from an envoy to call the provided target and function selector
-    /// on behalf of the caller's proxy.
+    /// @notice Sets the status of the envoy's permission to call the provided target on behalf of the caller's
+    /// proxy.
     ///
     /// @dev Emits a {SetPermission} event.
     ///
@@ -245,7 +246,7 @@ interface IPRBProxyRegistry {
     /// Requirements:
     /// - The caller must have a proxy.
     ///
-    /// @param envoy The address of the account given permission to call the target.
+    /// @param envoy The address of the account for which the permission status is set.
     /// @param target The address of the target.
     /// @param permission The boolean permission to set.
     function setPermission(address envoy, address target, bool permission) external;

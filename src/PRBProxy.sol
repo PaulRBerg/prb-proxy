@@ -52,7 +52,7 @@ contract PRBProxy is IPRBProxy {
     /// @notice Fallback function used to run plugins.
     /// @dev WARNING: anyone can call this function and thus run any installed plugin.
     fallback(bytes calldata data) external payable returns (bytes memory response) {
-        // Check if the function signature points to a known installed plugin.
+        // Check if the function selector points to a known installed plugin.
         IPRBProxyPlugin plugin = registry.getPluginByOwner({ owner: owner, method: msg.sig });
         if (address(plugin) == address(0)) {
             revert PRBProxy_PluginNotInstalledForMethod({ caller: msg.sender, owner: owner, method: msg.sig });
@@ -67,7 +67,7 @@ contract PRBProxy is IPRBProxy {
 
         // Check if the call was successful or not.
         if (!success) {
-            // If there is return data, the call reverted with a reason or a custom error.
+            // If there is return data, revert the call with the reason or a custom error.
             if (response.length > 0) {
                 assembly {
                     let returndata_size := mload(response)
