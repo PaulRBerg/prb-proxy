@@ -45,5 +45,8 @@
     "gas:snapshot:optimized": "pnpm build:optimized && FOUNDRY_PROFILE=test-optimized forge snapshot --no-match-test \"test(Fuzz)?_RevertWhen_\"",
     "prettier:check": "prettier --check \"**/*.{json,md,yml}\"",
     "prettier:write": "prettier --write \"**/*.{json,md,yml}\""
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "4.9.2"
   }
 }
