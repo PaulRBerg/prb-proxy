@@ -9,9 +9,8 @@ import { Registry_Test } from "../Registry.t.sol";
 contract UninstallPlugin_Test is Registry_Test {
     function test_RevertWhen_CallerDoesNotHaveProxy() external {
         vm.expectRevert(
-            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_CallerDoesNotHaveProxy.selector, users.bob)
+            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_CallerDoesNotHaveProxy.selector, users.alice)
         );
-        changePrank({ msgSender: users.bob });
         registry.uninstallPlugin(plugins.empty);
     }
 
@@ -21,10 +20,13 @@ contract UninstallPlugin_Test is Registry_Test {
     }
 
     function test_RevertWhen_PluginUnknown() external whenCallerHasProxy {
+        // Assert that every plugin method is uninstalled.
+        checkThatPluginMethodsArentInstalled(users.alice, plugins.basic);
+
         vm.expectRevert(
-            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_PluginUnknown.selector, plugins.empty)
+            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_PluginUnknown.selector, plugins.basic)
         );
-        registry.uninstallPlugin(plugins.empty);
+        registry.uninstallPlugin(plugins.basic);
     }
 
     modifier whenPluginKnown() {
@@ -37,11 +39,15 @@ contract UninstallPlugin_Test is Registry_Test {
         registry.uninstallPlugin(plugins.basic);
 
         // Assert that every plugin method has been uninstalled.
-        bytes4[] memory pluginMethods = plugins.basic.getMethods();
+        checkThatPluginMethodsArentInstalled(users.alice, plugins.basic);
+    }
+
+    function checkThatPluginMethodsArentInstalled(address owner, IPRBProxyPlugin plugin) private {
+        bytes4[] memory pluginMethods = plugin.getMethods();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
-            IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: users.alice, method: pluginMethods[i] });
+            IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: owner, method: pluginMethods[i] });
             IPRBProxyPlugin expectedPlugin = IPRBProxyPlugin(address(0));
-            assertEq(actualPlugin, expectedPlugin, "plugin method still installed");
+            assertEq(actualPlugin, expectedPlugin, "plugin method installed");
         }
     }
 

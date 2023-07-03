@@ -58,19 +58,26 @@ contract DeployAndExecuteAndInstallPlugin_Test is Registry_Test {
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address mismatch");
     }
 
-    function testFuzz_DeployAndExecuteAndInstallPlugin_Plugin() external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecuteAndInstallPlugin_Plugin(address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: owner });
+
         registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
         bytes4[] memory pluginMethods = plugins.basic.getMethods();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
-            IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: users.alice, method: pluginMethods[i] });
+            IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: owner, method: pluginMethods[i] });
             IPRBProxyPlugin expectedPlugin = plugins.basic;
             assertEq(actualPlugin, expectedPlugin, "plugin method not installed");
         }
     }
 
-    function testFuzz_DeployAndExecuteAndInstallPlugin_PluginReverseMapping() external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndExecuteAndInstallPlugin_PluginReverseMapping(address owner)
+        external
+        whenOwnerDoesNotHaveProxy
+    {
+        changePrank({ msgSender: owner });
+
         registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
-        bytes4[] memory actualMethods = registry.getMethodsByOwner({ owner: users.alice, plugin: plugins.basic });
+        bytes4[] memory actualMethods = registry.getMethodsByOwner({ owner: owner, plugin: plugins.basic });
         bytes4[] memory expectedMethods = plugins.basic.getMethods();
         assertEq(actualMethods, expectedMethods, "methods not saved in reverse mapping");
     }

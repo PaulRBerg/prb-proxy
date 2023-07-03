@@ -23,6 +23,5 @@ runPlugin.t.sol
             ├── when the plugin self-destructs
             │  └── it should return an empty response and send the ETH to the SELFDESTRUCT recipient
             └── when the plugin does not self-destruct
-               ├── it should run the plugin
-               └── it should emit a {RunPlugin} event
+               └── it should run the plugin and emit a {RunPlugin} event
 

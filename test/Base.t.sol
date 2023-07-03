@@ -127,7 +127,7 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     }
 
     /// @dev Generates an address by hashing the name, labels the address and funds it with test assets.
-    function createUser(string memory name) internal returns (address payable addr) {
+    function createUser(string memory name) private returns (address payable addr) {
         addr = payable(makeAddr(name));
         vm.deal({ account: addr, newBalance: 100 ether });
     }
@@ -138,7 +138,7 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     }
 
     /// @dev Conditionally deploy the registry either normally or from a source precompiled with `--via-ir`.
-    function deployRegistryConditionally() internal {
+    function deployRegistryConditionally() private {
         if (!isTestOptimizedProfile()) {
             registry = new PRBProxyRegistry();
         } else {
@@ -149,7 +149,7 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
     }
 
     /// @dev Reads the proxy bytecode either normally or from precompiled source.
-    function getProxyBytecode() internal returns (bytes memory) {
+    function getProxyBytecode() private returns (bytes memory) {
         if (!isTestOptimizedProfile()) {
             return type(PRBProxy).creationCode;
         } else {

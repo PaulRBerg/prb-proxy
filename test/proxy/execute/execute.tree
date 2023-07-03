@@ -22,7 +22,7 @@ execute.t.sol
          │     ├── it should revert with a custom error
          │     ├── it should revert with a require
          │     ├── it should revert with a reason string
-         │     └── it should revert due to no payable modifier
+         │     └── it should revert due to no payable function
          └── when the delegate call does not revert
             ├── when Ether is sent
             │  └── it should return the Ether amount

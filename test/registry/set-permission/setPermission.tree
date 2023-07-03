@@ -1,10 +1,10 @@
 setPermission.t.sol
-├── when the caller is not the owner
+├── when the caller doesn't have a proxy
 │  └── it should revert
-└── when the caller is the owner
-   ├── when the permission has not been set
+└── when the caller has a proxy
+   ├── when the permission has not been set previously
    │  └── it should set the permission
-   └── when the permission has been set
+   └── when the permission has been set previously
       ├── when resetting the permission
       │  ├── it should reset the permission
       │  └── it should emit a {SetPermission} event

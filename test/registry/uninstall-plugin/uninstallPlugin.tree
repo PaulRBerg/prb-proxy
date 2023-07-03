@@ -1,7 +1,7 @@
 uninstallPlugin.t.sol
-├── when the caller does not have a proxy
+├── when the caller doesn't own a proxy
 │  └── it should revert
-└── when the caller has a proxy
+└── when the caller owns a proxy
    ├── when the plugin is unknown
    │  └── it should revert
    └── when the plugin is known

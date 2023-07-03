@@ -48,14 +48,14 @@ contract RunPlugin_Test is Proxy_Test {
 
     function test_RevertWhen_Panic_DivisionByZero() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.panic);
-        vm.expectRevert(stdError.arithmeticError);
+        vm.expectRevert(stdError.divisionError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.divisionByZero.selector));
         success;
     }
 
     function test_RevertWhen_Panic_IndexOOB() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.panic);
-        vm.expectRevert(stdError.arithmeticError);
+        vm.expectRevert(stdError.indexOOBError);
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.indexOOB.selector));
         success;
     }
@@ -76,7 +76,7 @@ contract RunPlugin_Test is Proxy_Test {
 
     function test_RevertWhen_Error_Require() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.reverter);
-        vm.expectRevert(TargetReverter.SomeError.selector);
+        vm.expectRevert();
         (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withRequire.selector));
         success;
     }
@@ -92,7 +92,7 @@ contract RunPlugin_Test is Proxy_Test {
         _;
     }
 
-    function test_RunPlugin_EtherSent()
+    function test_RunPlugin_PluginReceivesEther()
         external
         whenPluginInstalled
         whenDelegateCallReverts
@@ -126,9 +126,10 @@ contract RunPlugin_Test is Proxy_Test {
 
         // Install the plugin and run it.
         registry.installPlugin(plugins.selfDestructer);
-        (bool success,) =
+        (bool success, bytes memory response) =
             address(proxy).call(abi.encodeWithSelector(plugins.selfDestructer.destroyMe.selector, users.bob));
-        success;
+        assertTrue(success);
+        assertEq(response.length, 0);
 
         // Assert that Bob's balance has increased by the contract's balance.
         uint256 actualBobBalance = users.bob.balance;
@@ -149,27 +150,16 @@ contract RunPlugin_Test is Proxy_Test {
         whenPluginDoesNotSelfDestruct
     {
         registry.installPlugin(plugins.basic);
-        (, bytes memory actualResponse) = address(proxy).call(abi.encodeWithSelector(plugins.basic.foo.selector));
-        bytes memory expectedResponse = abi.encode(bytes("foo"));
-        assertEq(actualResponse, expectedResponse, "basic.foo response mismatch");
-    }
-
-    function test_RunPlugin_Event()
-        external
-        whenPluginInstalled
-        whenDelegateCallReverts
-        whenDelegateCallDoesNotRevert
-        whenNoEtherSent
-        whenPluginDoesNotSelfDestruct
-    {
-        registry.installPlugin(plugins.basic);
         vm.expectEmit({ emitter: address(proxy) });
         emit RunPlugin({
             plugin: plugins.basic,
             data: abi.encodeWithSelector(TargetBasic.foo.selector),
             response: abi.encode(bytes("foo"))
         });
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.basic.foo.selector));
-        success;
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.basic.foo.selector));
+        assertTrue(success);
+        bytes memory expectedResponse = abi.encode(bytes("foo"));
+        assertEq(actualResponse, expectedResponse, "basic.foo response mismatch");
     }
 }
