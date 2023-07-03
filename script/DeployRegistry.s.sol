@@ -6,7 +6,7 @@ import { PRBProxyRegistry } from "../src/PRBProxyRegistry.sol";
 import { BaseScript } from "./Base.s.sol";
 
 contract DeployRegistry is BaseScript {
-    function run() public virtual broadcaster returns (PRBProxyRegistry registry) {
+    function run() public virtual broadcast returns (PRBProxyRegistry registry) {
         registry = new PRBProxyRegistry();
     }
 }
