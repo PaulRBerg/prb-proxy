@@ -10,7 +10,7 @@ import { BaseScript } from "./Base.s.sol";
 contract DeployDeterministicRegistry is BaseScript {
     /// @dev The presence of the salt instructs Forge to deploy contracts via this deterministic CREATE2 factory:
     /// https://github.com/Arachnid/deterministic-deployment-proxy
-    function run(uint256 create2Salt) public virtual broadcast returns (PRBProxyRegistry registry) {
-        registry = new PRBProxyRegistry{ salt: bytes32(create2Salt) }();
+    function run(string memory create2Salt) public virtual broadcast returns (PRBProxyRegistry registry) {
+        registry = new PRBProxyRegistry{ salt: bytes32(abi.encodePacked(create2Salt)) }();
     }
 }
