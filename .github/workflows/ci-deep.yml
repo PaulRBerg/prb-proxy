@@ -13,6 +13,9 @@ on:
 jobs:
   lint:
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: "packages/proxy"
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
@@ -46,6 +49,9 @@ jobs:
       FOUNDRY_FUZZ_RUNS: ${{ inputs.fuzzRuns || '100000' }}
     needs: "lint"
     runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: "packages/proxy"
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
