@@ -15,13 +15,32 @@ importers:
         specifier: ^3.4.1
         version: 3.4.1
 
-  packages/proxy: {}
+  packages/proxy:
+    devDependencies:
+      prettier:
+        specifier: ^2.8.8
+        version: 2.8.8
+      solhint:
+        specifier: ^3.4.1
+        version: 3.4.1
 
-  packages/sdk: {}
+  packages/sdk:
+    devDependencies:
+      prettier:
+        specifier: ^2.8.8
+        version: 2.8.8
 
-  packages/subgraph: {}
+  packages/subgraph:
+    devDependencies:
+      prettier:
+        specifier: ^2.8.8
+        version: 2.8.8
 
-  packages/targets: {}
+  packages/targets:
+    devDependencies:
+      prettier:
+        specifier: ^2.8.8
+        version: 2.8.8
 
 packages:
 

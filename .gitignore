@@ -1,0 +1,9 @@
+# directories
+node_modules
+
+# files
+*.env
+*.log
+.DS_Store
+.pnp.*
+yarn.lock
