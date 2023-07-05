@@ -26,7 +26,54 @@ Some key features of PRBProxy include:
 
 Overall, PRBProxy is a powerful tool for transaction composition, providing numerous features and benefits not available through EOAs.
 
+## Background
+
+The concept of a forwarding proxy has gained popularity thanks to DappHub, the developer team behind the decentralized stablecoin
+[DAI](https://makerdao.com). DappHub created [DSProxy](https://github.com/dapphub/ds-proxy), a widely used tool that allows for the execution of
+multiple contract calls in a single transaction. Major DeFi players like Maker, Balancer, and DeFi Saver all rely on DSProxy.
+
+However, as the Ethereum ecosystem has evolved since DSProxy's launch in 2017, the tool has become outdated. With significant improvements to the
+Solidity compiler and new EVM OPCODES, as well as the introduction of more user-friendly development environments like
+[Foundry](https://book.getfoundry.sh/), it was time for an update.
+
+Enter PRBProxy, the modern successor to DSProxy; a "DSProxy 2.0", if you will. It improves upon DSProxy in several ways:
+
+1. PRBProxy is deployed with [CREATE2][eip-1014], which allows clients to pre-compute the proxy contract's address.
+2. The `CREATE2` salts are generated in a way that eliminates the risk of front-running.
+3. The proxy owner is immutable, and so it cannot be changed during any `DELEGATECALL`.
+4. PRBProxy uses high-level Solidity code that is easier to comprehend and less prone to errors.
+5. PRBProxy offers more features than DSProxy.
+
+Using CREATE2 eliminates the risk of a [chain reorg](https://en.bitcoin.it/wiki/Chain_Reorganization) overriding the proxy contract owner, making
+PRBProxy a more secure alternative to DSProxy. With DSProxy, users must wait for several blocks to be mined before assuming the contract is secure.
+However, PRBProxy eliminates this risk entirely, making it possible to safely send funds to the proxy before it is deployed.
+
+## Deployments
+
+PRBProxyRegistry is deployed on all chains at 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D. A sortable, searchable list of all available chains can be
+found at https://prbproxy.com/deployments. To request a deployment to a new chain, please open a GitHub issue. You can speed up the process by sending
+funds to cover the deploy cost to the deployer account: 0x3Afb8fEDaC6429E2165E84CC43EeA7e42e6440fF.
+
+### ABIs
+
+The ABIs can be found on https://prbproxy.com/abi, where they can be downloaded or copied to the clipboard in various formats, including:
+
+- Solidity interface
+- JSON ABIs, prettified
+- JSON ABIs, minified
+- ethers.js human readable ABIs
+- viem human readable ABIs
+
+Alternatively, you can:
+
+- Download the ABIs from the [releases](https://github.com/PaulRBerg/prb-proxy/releases) page.
+- Copy the ABIs from [Etherscan](https://etherscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D).
+- Install [Foundry](https://getfoundry.sh/) and run `cast interface 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D`.
+- Use one of the programmatic methods described below.
+
 ## Install
+
+You can get access to the ABIs and the `IPRBProxy` and the `IPRBProxyRegistry` interfaces programmatically.
 
 ### Foundry
 
@@ -59,50 +106,6 @@ PRBProxy is available as an npm package:
 pnpm add @prb/proxy
 ```
 
-## Background
-
-The concept of a forwarding proxy has gained popularity thanks to DappHub, the developer team behind the decentralized stablecoin
-[DAI](https://makerdao.com). DappHub created [DSProxy](https://github.com/dapphub/ds-proxy), a widely used tool that allows for the execution of
-multiple contract calls in a single transaction. Major DeFi players like Maker, Balancer, and DeFi Saver all rely on DSProxy.
-
-However, as the Ethereum ecosystem has evolved since DSProxy's launch in 2017, the tool has become outdated. With significant improvements to the
-Solidity compiler and new EVM OPCODES, as well as the introduction of more user-friendly development environments like
-[Foundry](https://book.getfoundry.sh/), it was time for an update.
-
-Enter PRBProxy, the modern successor to DSProxy; a "DSProxy 2.0", if you will. It improves upon DSProxy in several ways:
-
-1. PRBProxy is deployed with [CREATE2][eip-1014], which allows clients to pre-compute the proxy contract's address.
-2. The `CREATE2` salts are generated in a way that eliminates the risk of front-running.
-3. The proxy owner is immutable, and so it cannot be changed during any `DELEGATECALL`.
-4. PRBProxy uses high-level Solidity code that is easier to comprehend and less prone to errors.
-5. PRBProxy offers more features than DSProxy.
-
-Using CREATE2 eliminates the risk of a [chain reorg](https://en.bitcoin.it/wiki/Chain_Reorganization) overriding the proxy contract owner, making
-PRBProxy a more secure alternative to DSProxy. With DSProxy, users must wait for several blocks to be mined before assuming the contract is secure.
-However, PRBProxy eliminates this risk entirely, making it possible to safely send funds to the proxy before it is deployed.
-
-## Deployments
-
-PRBProxyRegistry is deployed on all chains at 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D. A sortable, searchable list of all chains it's deployed on
-can be found at https://prbproxy.com/deployments. To request a deployment to a new chain, please open a GitHub issue. You can speed up the new deploy
-by sending funds to cover the deploy cost to the deployer account: 0x3Afb8fEDaC6429E2165E84CC43EeA7e42e6440fF.
-
-### ABIs
-
-The ABIs can be found on https://prbproxy.com/abi, where they can be downloaded or copied to the clipboard in various formats, including:
-
-- Solidity interface
-- JSON ABIs, prettified
-- JSON ABIs, minified
-- ethers.js human readable ABIs
-- viem human readable ABIs
-
-Alternatively, you can:
-
-- Download the ABIs from the releases page.
-- Copy the ABIs from [Etherscan](https://etherscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D).
-- Install [Foundry](https://getfoundry.sh/) and run `cast interface 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D`.
-
 ## Usage
 
 Proxies are deployed via PRBProxyRegistry. There are multiple deploy functions available:
@@ -118,10 +121,16 @@ Proxies are deployed via PRBProxyRegistry. There are multiple deploy functions a
 Once the proxy is deployed, you can start interacting with target contracts by calling the `execute` function on the proxy by passing the ABI-encoding
 function signatures and data.
 
-### Documentation
+### No Upgradeability
 
-See this repository's [wiki](https://github.com/PaulRBerg/prb-proxy/wiki) page for guidance on how to write plugins, targets, and front-end
-integrations.
+For the avoidance of doubt, PRBProxy is not an upgradeable proxy[^1]. It is a "forwarding" proxy whose sole purpose is to delegate calls to target and
+plugin contracts.
+
+Both PRBProxyRegistry and PRBProxy are immutable contracts. Their source code cannot be changed once deployed.
+
+### Targets and Plugins
+
+See this repository's [wiki](https://github.com/PaulRBerg/prb-proxy/wiki) page for guidance on how to write targets and plugins.
 
 ### Frontends
 
@@ -162,3 +171,10 @@ This project is licensed under MIT.
 [se-3667]: https://ethereum.stackexchange.com/questions/3667/difference-between-call-callcode-and-delegatecall/3672
 [dsproxy-guide]:
   https://github.com/makerdao/developerguides/blob/9ded1b68228e6cd70885f1326349c6bf087b9573/devtools/working-with-dsproxy/working-with-dsproxy.md
+
+<!-- Footnotes -->
+
+[^1]:
+    The term "proxy" can refer to different concepts in Ethereum, most notably upgradeable proxies, a design popularized by
+    [OpenZeppelin](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies) that enables contract owners to upgrade the contract's logic. It's
+    critical to note that PRBProxy does not fall under this category of upgradeable proxies.
