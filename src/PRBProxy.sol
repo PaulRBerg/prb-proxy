@@ -67,7 +67,7 @@ contract PRBProxy is IPRBProxy {
 
         // Check if the call was successful or not.
         if (!success) {
-            // If there is return data, revert the call with the reason or a custom error.
+            // If there is return data, the delegate call reverted with a reason or a custom error, which we bubble up.
             if (response.length > 0) {
                 assembly {
                     let returndata_size := mload(response)
@@ -121,7 +121,7 @@ contract PRBProxy is IPRBProxy {
 
         // Check if the call was successful or not.
         if (!success) {
-            // If there is return data, the call reverted with a reason or a custom error.
+            // If there is return data, the delegate call reverted with a reason or a custom error, which we bubble up.
             if (response.length > 0) {
                 assembly {
                     // The length of the data is at `response`, while the actual data is at `response + 32`.
