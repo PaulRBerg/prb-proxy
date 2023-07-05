@@ -10,8 +10,8 @@
 [license-badge]: https://img.shields.io/badge/License-MIT-blue.svg
 
 PRBProxy is a **proxy contract that allows for the composition of Ethereum transactions on behalf of the contract owner**, acting as a smart wallet
-that enables multiple contract calls within a single transaction. In Ethereum, externally owned accounts (EOAs) do not have this functionality; they
-are limited to interacting with only one contract per transaction.
+that enables multiple contract calls within a single transaction. In Ethereum, externally owned accounts (EOAs) do not have this functionality because
+they cannot perform delegate calls.
 
 Some key features of PRBProxy include:
 
@@ -81,9 +81,31 @@ Using CREATE2 eliminates the risk of a [chain reorg](https://en.bitcoin.it/wiki/
 PRBProxy a more secure alternative to DSProxy. With DSProxy, users must wait for several blocks to be mined before assuming the contract is secure.
 However, PRBProxy eliminates this risk entirely, making it possible to safely send funds to the proxy before it is deployed.
 
+## Deployments
+
+PRBProxyRegistry is deployed on all chains at 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D. A sortable, searchable list of all chains it's deployed on
+can be found at https://prbproxy.com/deployments. To request a deployment to a new chain, please open a GitHub issue. You can speed up the new deploy
+by sending funds to cover the deploy cost to the deployer account: 0x3Afb8fEDaC6429E2165E84CC43EeA7e42e6440fF.
+
+### ABIs
+
+The ABIs can be found on https://prbproxy.com/abi, where they can be downloaded or copied to the clipboard in various formats, including:
+
+- Solidity interface
+- JSON ABIs, prettified
+- JSON ABIs, minified
+- ethers.js human readable ABIs
+- viem human readable ABIs
+
+Alternatively, you can:
+
+- Download the ABIs from the releases page.
+- Copy the ABIs from [Etherscan](https://etherscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D).
+- Install [Foundry](https://getfoundry.sh/) and run `cast interface 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D`.
+
 ## Usage
 
-There are multiple ways to deploy a proxy:
+Proxies are deployed via PRBProxyRegistry. There are multiple deploy functions available:
 
 | Function                     | Description                                                                                              |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------- |
@@ -101,17 +123,9 @@ function signatures and data.
 See this repository's [wiki](https://github.com/PaulRBerg/prb-proxy/wiki) page for guidance on how to write plugins, targets, and front-end
 integrations.
 
-### Addresses
-
-The registry is deployed on the following chain:
-
-| Contract         | Chain          | [Chain ID](https://chainlist.org/) | Address                                                                                                                           |
-| ---------------- | -------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| PRBProxyRegistry | Goerli Testnet | 5                                  | [0x33e200B5fb5e0C57d370d5202c26A35d07A46B98](https://goerli.etherscan.io/address/0x33e200B5fb5e0C57d370d5202c26A35d07A46B98#code) |
-
 ### Frontends
 
-Integrating PRBProxy into a frontend app would look something like this:
+Integrating PRBProxy into a front-end app would work something like this:
 
 1. Begin by calling the `getProxy` function on the registry to determine if the user already has a proxy.
 2. If the user does not have a proxy, deploy one for them using one of the deploy methods outlined above.
@@ -123,56 +137,10 @@ However, this is just scratching the surface. For more examples of how to use PR
 wiki. Additionally, Maker's developer guide, [Working with DSProxy][dsproxy-guide], provides an in-depth exploration of the proxy concept that can
 also help you understand how to use PRBProxy. Just be sure to keep in mind the differences outlined throughout this document.
 
-## Gas Efficiency
-
-It costs ~528,529 gas to deploy a PRBProxy, whereas a DSProxy costs 596,198 gas - a reduction in deployment costs of roughly 12%.
-
-The `execute` function in PRBProxy is slightly more expensive than in its counterpart, due to the safety checks in our implementation. However, the
-majority of gas cost when calling `execute` is due to the target contract.
-
-## Contributing
-
-Feel free to dive in! [Open](https://github.com/PaulRBerg/prb-proxy/issues/new) an issue,
-[start](https://github.com/PaulRBerg/prb-proxy/discussions/new) a discussion, or submit a PR.
-
-### Pre Requisites
-
-You will need the following software on your machine:
-
-- [Git](https://git-scm.com/downloads)
-- [Foundry](https://github.com/foundry-rs/foundry)
-- [Node.Js](https://nodejs.org/en/download/)
-- [Pnpm](https://pnpm.io)
-
-In addition, familiarity with [Solidity](https://soliditylang.org/) is requisite.
-
-### Set Up
-
-Clone this repository including submodules:
-
-```sh
-$ git clone --recurse-submodules -j8 git@github.com:PaulRBerg/prb-proxy.git
-```
-
-Then, inside the project's directory, run this to install the Node.js dependencies:
-
-```sh
-$ pnpm install
-```
-
-Now you can start making changes.
-
-### Syntax Highlighting
-
-You will need the following VSCode extensions:
-
-- [hardhat-solidity](https://marketplace.visualstudio.com/items?itemName=NomicFoundation.hardhat-solidity)
-- [vscode-tree-language](https://marketplace.visualstudio.com/items?itemName=CTC.vscode-tree-extension)
-
 ## Security
 
-While I have strict standards for code quality and test coverage, it's important to note that this project may not be entirely risk-free. Although I
-have taken measures to ensure the security of PRBProxy, it has not yet been audited by a third-party security researcher.
+While I have strict standards for code quality and test coverage, and the code has been audited by third-party security researchers, using PRBProxy
+may not be entirely risk-free.
 
 ### Caveat Emptor
 
@@ -182,11 +150,6 @@ be held responsible for any direct or indirect loss resulting from the continued
 ### Contact
 
 If you discover any bugs or security issues, please report them via [Telegram](https://t.me/PaulRBerg).
-
-## Acknowledgments
-
-- [ds-proxy](https://github.com/dapphub/ds-proxy) - DappHub's proxy, which powers the Maker protocol.
-- [dsa-contracts](https://github.com/Instadapp/dsa-contracts) - InstaDapp's DeFi Smart Accounts.
 
 ## License
 
