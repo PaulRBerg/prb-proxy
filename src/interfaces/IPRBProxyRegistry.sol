@@ -230,7 +230,7 @@ interface IPRBProxyRegistry {
     /// Requirements:
     /// - The caller must have a proxy.
     /// - The plugin must have at least one implemented method.
-    /// - There must be no method collision with any other installed plugin.
+    /// - There must be no method collision with any other plugin installed by the caller.
     ///
     /// @param plugin The address of the plugin to install.
     function installPlugin(IPRBProxyPlugin plugin) external;
@@ -246,7 +246,7 @@ interface IPRBProxyRegistry {
     /// Requirements:
     /// - The caller must have a proxy.
     ///
-    /// @param envoy The address of the account being given or taken permission to call the target.
+    /// @param envoy The address of the account from which permission is given or taken to call the target.
     /// @param target The address of the target.
     /// @param permission The boolean permission to set.
     function setPermission(address envoy, address target, bool permission) external;
