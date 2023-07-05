@@ -8,9 +8,8 @@ import { Registry_Test } from "../Registry.t.sol";
 contract SetPermission_Test is Registry_Test {
     function test_RevertWhen_CallerDoesNotHaveProxy() external {
         vm.expectRevert(
-            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_CallerDoesNotHaveProxy.selector, users.bob)
+            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_CallerDoesNotHaveProxy.selector, users.alice)
         );
-        changePrank({ msgSender: users.bob });
         registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
     }
 
@@ -19,26 +18,26 @@ contract SetPermission_Test is Registry_Test {
         _;
     }
 
-    function test_SetPermission_PermissionNotSet() external whenCallerHasProxy {
+    function test_SetPermission_PermissionNotSetPreviously() external whenCallerHasProxy {
         registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
         bool permission =
             registry.getPermissionByOwner({ owner: users.alice, envoy: users.envoy, target: address(targets.basic) });
         assertTrue(permission, "permission mismatch");
     }
 
-    modifier whenPermissionSet() {
+    modifier whenPermissionSetPreviously() {
         registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
         _;
     }
 
-    function test_SetPermission_ResetPermission() external whenCallerHasProxy whenPermissionSet {
+    function test_SetPermission_ResetPermission() external whenCallerHasProxy whenPermissionSetPreviously {
         registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
         bool permission =
             registry.getPermissionByOwner({ owner: users.alice, envoy: users.envoy, target: address(targets.basic) });
         assertTrue(permission, "permission mismatch");
     }
 
-    function test_SetPermission_ResetPermission_Event() external whenCallerHasProxy whenPermissionSet {
+    function test_SetPermission_ResetPermission_Event() external whenCallerHasProxy whenPermissionSetPreviously {
         vm.expectEmit({ emitter: address(registry) });
         emit SetPermission({
             owner: users.alice,
@@ -50,11 +49,14 @@ contract SetPermission_Test is Registry_Test {
         registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
     }
 
-    function test_SetPermission_UnsetPermission() external whenCallerHasProxy whenPermissionSet {
+    function test_SetPermission_UnsetPermission() external whenCallerHasProxy whenPermissionSetPreviously {
         registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: false });
+        bool permission =
+            registry.getPermissionByOwner({ owner: users.alice, envoy: users.envoy, target: address(targets.basic) });
+        assertFalse(permission, "permission mismatch");
     }
 
-    function test_SetPermission_UnsetPermission_Event() external whenCallerHasProxy whenPermissionSet {
+    function test_SetPermission_UnsetPermission_Event() external whenCallerHasProxy whenPermissionSetPreviously {
         vm.expectEmit({ emitter: address(registry) });
         emit SetPermission({
             owner: users.alice,

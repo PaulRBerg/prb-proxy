@@ -143,13 +143,13 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.reverter), data);
     }
 
-    function test_RevertWhen_Error_NoPayableModifier()
+    function test_RevertWhen_Error_NotPayable()
         external
         whenCallerAuthorized
         whenTargetContract
         whenDelegateCallReverts
     {
-        bytes memory data = bytes.concat(targets.reverter.dueToNoPayableModifier.selector);
+        bytes memory data = bytes.concat(targets.reverter.notPayable.selector);
         vm.expectRevert();
         proxy.execute{ value: 0.1 ether }(address(targets.reverter), data);
     }

@@ -20,7 +20,7 @@ contract TargetReverter {
         revert("You shall not pass");
     }
 
-    function dueToNoPayableModifier() external pure returns (uint256) {
+    function notPayable() external pure returns (uint256) {
         return 0;
     }
 }

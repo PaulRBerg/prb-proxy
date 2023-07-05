@@ -17,7 +17,7 @@ contract DeployAndInstallPlugin_Test is Registry_Test {
         vm.expectRevert(
             abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerHasProxy.selector, users.alice, proxy)
         );
-        registry.deploy();
+        registry.deployAndInstallPlugin(plugins.basic);
     }
 
     modifier whenOwnerDoesNotHaveProxy() {
@@ -48,19 +48,23 @@ contract DeployAndInstallPlugin_Test is Registry_Test {
         assertEq(actualProxyAddress, expectedProxyAddress, "proxy address mismatch");
     }
 
-    function testFuzz_DeployAndInstallPlugin_Plugin() external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndInstallPlugin_Plugin(address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: owner });
         registry.deployAndInstallPlugin(plugins.basic);
+
         bytes4[] memory pluginMethods = plugins.basic.getMethods();
         for (uint256 i = 0; i < pluginMethods.length; ++i) {
-            IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: users.alice, method: pluginMethods[i] });
+            IPRBProxyPlugin actualPlugin = registry.getPluginByOwner({ owner: owner, method: pluginMethods[i] });
             IPRBProxyPlugin expectedPlugin = plugins.basic;
             assertEq(actualPlugin, expectedPlugin, "plugin method not installed");
         }
     }
 
-    function testFuzz_DeployAndInstallPlugin_PluginReverseMapping() external whenOwnerDoesNotHaveProxy {
+    function testFuzz_DeployAndInstallPlugin_PluginReverseMapping(address owner) external whenOwnerDoesNotHaveProxy {
+        changePrank({ msgSender: owner });
         registry.deployAndInstallPlugin(plugins.basic);
-        bytes4[] memory actualMethods = registry.getMethodsByOwner({ owner: users.alice, plugin: plugins.basic });
+
+        bytes4[] memory actualMethods = registry.getMethodsByOwner({ owner: owner, plugin: plugins.basic });
         bytes4[] memory expectedMethods = plugins.basic.getMethods();
         assertEq(actualMethods, expectedMethods, "methods not saved in reverse mapping");
     }

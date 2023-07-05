@@ -17,9 +17,9 @@ runPlugin.t.sol
       │     ├── it should revert with a require
       │     └── it should revert with a reason string
       └── when the delegate call does not revert
-         ├── when Ether is sent
-         │  └── it should return the Ether amount
-         └── when no Ether is sent
+         ├── when the plugin receives ETH
+         │  └── it should return the ETH amount
+         └── when the plugin does not receive ETH
             ├── when the plugin self-destructs
             │  └── it should return an empty response and send the ETH to the SELFDESTRUCT recipient
             └── when the plugin does not self-destruct

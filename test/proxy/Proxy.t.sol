@@ -22,6 +22,6 @@ contract Proxy_Test is Base_Test {
 
         // Deploy and label the default proxy.
         proxy = registry.deployFor({ owner: users.alice });
-        vm.label({ account: address(proxy), newLabel: "Alice Proxy" });
+        vm.label({ account: address(proxy), newLabel: "Alice's Proxy" });
     }
 }

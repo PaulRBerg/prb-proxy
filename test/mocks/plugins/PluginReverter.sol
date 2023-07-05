@@ -13,7 +13,7 @@ contract PluginReverter is IPRBProxyPlugin, TargetReverter {
         methods[1] = this.withCustomError.selector;
         methods[2] = this.withRequire.selector;
         methods[3] = this.withReasonString.selector;
-        methods[4] = this.dueToNoPayableModifier.selector;
+        methods[4] = this.notPayable.selector;
 
         return methods;
     }

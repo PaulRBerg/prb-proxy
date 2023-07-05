@@ -12,7 +12,7 @@ contract DeployFor_Test is Registry_Test {
     }
 
     function test_RevertWhen_OwnerHasProxy() external {
-        IPRBProxy proxy = registry.deployFor({ owner: users.alice });
+        IPRBProxy proxy = registry.deploy();
         vm.expectRevert(
             abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerHasProxy.selector, users.alice, proxy)
         );

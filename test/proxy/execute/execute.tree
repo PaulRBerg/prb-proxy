@@ -22,11 +22,11 @@ execute.t.sol
          │     ├── it should revert with a custom error
          │     ├── it should revert with a require
          │     ├── it should revert with a reason string
-         │     └── it should revert due to no payable modifier
+         │     └── it should revert when sending ETH to a non-payable function
          └── when the delegate call does not revert
-            ├── when Ether is sent
+            ├── when ETH is sent
             │  └── it should return the Ether amount
-            └── when no Ether is sent
+            └── when no ETH is sent
                ├── when the target self-destructs
                │  └── it should return an empty response and send the ETH to the SELFDESTRUCT recipient
                └── when the target does not self-destruct
