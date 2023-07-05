@@ -9,20 +9,20 @@
 [license]: https://opensource.org/licenses/MIT
 [license-badge]: https://img.shields.io/badge/License-MIT-blue.svg
 
-PRBProxy is a **proxy contract that allows for the composition of Ethereum transactions on behalf of the contract owner**, acting as a smart wallet
+PRBProxy is a **forwarding proxy that allows for the composition of Ethereum transactions on behalf of the contract owner**, acting as a smart wallet
 that enables multiple contract calls within a single transaction. In Ethereum, externally owned accounts (EOAs) do not have this functionality because
 they cannot perform delegate calls.
 
 Some key features of PRBProxy include:
 
-- Forwarding calls with [`DELEGATECALL`][se-3667]
-- Use of [CREATE2][eip-1014] to deploy the proxies at deterministic addresses.
+- Forwards calls with [`DELEGATECALL`][se-3667].
+- Uses [CREATE2][eip-1014] to deploy the proxies at deterministic addresses.
 - A unique registry system ensures that each user has a distinct proxy.
-- An access control system that permits third-party accounts (called "envoys") to call target contracts on behalf of the owner.
-- A plugin system that enables the proxy to respond to callbacks.
-- Reversion with custom errors rather than reason strings for improved error handling.
+- A plugin system enables the proxy to respond to callbacks.
+- An access control system permits third-party accounts (called "envoys") to call target contracts on behalf of the owner.
+- Reverts with custom errors rather than reason strings for more efficient error handling.
 - Comprehensive documentation via NatSpec comments.
-- Development and testing using Foundry.
+- Developed and tested using Foundry.
 
 Overall, PRBProxy is a powerful tool for transaction composition, providing numerous features and benefits not available through EOAs.
 
@@ -50,7 +50,7 @@ However, PRBProxy eliminates this risk entirely, making it possible to safely se
 
 ## Deployments
 
-PRBProxyRegistry is deployed on all chains at 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D. A sortable, searchable list of all available chains can be
+PRBProxyRegistry is deployed on 10+ chains at 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D. A sortable, searchable list of all available chains can be
 found at https://prbproxy.com/deployments. To request a deployment to a new chain, please open a GitHub issue. You can speed up the process by sending
 funds to cover the deploy cost to the deployer account: 0x3Afb8fEDaC6429E2165E84CC43EeA7e42e6440fF.
 
