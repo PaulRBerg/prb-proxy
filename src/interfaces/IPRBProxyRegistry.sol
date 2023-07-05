@@ -246,7 +246,7 @@ interface IPRBProxyRegistry {
     /// Requirements:
     /// - The caller must have a proxy.
     ///
-    /// @param envoy The address of the account from which permission is given or taken to call the target.
+    /// @param envoy The address of the account the caller is giving or taking permission from.
     /// @param target The address of the target.
     /// @param permission The boolean permission to set.
     function setPermission(address envoy, address target, bool permission) external;
