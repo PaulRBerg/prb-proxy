@@ -17,7 +17,7 @@ interface IPRBProxy {
     /// @notice Thrown when a target contract reverts without a specified reason.
     error PRBProxy_ExecutionReverted();
 
-    /// @notice Thrown when the caller to be the owner.
+    /// @notice Thrown when an unauthorized account tries to execute a delegate call.
     error PRBProxy_ExecutionUnauthorized(address owner, address caller, address target);
 
     /// @notice Thrown when the fallback function fails to find an installed plugin for the method selector.
@@ -67,6 +67,6 @@ interface IPRBProxy {
     ///
     /// @param target The address of the target contract.
     /// @param data Function selector plus ABI encoded data.
-    /// @return response The response received from the target contract.
+    /// @return response The response received from the target contract, if any.
     function execute(address target, bytes calldata data) external payable returns (bytes memory response);
 }
