@@ -128,8 +128,8 @@ contract RunPlugin_Test is Proxy_Test {
         registry.installPlugin(plugins.selfDestructer);
         (bool success, bytes memory response) =
             address(proxy).call(abi.encodeWithSelector(plugins.selfDestructer.destroyMe.selector, users.bob));
-        assertTrue(success);
-        assertEq(response.length, 0);
+        assertTrue(success, "selfDestructer.destroyMe failed");
+        assertEq(response.length, 0, "selfDestructer.destroyMe response length mismatch");
 
         // Assert that Bob's balance has increased by the contract's balance.
         uint256 actualBobBalance = users.bob.balance;
@@ -150,16 +150,29 @@ contract RunPlugin_Test is Proxy_Test {
         whenPluginDoesNotSelfDestruct
     {
         registry.installPlugin(plugins.basic);
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.basic.foo.selector));
+        bytes memory expectedResponse = abi.encode(bytes("foo"));
+        assertTrue(success, "basic.foo failed");
+        assertEq(actualResponse, expectedResponse, "basic.foo response mismatch");
+    }
+
+    function test_RunPlugin_Event()
+        external
+        whenPluginInstalled
+        whenDelegateCallReverts
+        whenDelegateCallDoesNotRevert
+        whenNoEtherSent
+        whenPluginDoesNotSelfDestruct
+    {
+        registry.installPlugin(plugins.basic);
         vm.expectEmit({ emitter: address(proxy) });
         emit RunPlugin({
             plugin: plugins.basic,
             data: abi.encodeWithSelector(TargetBasic.foo.selector),
             response: abi.encode(bytes("foo"))
         });
-        (bool success, bytes memory actualResponse) =
-            address(proxy).call(abi.encodeWithSelector(plugins.basic.foo.selector));
-        assertTrue(success);
-        bytes memory expectedResponse = abi.encode(bytes("foo"));
-        assertEq(actualResponse, expectedResponse, "basic.foo response mismatch");
+        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.basic.foo.selector));
+        success;
     }
 }

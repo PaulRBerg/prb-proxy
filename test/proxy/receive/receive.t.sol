@@ -4,7 +4,7 @@ pragma solidity >=0.8.19 <=0.9.0;
 import { Proxy_Test } from "../Proxy.t.sol";
 
 contract Receive_Test is Proxy_Test {
-    uint256 private value = 1 ether;
+    uint256 internal value = 1 ether;
 
     function setUp() public virtual override {
         Proxy_Test.setUp();
