@@ -5,161 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-[4.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.6...v4.0.0
-[4.0.0-beta.6]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.5...v4.0.0-beta.6
-[4.0.0-beta.5]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.4...v4.0.0-beta.5
-[4.0.0-beta.4]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.3...v4.0.0-beta.4
-[4.0.0-beta.3]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.2...v4.0.0-beta.3
-[4.0.0-beta.2]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0-beta.1...v4.0.0-beta.2
-[4.0.0-beta.1]: https://github.com/PaulRBerg/prb-proxy/compare/v2.0.0...v4.0.0-beta.1
+[4.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v2.0.0...v4.0.0
 [2.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/PaulRBerg/prb-proxy/releases/tag/v1.0.0
 
-## [4.0.0] - 2023-07-04
-
-### Added
-
-- Stable release (@PaulRBerg)
-
-## [4.0.0-beta.6] - 2023-06-29
-
-### Changed
-
-- Change `proxies` getter to `getProxy` ([#100](https://github.com/PaulRBerg/prb-proxy/pull/118)) (@PaulRBerg)
-- Improve documentation in NatSpec comments (@PaulRBerg)
-- Make the registry in charge of plugins ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
-- Make the `owner` an immutable variable ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
-- Rename `methodList` to `methods`
-- Use `owner` instead of `tx.origin` as CREATE2 salt ([#130](https://github.com/PaulRBerg/prb-proxy/pull/130)) (@PaulRBerg)
-
-### Added
-
-- Add `deployAndExecuteAndInstallPlugin` function ([#134](https://github.com/PaulRBerg/prb-proxy/pull/134)) (@PaulRBerg)
-- Add `deployAndInstallPlugin` function ([#131](https://github.com/PaulRBerg/prb-proxy/pull/131)) (@PaulRBerg)
-- Add new getters for reading the plugins and the permissions ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
-- Store plugin methods in reverse mapping ([#131](https://github.com/PaulRBerg/prb-proxy/pull/131)) (@PaulRBerg)
-
-### Removed
-
-- Remove `deployAndExecuteFor` function ([#113](https://github.com/PaulRBerg/prb-proxy/pull/113)) (@PaulRBerg)
-- Remove `minGasReserve` storage variable ([#114](https://github.com/PaulRBerg/prb-proxy/pull/114)) (@PaulRBerg)
-- Remove `nextSeeds` storage variable ([#130](https://github.com/PaulRBerg/prb-proxy/pull/130)) (@PaulRBerg)
-- Remove `PRBProxyAnnex` ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
-- Remove proxy storage ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
-- Remove `transferOwnership` functionality ([#119](https://github.com/PaulRBerg/prb-proxy/pull/119)) (@PaulRBerg)
-
-### Fixed
-
-- Check for plugin method collisions ([#129](https://github.com/PaulRBerg/prb-proxy/pull/129)) (@PaulRBerg)
-
-## [4.0.0-beta.5] - 2023-05-30
-
-### Changed
-
-- Change key name in `nextSeeds` (@PaulRBerg)
-- Simplify nesting structure in `script` (@PaulRBerg)
-- Revert with reason strings in precompiles (@PaulRBerg)
-- Various small improvements (@PaulRBerg)
-- Use relative paths in imports in `script` and `test` (@PaulRBerg)
-
-## [4.0.0-beta.4] - 2023-05-19
-
-### Changed
-
-- Bump pragma in scripts to `>=0.8.19` (@PaulRBerg)
-- Change license of test utils to MIT (@PaulRBerg)
-- Improve documentation (@PaulRBerg)
-- Improve names of custom errors and functions (@PaulRBerg)
-- Inherit storage in plugin ([#92](https://github.com/PaulRBerg/prb-proxy/pull/92)) (@PaulRBerg)
-- Move `PRBProxyStorage` to `src/abstracts` (@PaulRBerg)
-- Provide default mnemonic in base script (@PaulRBerg)
-- Rename `PRBProxyHelpers` to `PRBProxyAnnex` ([#96](https://github.com/PaulRBerg/prb-proxy/pull/96)) (@PaulRBerg)
-- Replace getters with public mappings (@PaulRBerg)
-- Switch order of return parameters in the `run` function of scripts (@PaulRBerg)
-- Use named parameter in error reverts (@PaulRBerg)
-
-### Added
-
-- Add ASCII art (@PaulRBerg)
-- Add `SablierV2ProxyPlugin` abstract ([#92](https://github.com/PaulRBerg/prb-proxy/pull/92)) (@PaulRBerg)
-- Provide testing utilities for deploying precompiled bytecodes (@PaulRBerg)
-
-### Removed
-
-- Remove development-related Node.js dependencies (@PaulRBerg)
-- Remove problematic src/=src/ remapping (@PaulRBerg)
-
-### Fixed
-
-- Use constructor instead of `setUp` function in base script (@PaulRBerg)
-
-## [4.0.0-beta.3] - 2023-03-08
-
-### Changed
-
-- Improve documentation (@PaulRBerg)
-- Make `permissions` and `plugins` mappings public ([#84](https://github.com/PaulRBerg/prb-proxy/pull/84)) (@andreivladbrg)
-- Reorder storage variables ([`d86514`](https://github.com/PaulRBerg/prb-proxy/commit/d86514)) (@PaulRBerg)
-
-### Added
-
-- Add `IRPProxyStorage` interface ([#84](https://github.com/PaulRBerg/prb-proxy/pull/84)) (@andreivladbrg)
-
-### Removed
-
-- Remove getters `getPermission` and `getPluginForMethod` ([#84](https://github.com/PaulRBerg/prb-proxy/pull/84)) (@andreivladbrg)
-
-## [4.0.0-beta.2] - 2023-03-03
-
-### Changed
-
-- Merge the registry and the factory ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
-- Rename `deployer` to `operator` ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
-- Set the owner via the `transientProxyOwner` storage variable ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
-- Transfer ownership via the registry ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
-- Bump submodules (@PaulRBerg)
-- Improve documentation (@PaulRBerg)
-- Make `VERSION` a string ([699f76](https://github.com/PaulRBerg/prb-proxy/commit/699f76)) (@PaulRBerg)
-
-### Added
-
-- Add `OpenZeppelin/openzeppelin-contracts` submodule
-
-### Removed
-
-- **Breaking**: Remove `PRBProxyFactory` contract ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
-- Remove `PaulRBerg/prb-contracts` submodule
-
-## [4.0.0-beta.1] - 2023-02-25
+## [4.0.0] - 2023-07-07
 
 _Version 3 has been skipped to keep the package version in sync with the contract version_
 
 ### Changed
 
+- **Breaking**: Merge the registry and the factory ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
+- **Breaking**: Rename `getCurrentProxy` to `getProxy` (@PaulRBerg)
+- **Breaking**: Simplify the envoy permission system ([#72](https://github.com/PaulRBerg/prb-proxy/issues/73)) (@PaulRBerg)
+- **Breaking**: Use `owner` instead of `tx.origin` as CREATE2 salt ([#130](https://github.com/PaulRBerg/prb-proxy/pull/130)) (@PaulRBerg)
+- Bump Solidity pragmas (@PaulRBerg)
 - Change license to MIT ([#49](https://github.com/PaulRBerg/prb-proxy/issues/49)) (@PaulRBerg)
-- Format contracts with Forge Formatter (@PaulRBerg)
-- Improve documentation (@PaulRBerg)
-- Improve formatting (@PaulRBerg)
-- Improve names of custom errors, events, and functions (@PaulRBerg)
-- Lower pragma to `>=0.8.4` in interface files ([46a34c](https://github.com/PaulRBerg/prb-proxy/commit/46a34c)) (@PaulRBerg)
-- Mark factory as immutable ([bcc8aa](https://github.com/PaulRBerg/prb-proxy/commit/bcc8aa)) (@PaulRBerg)
-- Move interface files in a nested directory ([b954b5](https://github.com/PaulRBerg/prb-proxy/commit/b954b5)) (@PaulRBerg)
-- Move the `setPermission` function to an enshrined target contract ([3f5794](https://github.com/PaulRBerg/prb-proxy/commit/3f5794)) (@PaulRBerg)
-- Reduce deployment size by setting optimizer runs to 200 ([c2f955](https://github.com/PaulRBerg/prb-proxy/commit/c2f955)) (@PaulRBerg)
 - Rename custom errors to use single underscore ([b954b5](https://github.com/PaulRBerg/prb-proxy/commit/b954b5)) (@PaulRBerg)
-- Simplify the envoy permission system ([#72](https://github.com/PaulRBerg/prb-proxy/issues/73)) (@PaulRBerg)
-- Update pragmas (@PaulRBerg)
-- Use named arguments in function calls (@PaulRBerg)
+- Improve formatting and documentation (@PaulRBerg)
+- Lower pragma to `>=0.8.4` in interface files ([46a34c](https://github.com/PaulRBerg/prb-proxy/commit/46a34c)) (@PaulRBerg)
+- Make the `owner` an immutable variable ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
+- Make `VERSION` a string ([699f76](https://github.com/PaulRBerg/prb-proxy/commit/699f76)) (@PaulRBerg)
+- Reduce deployment size by setting optimizer runs to 200 ([c2f955](https://github.com/PaulRBerg/prb-proxy/commit/c2f955)) (@PaulRBerg)
 
 ### Added
 
-- Add `deployAndExecute` functions ([ce9d29](https://github.com/PaulRBerg/prb-proxy/commit/ce9d29)) (@PaulRBerg)
-- Add enshrined target contract `PRBProxyHelpers` ([4ca1c9](https://github.com/PaulRBerg/prb-proxy/commit/4ca1c9)) (@PaulRBerg)
-- Add plugin system and fallback function ([#53](https://github.com/PaulRBerg/prb-proxy/pull/53)) (@cleanunicorn, @PaulRBerg)
-- Add storage contract that replicates the storage layout of the proxy ([1449da](https://github.com/PaulRBerg/prb-proxy/commit/1449da)) (@PaulRBerg)
+- Add ability to deploy a proxy and execute a delegate call to a target in a single transaction (@PaulRBerg)
+- Add ASCII art (@PaulRBerg)
+- Add plugin system ([#53](https://github.com/PaulRBerg/prb-proxy/pull/53)) (@cleanunicorn, @PaulRBerg)
 - Emit event in `setPermission` ([b277fd](https://github.com/PaulRBerg/prb-proxy/commit/b277fd)) (@PaulRBerg)
-- Re-implement the `setMinGasReserve` function in the enshrined target ([e6fdfb](https://github.com/PaulRBerg/prb-proxy/commit/e6fdfb)) (@PaulRBerg)
+- Provide testing utilities for deploying precompiled bytecodes (@PaulRBerg)
+- Store the registry address as an immutable variable in the proxy (@PaulRBerg)
+
+### Removed
+
+- **Breaking**: Remove `PRBProxyFactory` contract ([#81](https://github.com/PaulRBerg/prb-proxy/pull/81)) (@PaulRBerg)
+- **Breaking**: Remove proxy storage ([#120](https://github.com/PaulRBerg/prb-proxy/pull/120)) (@PaulRBerg)
+- **Breaking**: Remove `transferOwnership` functionality ([#119](https://github.com/PaulRBerg/prb-proxy/pull/119)) (@PaulRBerg)
 
 ### Fixed
 

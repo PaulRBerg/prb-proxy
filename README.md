@@ -58,10 +58,8 @@ funds to cover the deploy cost to the deployer account: 0x3Afb8fEDaC6429E2165E84
 
 The ABIs can be found on https://prbproxy.com/abi, where they can be downloaded or copied to the clipboard in various formats, including:
 
-- Solidity interface
+- Solidity interfaces
 - JSON ABIs, prettified
-- JSON ABIs, minified
-- ethers.js human readable ABIs
 - viem human readable ABIs
 
 Alternatively, you can:
@@ -73,7 +71,7 @@ Alternatively, you can:
 
 ## Install
 
-You can get access to the ABIs and the `IPRBProxy` and the `IPRBProxyRegistry` interfaces programmatically.
+You can get access to the Solidity code and the ABIs programmatically.
 
 ### Foundry
 
