@@ -30,6 +30,11 @@
     "url": "https://polygonscan.com/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
   },
   {
+    "chainId": 42220,
+    "name": "Celo",
+    "url": "https://celoscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+  },
+  {
     "chainId": 42161,
     "name": "Arbitrum",
     "url": "https://arbiscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
