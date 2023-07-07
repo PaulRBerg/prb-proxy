@@ -8,34 +8,31 @@ execute.t.sol
    ├── when the target is not a contract
    │  └── it should revert
    └── when the target is a contract
-      ├── when the target is the registry
-      │  └── it should revert
-      └── when the target is not the registry
-         ├── when the delegate call reverts
-         │  ├── when the exception is a panic
-         │  │  ├── it should panic due to a failed assertion
-         │  │  ├── it should panic due to an arithmetic overflow
-         │  │  ├── it should panic due to a division by zero
-         │  │  └── it should panic due to an index out of bounds
-         │  └── when the exception is an error
-         │     ├── it should revert with an empty revert statement
-         │     ├── it should revert with a custom error
-         │     ├── it should revert with a require
-         │     ├── it should revert with a reason string
-         │     └── it should revert when sending ETH to a non-payable function
-         └── when the delegate call does not revert
-            ├── when ETH is sent
-            │  └── it should return the Ether amount
-            └── when no ETH is sent
-               ├── when the target self-destructs
-               │  └── it should return an empty response and send the ETH to the SELFDESTRUCT recipient
-               └── when the target does not self-destruct
-                  ├── it should return the address
-                  ├── it should return the bytes array
-                  ├── it should return the bytes32
-                  ├── it should return the string
-                  ├── it should return the struct
-                  ├── it should return the uint8
-                  ├── it should return the uint256
-                  ├── it should return the uint256 array
-                  └── it should emit an {Execute} event
+      ├── when the delegate call reverts
+      │  ├── when the exception is a panic
+      │  │  ├── it should panic due to a failed assertion
+      │  │  ├── it should panic due to an arithmetic overflow
+      │  │  ├── it should panic due to a division by zero
+      │  │  └── it should panic due to an index out of bounds
+      │  └── when the exception is an error
+      │     ├── it should revert with an empty revert statement
+      │     ├── it should revert with a custom error
+      │     ├── it should revert with a require
+      │     ├── it should revert with a reason string
+      │     └── it should revert when sending ETH to a non-payable function
+      └── when the delegate call does not revert
+         ├── when ETH is sent
+         │  └── it should return the Ether amount
+         └── when no ETH is sent
+            ├── when the target self-destructs
+            │  └── it should return an empty response and send the ETH to the SELFDESTRUCT recipient
+            └── when the target does not self-destruct
+               ├── it should return the address
+               ├── it should return the bytes array
+               ├── it should return the bytes32
+               ├── it should return the string
+               ├── it should return the struct
+               ├── it should return the uint8
+               ├── it should return the uint256
+               ├── it should return the uint256 array
+               └── it should emit an {Execute} event
