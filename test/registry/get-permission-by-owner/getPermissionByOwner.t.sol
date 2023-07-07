@@ -11,7 +11,7 @@ contract GetPermissionByOwner_Test is Registry_Test {
 
     function test_GetPermissionByOwner_EnvoyDoesNotHavePermission() external {
         bool permission =
-            registry.getPermissionByProxy({ proxy: proxy, envoy: users.envoy, target: address(targets.basic) });
+            registry.getPermissionByOwner({ owner: users.alice, envoy: users.envoy, target: address(targets.basic) });
         assertFalse(permission, "permission mismatch");
     }
 
@@ -22,7 +22,7 @@ contract GetPermissionByOwner_Test is Registry_Test {
 
     function test_GetPermissionByOwner() external whenEnvoyHasPermission {
         bool permission =
-            registry.getPermissionByProxy({ proxy: proxy, envoy: users.envoy, target: address(targets.basic) });
+            registry.getPermissionByOwner({ owner: users.alice, envoy: users.envoy, target: address(targets.basic) });
         assertTrue(permission, "permission mismatch");
     }
 }
