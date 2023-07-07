@@ -2,27 +2,24 @@ runPlugin.t.sol
 ├── when the plugin is not installed
 │  └── it should revert
 └── when the plugin is installed
-   ├── when the owner has been changed during the delegate call
-   │  └── it should revert
-   └── when the owner has not been changed during the delegate call
-      ├── when the delegate call reverts
-      │  ├── when the exception is a panic
-      │  │  ├── it should panic due to a failed assertion
-      │  │  ├── it should panic due to an arithmetic overflow
-      │  │  ├── it should panic due to an index out of bounds
-      │  │  └── it should panic due to a division by zero
-      │  └── when the exception is an error
-      │     ├── it should revert with an empty revert statement
-      │     ├── it should revert with a custom error
-      │     ├── it should revert with a require
-      │     └── it should revert with a reason string
-      └── when the delegate call does not revert
-         ├── when the plugin receives ETH
-         │  └── it should return the ETH amount
-         └── when the plugin does not receive ETH
-            ├── when the plugin self-destructs
-            │  └── it should return an empty response and send the ETH to the SELFDESTRUCT recipient
-            └── when the plugin does not self-destruct
-               ├── it should run the plugin
-               └── it should emit a {RunPlugin} event
+   ├── when the delegate call reverts
+   │  ├── when the exception is a panic
+   │  │  ├── it should panic due to a failed assertion
+   │  │  ├── it should panic due to an arithmetic overflow
+   │  │  ├── it should panic due to an index out of bounds
+   │  │  └── it should panic due to a division by zero
+   │  └── when the exception is an error
+   │     ├── it should revert with an empty revert statement
+   │     ├── it should revert with a custom error
+   │     ├── it should revert with a require
+   │     └── it should revert with a reason string
+   └── when the delegate call does not revert
+      ├── when the plugin receives ETH
+      │  └── it should return the ETH amount
+      └── when the plugin does not receive ETH
+         ├── when the plugin self-destructs
+         │  └── it should return an empty response and send the ETH to the SELFDESTRUCT recipient
+         └── when the plugin does not self-destruct
+            ├── it should run the plugin
+            └── it should emit a {RunPlugin} event
 
