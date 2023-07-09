@@ -132,8 +132,8 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function getProxy(address owner) external view returns (IPRBProxy proxy) {
-        proxy = _proxies[owner];
+    function getProxy(address user) external view returns (IPRBProxy proxy) {
+        proxy = _proxies[user];
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -159,8 +159,8 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner) external override onlyNonProxyOwner(owner) returns (IPRBProxy proxy) {
-        proxy = _deploy({ owner: owner, target: address(0), data: "" });
+    function deployFor(address user) external override onlyNonProxyOwner(user) returns (IPRBProxy proxy) {
+        proxy = _deploy({ owner: user, target: address(0), data: "" });
     }
 
     /// @inheritdoc IPRBProxyRegistry

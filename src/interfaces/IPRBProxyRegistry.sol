@@ -137,9 +137,9 @@ interface IPRBProxyRegistry {
     /// @param method The method selector for the query.
     function getPluginByProxy(IPRBProxy proxy, bytes4 method) external view returns (IPRBProxyPlugin plugin);
 
-    /// @notice Retrieves the proxy for the provided owner.
-    /// @param owner The user address for the query.
-    function getProxy(address owner) external view returns (IPRBProxy proxy);
+    /// @notice Retrieves the proxy for the provided user.
+    /// @param user The user address for the query.
+    function getProxy(address user) external view returns (IPRBProxy proxy);
 
     /*//////////////////////////////////////////////////////////////////////////
                                NON-CONSTANT FUNCTIONS
@@ -206,16 +206,16 @@ interface IPRBProxyRegistry {
     /// @return proxy The address of the newly deployed proxy.
     function deployAndInstallPlugin(IPRBProxyPlugin plugin) external returns (IPRBProxy proxy);
 
-    /// @notice Deploys a new proxy for the provided owner.
+    /// @notice Deploys a new proxy for the provided user.
     ///
     /// @dev Emits a {DeployProxy} event.
     ///
     /// Requirements:
-    /// - The owner must not have a proxy.
+    /// - The user must not have a proxy already.
     ///
-    /// @param owner The owner of the proxy.
+    /// @param user The address that will own the proxy.
     /// @return proxy The address of the newly deployed proxy.
-    function deployFor(address owner) external returns (IPRBProxy proxy);
+    function deployFor(address user) external returns (IPRBProxy proxy);
 
     /// @notice Installs the provided plugin on the caller's proxy, and saves the list of methods implemented by the
     /// plugin so that they can be referenced later.
