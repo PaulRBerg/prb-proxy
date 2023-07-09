@@ -11,9 +11,6 @@ interface IPRBProxy {
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Thrown when the transfer ownership function is called directly (not via the registry).
-    error PRBProxy_CallerNotRegistry(IPRBProxyRegistry registry, address caller);
-
     /// @notice Thrown when a target contract reverts without a specified reason.
     error PRBProxy_ExecutionReverted();
 
@@ -28,9 +25,6 @@ interface IPRBProxy {
 
     /// @notice Thrown when a non-contract address is passed as the target.
     error PRBProxy_TargetNotContract(address target);
-
-    /// @notice Thrown when the registry is passed as the target.
-    error PRBProxy_TargetRegistry();
 
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS
