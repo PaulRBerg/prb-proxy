@@ -159,14 +159,14 @@ interface IPRBProxyRegistry {
     /// 1. Deploys a new proxy for the caller
     /// 2. Delegate calls to the provided target, returning the data it gets back, and bubbling up any potential revert.
     ///
-    /// @dev Emits a {DeployProxy} and an {Execute} event.
+    /// @dev Emits a {DeployProxy} and {Execute} event.
     ///
     /// Requirements:
     /// - The caller must not have a proxy.
     /// - `target` must be a contract.
     ///
     /// @param target The address of the target.
-    /// @param data Function selector plus ABI encoded data.
+    /// @param data Function selector plus ABI-encoded data.
     /// @return proxy The address of the newly deployed proxy.
     function deployAndExecute(address target, bytes calldata data) external returns (IPRBProxy proxy);
 
@@ -175,13 +175,15 @@ interface IPRBProxyRegistry {
     /// 2. Delegate calls to the provided target, returning the data it gets back, and bubbling up any potential revert.
     /// 3. Installs the provided plugin on the newly deployed proxy.
     ///
-    /// @dev Emits a {DeployProxy} and an {InstallPlugin} event.
+    /// @dev Emits a {DeployProxy}, {Execute}, and {InstallPlugin} event.
     ///
     /// Requirements:
     /// - The caller must not have a proxy.
     /// - See the requirements in `installPlugin`.
     /// - See the requirements in `execute`.
     ///
+    /// @param target The address of the target.
+    /// @param data Function selector plus ABI-encoded data.
     /// @param plugin The address of the plugin to install.
     /// @return proxy The address of the newly deployed proxy.
     function deployAndExecuteAndInstallPlugin(
@@ -196,7 +198,7 @@ interface IPRBProxyRegistry {
     /// 1. Deploys a new proxy for the caller.
     /// 2. Installs the provided plugin on the newly deployed proxy.
     ///
-    /// @dev Emits a {DeployProxy} and an {InstallPlugin} event.
+    /// @dev Emits a {DeployProxy} and {InstallPlugin} event.
     ///
     /// Requirements:
     /// - The caller must not have a proxy.
