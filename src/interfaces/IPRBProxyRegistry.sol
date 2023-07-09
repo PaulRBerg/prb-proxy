@@ -29,7 +29,7 @@ interface IPRBProxyRegistry {
     error PRBProxyRegistry_UserDoesNotHaveProxy(address user);
 
     /// @notice Thrown when a function requires the user to not have a proxy.
-    error PRBProxyRegistry_UserHasProxy(address owner, IPRBProxy proxy);
+    error PRBProxyRegistry_UserHasProxy(address user, IPRBProxy proxy);
 
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS
