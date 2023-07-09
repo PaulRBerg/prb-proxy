@@ -8,7 +8,7 @@ import { Registry_Test } from "../Registry.t.sol";
 contract SetPermission_Test is Registry_Test {
     function test_RevertWhen_CallerDoesNotHaveProxy() external {
         vm.expectRevert(
-            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_CallerDoesNotHaveProxy.selector, users.alice)
+            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_UserDoesNotHaveProxy.selector, users.alice)
         );
         registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
     }

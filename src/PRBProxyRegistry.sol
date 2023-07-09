@@ -57,19 +57,19 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
                                      MODIFIERS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Check that the owner does not have a proxy.
-    modifier noProxy(address owner) {
-        IPRBProxy proxy = _proxies[owner];
-        if (address(proxy) != address(0)) {
-            revert PRBProxyRegistry_OwnerHasProxy(owner, proxy);
+    /// @notice Checks that the caller has a proxy.
+    modifier onlyCallerWithProxy() {
+        if (address(_proxies[msg.sender]) == address(0)) {
+            revert PRBProxyRegistry_UserDoesNotHaveProxy(msg.sender);
         }
         _;
     }
 
-    /// @notice Checks that the caller has a proxy.
-    modifier onlyCallerWithProxy() {
-        if (address(_proxies[msg.sender]) == address(0)) {
-            revert PRBProxyRegistry_CallerDoesNotHaveProxy(msg.sender);
+    /// @notice Check that the user does not have a proxy.
+    modifier onlyNonProxyOwner(address user) {
+        IPRBProxy proxy = _proxies[user];
+        if (address(proxy) != address(0)) {
+            revert PRBProxyRegistry_UserHasProxy(user, proxy);
         }
         _;
     }
@@ -132,8 +132,8 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function getProxy(address owner) external view returns (IPRBProxy proxy) {
-        proxy = _proxies[owner];
+    function getProxy(address user) external view returns (IPRBProxy proxy) {
+        proxy = _proxies[user];
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IPRBProxyRegistry
-    function deploy() external override noProxy(msg.sender) returns (IPRBProxy proxy) {
+    function deploy() external override onlyNonProxyOwner(msg.sender) returns (IPRBProxy proxy) {
         proxy = _deploy({ owner: msg.sender, target: address(0), data: "" });
     }
 
@@ -152,15 +152,15 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     )
         external
         override
-        noProxy(msg.sender)
+        onlyNonProxyOwner(msg.sender)
         returns (IPRBProxy proxy)
     {
         proxy = _deploy({ owner: msg.sender, target: target, data: data });
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployFor(address owner) external override noProxy(owner) returns (IPRBProxy proxy) {
-        proxy = _deploy({ owner: owner, target: address(0), data: "" });
+    function deployFor(address user) external override onlyNonProxyOwner(user) returns (IPRBProxy proxy) {
+        proxy = _deploy({ owner: user, target: address(0), data: "" });
     }
 
     /// @inheritdoc IPRBProxyRegistry
@@ -171,7 +171,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     )
         external
         override
-        noProxy(msg.sender)
+        onlyNonProxyOwner(msg.sender)
         returns (IPRBProxy proxy)
     {
         proxy = _deploy({ owner: msg.sender, target: target, data: data });
@@ -179,7 +179,11 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployAndInstallPlugin(IPRBProxyPlugin plugin) external noProxy(msg.sender) returns (IPRBProxy proxy) {
+    function deployAndInstallPlugin(IPRBProxyPlugin plugin)
+        external
+        onlyNonProxyOwner(msg.sender)
+        returns (IPRBProxy proxy)
+    {
         proxy = _deploy({ owner: msg.sender, target: address(0), data: "" });
         _installPlugin(plugin);
     }
