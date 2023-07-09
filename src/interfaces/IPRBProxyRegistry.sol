@@ -26,7 +26,7 @@ interface IPRBProxyRegistry {
     error PRBProxyRegistry_PluginWithZeroMethods(IPRBProxyPlugin plugin);
 
     /// @notice Thrown when a function requires the user to have a proxy.
-    error PRBProxyRegistry_UserDoesNotHaveProxy(address caller);
+    error PRBProxyRegistry_UserDoesNotHaveProxy(address user);
 
     /// @notice Thrown when a function requires the user to not have a proxy.
     error PRBProxyRegistry_UserHasProxy(address owner, IPRBProxy proxy);
