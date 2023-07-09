@@ -15,7 +15,7 @@ contract DeployAndInstallPlugin_Test is Registry_Test {
     function test_RevertWhen_OwnerHasProxy() external {
         IPRBProxy proxy = registry.deploy();
         vm.expectRevert(
-            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_OwnerHasProxy.selector, users.alice, proxy)
+            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_UserHasProxy.selector, users.alice, proxy)
         );
         registry.deployAndInstallPlugin(plugins.basic);
     }

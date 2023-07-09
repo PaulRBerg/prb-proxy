@@ -13,12 +13,6 @@ interface IPRBProxyRegistry {
                                        ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Thrown when an action requires the caller to have a proxy.
-    error PRBProxyRegistry_CallerDoesNotHaveProxy(address caller);
-
-    /// @notice Thrown when an action requires the owner to not have a proxy.
-    error PRBProxyRegistry_OwnerHasProxy(address owner, IPRBProxy proxy);
-
     /// @notice Thrown when trying to install a plugin that implements a method already implemented by another
     /// installed plugin.
     error PRBProxyRegistry_PluginMethodCollision(
@@ -30,6 +24,12 @@ interface IPRBProxyRegistry {
 
     /// @notice Thrown when trying to install a plugin that doesn't implement any method.
     error PRBProxyRegistry_PluginWithZeroMethods(IPRBProxyPlugin plugin);
+
+    /// @notice Thrown when a function requires the user to have a proxy.
+    error PRBProxyRegistry_UserDoesNotHaveProxy(address caller);
+
+    /// @notice Thrown when a function requires the user to not have a proxy.
+    error PRBProxyRegistry_UserHasProxy(address owner, IPRBProxy proxy);
 
     /*//////////////////////////////////////////////////////////////////////////
                                        EVENTS

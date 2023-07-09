@@ -9,7 +9,7 @@ import { Registry_Test } from "../Registry.t.sol";
 contract InstallPlugin_Test is Registry_Test {
     function test_RevertWhen_CallerDoesNotHaveProxy() external {
         vm.expectRevert(
-            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_CallerDoesNotHaveProxy.selector, users.alice)
+            abi.encodeWithSelector(IPRBProxyRegistry.PRBProxyRegistry_UserDoesNotHaveProxy.selector, users.alice)
         );
         registry.installPlugin(plugins.empty);
     }
