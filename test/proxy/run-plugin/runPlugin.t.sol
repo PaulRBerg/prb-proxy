@@ -34,58 +34,77 @@ contract RunPlugin_Test is Proxy_Test {
 
     function test_RevertWhen_Panic_FailedAssertion() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.panic);
-        vm.expectRevert(stdError.assertionError);
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.failedAssertion.selector));
-        success;
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.panic.failedAssertion.selector));
+        assertFalse(success, "plugins.panic.failedAssertion did not panic");
+        bytes memory expectedResponse = stdError.assertionError;
+        assertEq(actualResponse, expectedResponse, "plugins.panic.failedAssertion response mismatch");
     }
 
     function test_RevertWhen_Panic_ArithmeticOverflow() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.panic);
-        vm.expectRevert(stdError.arithmeticError);
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.arithmeticOverflow.selector));
-        success;
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.panic.arithmeticOverflow.selector));
+        assertFalse(success, "plugins.panic.arithmeticOverflow did not panic");
+        bytes memory expectedResponse = stdError.arithmeticError;
+        assertEq(actualResponse, expectedResponse, "plugins.panic.arithmeticOverflow response mismatch");
     }
 
     function test_RevertWhen_Panic_DivisionByZero() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.panic);
-        vm.expectRevert(stdError.divisionError);
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.divisionByZero.selector));
-        success;
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.panic.divisionByZero.selector));
+        assertFalse(success, "plugins.panic.divisionByZero did not panic");
+        bytes memory expectedResponse = stdError.divisionError;
+        assertEq(actualResponse, expectedResponse, "plugins.panic.divisionByZero response mismatch");
     }
 
     function test_RevertWhen_Panic_IndexOOB() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.panic);
-        vm.expectRevert(stdError.indexOOBError);
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.panic.indexOOB.selector));
-        success;
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.panic.indexOOB.selector));
+        assertFalse(success, "plugins.panic.indexOOB did not panic");
+        bytes memory expectedResponse = stdError.indexOOBError;
+        assertEq(actualResponse, expectedResponse, "plugins.panic.indexOOB response mismatch");
     }
 
     function test_RevertWhen_Error_EmptyRevertStatement() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.reverter);
-        vm.expectRevert(IPRBProxy.PRBProxy_PluginReverted.selector);
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withNothing.selector));
-        success;
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.reverter.withNothing.selector));
+        assertFalse(success, "reverter.withNothing did not revert");
+        bytes memory expectedResponse =
+            abi.encodeWithSelector(IPRBProxy.PRBProxy_PluginReverted.selector, address(plugins.reverter));
+        assertEq(actualResponse, expectedResponse, "reverter.withNothing response mismatch");
     }
 
     function test_RevertWhen_Error_CustomError() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.reverter);
-        vm.expectRevert(TargetReverter.SomeError.selector);
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withCustomError.selector));
-        success;
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.reverter.withCustomError.selector));
+        assertFalse(success, "reverter.withCustomError did not revert");
+        bytes memory expectedResponse = abi.encodeWithSelector(TargetReverter.SomeError.selector);
+        assertEq(actualResponse, expectedResponse, "reverter.withCustomError response mismatch");
     }
 
     function test_RevertWhen_Error_Require() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.reverter);
-        vm.expectRevert();
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withRequire.selector));
-        success;
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.reverter.withRequire.selector));
+        assertFalse(success, "reverter.withRequire did not revert");
+        bytes memory expectedResponse =
+            abi.encodeWithSelector(IPRBProxy.PRBProxy_PluginReverted.selector, address(plugins.reverter));
+        assertEq(actualResponse, expectedResponse, "reverter.withRequire response mismatch");
     }
 
+    /// @dev See https://docs.soliditylang.org/en/v0.8.19/control-structures.html#revert
     function test_RevertWhen_Error_ReasonString() external whenPluginInstalled whenDelegateCallReverts {
         registry.installPlugin(plugins.reverter);
-        vm.expectRevert("You shall not pass");
-        (bool success,) = address(proxy).call(abi.encodeWithSelector(plugins.reverter.withReasonString.selector));
-        success;
+        (bool success, bytes memory actualResponse) =
+            address(proxy).call(abi.encodeWithSelector(plugins.reverter.withReasonString.selector));
+        assertFalse(success, "reverter.withReasonString did not revert");
+        bytes memory expectedResponse = abi.encodeWithSignature("Error(string)", "You shall not pass");
+        assertEq(actualResponse, expectedResponse, "reverter.withReasonString response mismatch");
     }
 
     modifier whenDelegateCallDoesNotRevert() {
