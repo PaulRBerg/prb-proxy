@@ -2,51 +2,51 @@
   {
     "chainId": 1,
     "name": "Mainnet",
-    "url": "https://etherscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://etherscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
     "chainId": 5,
     "name": "Goerli",
-    "url": "https://goerli.etherscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://goerli.etherscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
     "chainId": 10,
     "name": "Optimism",
-    "url": "https://optimistic.etherscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://optimistic.etherscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
     "chainId": 56,
     "name": "BNB Smart Chain",
-    "url": "https://bscscan.com/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://bscscan.com/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
     "chainId": 100,
     "name": "Gnosis Chain",
-    "url": "https://gnosisscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://gnosisscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
     "chainId": 137,
     "name": "Polygon",
-    "url": "https://polygonscan.com/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://polygonscan.com/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
     "chainId": 42220,
     "name": "Celo",
-    "url": "https://celoscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://celoscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
     "chainId": 42161,
     "name": "Arbitrum",
-    "url": "https://arbiscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://arbiscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
     "chainId": 43114,
     "name": "Avalanche",
-    "url": "https://snowtrace.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://snowtrace.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
     "chainId": 11155111,
     "name": "Sepolia",
-    "url": "https://sepolia.etherscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D#code"
+    "url": "https://sepolia.etherscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   }
 ]

@@ -50,7 +50,7 @@ However, PRBProxy eliminates this risk entirely, making it possible to safely se
 
 ## Deployments
 
-PRBProxyRegistry is deployed on 10+ chains at 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D. A sortable, searchable list of all available chains can be
+PRBProxyRegistry is deployed on 10+ chains at 0x584009E9eDe26e212182c9745F5c000191296a78. A sortable, searchable list of all available chains can be
 found at https://prbproxy.com/deployments. To request a deployment to a new chain, please open a GitHub issue. You can speed up the process by sending
 funds to cover the deploy cost to the deployer account: 0x3Afb8fEDaC6429E2165E84CC43EeA7e42e6440fF.
 
@@ -65,8 +65,8 @@ The ABIs can be found on https://prbproxy.com/abi, where they can be downloaded 
 Alternatively, you can:
 
 - Download the ABIs from the [releases](https://github.com/PaulRBerg/prb-proxy/releases) page.
-- Copy the ABIs from [Etherscan](https://etherscan.io/address/0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D).
-- Install [Foundry](https://getfoundry.sh/) and run `cast interface 0xD42a2bB59775694c9Df4c7822BfFAb150e6c699D`.
+- Copy the ABIs from [Etherscan](https://etherscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78).
+- Install [Foundry](https://getfoundry.sh/) and run `cast interface 0x584009E9eDe26e212182c9745F5c000191296a78`.
 - Use one of the programmatic methods described below.
 
 ## Install
