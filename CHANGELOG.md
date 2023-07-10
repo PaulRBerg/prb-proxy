@@ -5,10 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[4.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v2.0.0...v4.0.0
 [2.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/PaulRBerg/prb-proxy/releases/tag/v1.0.0
+
+## [4.0.1] - 2023-07-10
+
+### Changed
+
+- Improve documentation ([#163](https://github.com/PaulRBerg/prb-proxy/pull/163)) (@PaulRBerg, @IaroslavMazur)
+- Rename `noProxy` to `onlyNonProxyOwner` ([#165](https://github.com/PaulRBerg/prb-proxy/pull/165)) (@PaulRBerg, @IaroslavMazur)
+- Rename `owner` parameter to `user` ([#165](https://github.com/PaulRBerg/prb-proxy/pull/165)) (@PaulRBerg, @IaroslavMazur)
+
+### Removed
+
+- Remove unused errors ([#164](https://github.com/PaulRBerg/prb-proxy/pull/164)) (@PaulRBerg, @IaroslavMazur)
 
 ## [4.0.0] - 2023-07-07
 
