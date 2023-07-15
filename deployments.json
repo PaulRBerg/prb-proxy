@@ -45,6 +45,11 @@
     "url": "https://snowtrace.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
+    "chainId": 421613,
+    "name": "Arbitrum Goerli",
+    "url": "https://goerli.arbiscan.io//address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
+  },
+  {
     "chainId": 11155111,
     "name": "Sepolia",
     "url": "https://sepolia.etherscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
