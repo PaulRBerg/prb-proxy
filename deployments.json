@@ -30,6 +30,11 @@
     "url": "https://polygonscan.com/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
+    "chainId": 8453,
+    "name": "Base",
+    "url": "https://basescan.org/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
+  },
+  {
     "chainId": 42220,
     "name": "Celo",
     "url": "https://celoscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
