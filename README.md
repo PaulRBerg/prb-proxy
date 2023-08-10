@@ -44,10 +44,11 @@ Solidity compiler and new EVM OPCODES, as well as the introduction of more user-
 Enter PRBProxy, the modern successor to DSProxy; a "DSProxy 2.0", if you will. It improves upon DSProxy in several ways:
 
 1. PRBProxy is deployed with [CREATE2][eip-1014], which allows clients to pre-compute the proxy contract's address.
-2. The `CREATE2` salts are generated in a way that eliminates the risk of front-running.
-3. The proxy owner is immutable, and so it cannot be changed during any `DELEGATECALL`.
-4. PRBProxy uses high-level Solidity code that is easier to comprehend and less prone to errors.
-5. PRBProxy offers more features than DSProxy.
+2. Front-running is not possible.
+3. The proxy contract itself has no storage, which reduces the risk of storage collisions and malicious attacks.
+4. The proxy owner is immutable, and so it cannot be changed during any `DELEGATECALL`.
+5. PRBProxy uses high-level Solidity code that is easier to comprehend and less prone to errors.
+6. PRBProxy offers more features than DSProxy, such as plugins.
 
 Using CREATE2 eliminates the risk of a [chain reorg](https://en.bitcoin.it/wiki/Chain_Reorganization) overriding the proxy contract owner, making
 PRBProxy a more secure alternative to DSProxy. With DSProxy, users must wait for several blocks to be mined before assuming the contract is secure.
