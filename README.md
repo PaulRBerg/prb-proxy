@@ -24,7 +24,12 @@ Some key features of PRBProxy include:
 - Comprehensive documentation via NatSpec comments.
 - Developed and tested using Foundry.
 
-Overall, PRBProxy is a powerful tool for transaction composition, providing numerous features and benefits not available through EOAs.
+Overall, PRBProxy is a powerful tool for transaction composition, providing numerous features and benefits not available through EOAs:
+
+1. **Fewer interactions**: bundling multiple actions together lowers the number of protocol interactions required.
+2. **Modularity**: establishing a clear distinction between the core business logic of your protocol and the potentially more intricate, peripheral
+   higher-level logic.
+3. **Extensibility without upgradeability**: users can delegate call to any arbitrary contracts, including those not even written yet.
 
 ## Background
 
