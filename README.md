@@ -99,7 +99,7 @@ Your `.gitmodules` file should now contain the following entry:
 Finally, add this to your `remappings.txt` file:
 
 ```text
-prb-proxy/=lib/prb-proxy/src/
+prb-proxy/=lib/prb-proxy/
 ```
 
 ### Hardhat
