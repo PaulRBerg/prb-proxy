@@ -35,6 +35,11 @@
     "url": "https://basescan.org/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
   },
   {
+    "chainId": 42170,
+    "name": "Arbitrum Nova",
+    "url": "https://nova.arbiscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
+  },
+  {
     "chainId": 42220,
     "name": "Celo",
     "url": "https://celoscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78#code"
