@@ -14,7 +14,7 @@ FOUNDRY_PROFILE=optimized forge build
 # Retrieve the raw bytecodes, removing the "0x" prefix
 registry=$(cat out-optimized/PRBProxyRegistry.sol/PRBProxyRegistry.json | jq -r '.bytecode.object' | cut -c 3-)
 
-precompiles_path="test/utils/Precompiles.sol"
+precompiles_path="src/test/Precompiles.sol"
 if [ ! -f $precompiles_path ]; then
     echo "Precompiles file does not exist"
     exit 1

@@ -2,7 +2,7 @@
 // solhint-disable max-line-length
 pragma solidity >=0.8.18;
 
-import { IPRBProxyRegistry } from "../../src/interfaces/IPRBProxyRegistry.sol";
+import { IPRBProxyRegistry } from "../interfaces/IPRBProxyRegistry.sol";
 
 /// @notice This is useful for external integrations seeking to test against the exact deployed bytecode, as recompiling
 /// with via IR enabled would be time-consuming.

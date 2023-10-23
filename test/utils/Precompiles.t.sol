@@ -2,7 +2,7 @@
 pragma solidity >=0.8.18;
 
 import { Base_Test } from "../Base.t.sol";
-import { Precompiles } from "./Precompiles.sol";
+import { Precompiles } from "../../src/test/Precompiles.sol";
 
 contract Precompiles_Test is Base_Test {
     Precompiles internal precompiles = new Precompiles();

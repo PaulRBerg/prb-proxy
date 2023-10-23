@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <=0.9.0;
 
-import { eqString } from "@prb/test/Helpers.sol";
+import { eqString } from "@prb/test/src/Helpers.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 import { StdUtils } from "forge-std/StdUtils.sol";
 
@@ -9,6 +9,8 @@ import { IPRBProxy } from "../src/interfaces/IPRBProxy.sol";
 import { IPRBProxyRegistry } from "../src/interfaces/IPRBProxyRegistry.sol";
 import { PRBProxy } from "../src/PRBProxy.sol";
 import { PRBProxyRegistry } from "../src/PRBProxyRegistry.sol";
+import { Assertions } from "../src/test/Assertions.sol";
+import { Events } from "../src/test/Events.sol";
 
 import { PluginBasic } from "./mocks/plugins/PluginBasic.sol";
 import { PluginCollider } from "./mocks/plugins/PluginCollider.sol";
@@ -23,8 +25,6 @@ import { TargetEcho } from "./mocks/targets/TargetEcho.sol";
 import { TargetPanic } from "./mocks/targets/TargetPanic.sol";
 import { TargetReverter } from "./mocks/targets/TargetReverter.sol";
 import { TargetSelfDestructer } from "./mocks/targets/TargetSelfDestructer.sol";
-import { Assertions } from "./utils/Assertions.sol";
-import { Events } from "./utils/Events.sol";
 
 /// @notice Base test contract with common logic needed by all test contracts.
 abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {

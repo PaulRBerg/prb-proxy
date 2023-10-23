@@ -116,6 +116,20 @@ jobs:
           key: "foundry-build-${{ github.sha }}"
           path: "out-optimized"
 
+      - name: "Install Pnpm"
+        uses: "pnpm/action-setup@v2"
+        with:
+          version: "8"
+
+      - name: "Install Node.js"
+        uses: "actions/setup-node@v3"
+        with:
+          cache: "pnpm"
+          node-version: "lts/*"
+
+      - name: "Install the Node.js dependencies"
+        run: "pnpm install"
+
       - name: "Run the tests against the optimized build"
         run: "FOUNDRY_PROFILE=test-optimized forge test"
 
