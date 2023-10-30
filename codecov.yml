@@ -1,4 +1,5 @@
 comment: false
 ignore:
   - "script"
+  - "src/test/"
   - "test"
