@@ -52,8 +52,6 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
-        with:
-          submodules: "recursive"
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
@@ -103,8 +101,6 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
-        with:
-          submodules: "recursive"
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
@@ -144,8 +140,6 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
-        with:
-          submodules: "recursive"
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
@@ -183,8 +177,6 @@ jobs:
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
-        with:
-          submodules: "recursive"
 
       - name: "Run Slither"
         uses: "crytic/slither-action@v0.3.0"
