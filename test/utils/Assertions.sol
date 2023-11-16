@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.18;
 
-import { PRBTest } from "@prb/test/PRBTest.sol";
+import { PRBTest } from "@prb/test/src/PRBTest.sol";
 
 import { IPRBProxyPlugin } from "../../src/interfaces/IPRBProxyPlugin.sol";
 
