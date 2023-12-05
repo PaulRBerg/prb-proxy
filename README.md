@@ -79,35 +79,20 @@ Alternatively, you can:
 
 You can get access to the Solidity code and the ABIs programmatically.
 
+All users are recommended to install PRBProxy as a Node.js package:
+
+```sh
+pnpm add @prb/math
+```
+
+This example uses Pnpm, but using Yarn or Npm is also possible.
+
 ### Foundry
 
-First, run the install step:
-
-```sh
-forge install PaulRBerg/prb-proxy@release-v4
-```
-
-Your `.gitmodules` file should now contain the following entry:
-
-```toml
-[submodule "lib/prb-proxy"]
-  branch = "release-v4"
-  path = "lib/prb-proxy"
-  url = "https://github.com/PaulRBerg/prb-proxy"
-```
-
-Finally, add this to your `remappings.txt` file:
+If you're using Foundry, you have to add this to your `remappings.txt` file:
 
 ```text
-prb-proxy/=lib/prb-proxy/
-```
-
-### Hardhat
-
-PRBProxy is available as an npm package:
-
-```sh
-pnpm add @prb/proxy
+@prb/proxy/=node_modules/@prb/proxy/
 ```
 
 ## Usage

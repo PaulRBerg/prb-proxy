@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <=0.9.0;
 
-import { eqString } from "@prb/test/Helpers.sol";
-import { StdCheats } from "forge-std/StdCheats.sol";
-import { StdUtils } from "forge-std/StdUtils.sol";
+import { eqString } from "@prb/test/src/Helpers.sol";
+import { StdCheats } from "forge-std/src/StdCheats.sol";
+import { StdUtils } from "forge-std/src/StdUtils.sol";
 
 import { IPRBProxy } from "../src/interfaces/IPRBProxy.sol";
 import { IPRBProxyRegistry } from "../src/interfaces/IPRBProxyRegistry.sol";
