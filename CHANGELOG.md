@@ -5,11 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Common Changelog](https://common-changelog.org/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[4.0.2]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v2.0.0...v4.0.0
 [2.0.0]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/PaulRBerg/prb-proxy/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/PaulRBerg/prb-proxy/releases/tag/v1.0.0
+
+## [4.0.2] - 2023-12-28
+
+### Changed
+
+- Install `prb-test` and `forge-std` as Node.js packages ([#179](https://github.com/PaulRBerg/prb-proxy/pull/179)) (@andreivladbrg, @PaulRBerg)
+- Update import paths to include `src` ([#179](https://github.com/PaulRBerg/prb-proxy/pull/179)) (@PaulRBerg)
+- Make Node.js the default installation option (@PaulRBerg)
+
+### Added
+
+- Include `test/utils` in Node.js package ([#179](https://github.com/PaulRBerg/prb-proxy/pull/179)) (@andreivladbrg, @PaulRBerg)
+
+### Removed
+
+- Remove git submodules ([#179](https://github.com/PaulRBerg/prb-proxy/pull/179)) (@andreivladbrg, @PaulRBerg)
 
 ## [4.0.1] - 2023-07-10
 
