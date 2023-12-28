@@ -12,7 +12,7 @@
   optimizer_runs = 200
   out = "out"
   script = "script"
-  solc = "0.8.19"
+  solc = "0.8.23"
   src = "src"
   test = "test"
 

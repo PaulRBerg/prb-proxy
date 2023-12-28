@@ -17,8 +17,9 @@ The format is based on [Common Changelog](https://common-changelog.org/), and th
 ### Changed
 
 - Install `prb-test` and `forge-std` as Node.js packages ([#179](https://github.com/PaulRBerg/prb-proxy/pull/179)) (@andreivladbrg, @PaulRBerg)
-- Update import paths to include `src` ([#179](https://github.com/PaulRBerg/prb-proxy/pull/179)) (@PaulRBerg)
 - Make Node.js the default installation option (@PaulRBerg)
+- Update import paths to include `src` ([#179](https://github.com/PaulRBerg/prb-proxy/pull/179)) (@PaulRBerg)
+- Use Solidity v0.8.23 ([#182](https://github.com/PaulRBerg/prb-proxy/pull/182)) (@PaulRBerg)
 
 ### Added
 
