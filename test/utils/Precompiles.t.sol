@@ -15,7 +15,7 @@ contract Precompiles_Test is Base_Test {
 
     function test_DeployPRBProxyRegistry() external onlyTestOptimizedProfile {
         address actualRegistry = address(precompiles.deployRegistry());
-        address expectedRegistry = address(deployPrecompiledRegistry());
+        address expectedRegistry = address(deployOptimizedRegistry());
         assertEq(actualRegistry.code, expectedRegistry.code, "registry bytecodes don't match");
     }
 }
