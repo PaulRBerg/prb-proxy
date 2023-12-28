@@ -2,7 +2,6 @@
 pragma solidity >=0.8.18 <0.9.0;
 
 import { eqString } from "@prb/test/src/Helpers.sol";
-import { StdCheats } from "forge-std/src/StdCheats.sol";
 import { StdUtils } from "forge-std/src/StdUtils.sol";
 
 import { IPRBProxy } from "../src/interfaces/IPRBProxy.sol";
@@ -24,10 +23,11 @@ import { TargetPanic } from "./mocks/targets/TargetPanic.sol";
 import { TargetReverter } from "./mocks/targets/TargetReverter.sol";
 import { TargetSelfDestructer } from "./mocks/targets/TargetSelfDestructer.sol";
 import { Assertions } from "./utils/Assertions.sol";
+import { DeployOptimized } from "./utils/DeployOptimized.sol";
 import { Events } from "./utils/Events.sol";
 
 /// @notice Base test contract with common logic needed by all test contracts.
-abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
+abstract contract Base_Test is Assertions, DeployOptimized, Events, StdUtils {
     /*//////////////////////////////////////////////////////////////////////////
                                        STRUCTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -132,23 +132,18 @@ abstract contract Base_Test is Assertions, Events, StdCheats, StdUtils {
         vm.deal({ account: addr, newBalance: 100 ether });
     }
 
-    /// @dev Deploys {PRBProxyRegistry} from a source precompiled with `--via-ir`.
-    function deployPrecompiledRegistry() internal returns (IPRBProxyRegistry registry_) {
-        registry_ = IPRBProxyRegistry(deployCode("out-optimized/PRBProxyRegistry.sol/PRBProxyRegistry.json"));
-    }
-
-    /// @dev Conditionally deploy the registry either normally or from a source precompiled with `--via-ir`.
+    /// @dev Conditionally deploy the registry either normally or from an optimized source compiled with `--via-ir`.
     function deployRegistryConditionally() internal {
         if (!isTestOptimizedProfile()) {
             registry = new PRBProxyRegistry();
         } else {
-            registry = deployPrecompiledRegistry();
+            registry = deployOptimizedRegistry();
         }
 
         vm.label({ account: address(registry), newLabel: "Registry" });
     }
 
-    /// @dev Reads the proxy bytecode either normally or from precompiled source.
+    /// @dev Reads the proxy bytecode either normally or from an optimized source.
     function getProxyBytecode() internal returns (bytes memory) {
         if (!isTestOptimizedProfile()) {
             return type(PRBProxy).creationCode;
