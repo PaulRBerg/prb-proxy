@@ -70,29 +70,52 @@ The ABIs can be found on https://prbproxy.com/abi, where they can be downloaded 
 
 Alternatively, you can:
 
-- Download the ABIs from the [releases](https://github.com/PaulRBerg/prb-proxy/releases) page.
-- Copy the ABIs from [Etherscan](https://etherscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78).
-- Install [Foundry](https://getfoundry.sh/) and run `cast interface 0x584009E9eDe26e212182c9745F5c000191296a78`.
-- Use one of the programmatic methods described below.
+- Download the ABIs from the [releases](https://github.com/PaulRBerg/prb-proxy/releases) page
+- Copy the ABIs from [Etherscan](https://etherscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78)
+- Install [Foundry](https://getfoundry.sh/) and run `cast interface 0x584009E9eDe26e212182c9745F5c000191296a78`
+- Use one of the programmatic methods described below
 
 ## Install
 
-You can get access to the Solidity code and the ABIs programmatically.
+### Node.js
 
-All users are recommended to install PRBProxy as a Node.js package:
+This is the recommended approach.
 
-```sh
-pnpm add @prb/math
+Install PRBProxy using your favorite package manager, e.g., with Bun:
+
+```shell
+bun add @prb/proxy
 ```
 
-This example uses Pnpm, but using Yarn or Npm is also possible.
-
-### Foundry
-
-If you're using Foundry, you have to add this to your `remappings.txt` file:
+Then, if you are using Foundry, you need to add this to your `remappings.txt` file:
 
 ```text
 @prb/proxy/=node_modules/@prb/proxy/
+```
+
+### Git Submodules
+
+This installation method is not recommended, but it is available for those who prefer it.
+
+First, install the submodule using Forge:
+
+```shell
+forge install --no-commit PaulRBerg/prb-proxy@release-v4
+```
+
+Your `.gitmodules` file should now contain the following entry:
+
+```toml
+[submodule "lib/prb-proxy"]
+  branch = "release-v4"
+  path = "lib/prb-proxy"
+  url = "https://github.com/PaulRBerg/prb-proxy"
+```
+
+Finally, add this to your `remappings.txt` file:
+
+```text
+@prb/proxy/=lib/prb-proxy/
 ```
 
 ## Usage
