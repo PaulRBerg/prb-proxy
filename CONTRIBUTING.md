@@ -10,7 +10,7 @@ You will need the following software on your machine:
 - [Git](https://git-scm.com/downloads)
 - [Foundry](https://github.com/foundry-rs/foundry)
 - [Node.Js](https://nodejs.org/en/download/)
-- [Pnpm](https://pnpm.io)
+- [Bun](https://bun.sh)
 
 In addition, familiarity with [Solidity](https://soliditylang.org/) is requisite.
 
@@ -25,7 +25,7 @@ $ git clone --recurse-submodules -j8 git@github.com:PaulRBerg/prb-proxy.git
 Then, inside the project's directory, run this to install the Node.js dependencies:
 
 ```sh
-$ pnpm install
+$ bun install
 ```
 
 Now you can start making changes.

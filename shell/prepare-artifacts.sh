@@ -5,7 +5,7 @@
 
 # Pre-requisites:
 # - foundry (https://getfoundry.sh)
-# - pnpm (https://pnpm.io)
+# - bun (https://bun.sh)
 
 # Strict mode: https://gist.github.com/vncsna/64825d5609c146e80de8b1fd623011ca
 set -euo pipefail
@@ -30,4 +30,4 @@ cp out-optimized/IPRBProxyPlugin.sol/IPRBProxyPlugin.json $interfaces
 cp out-optimized/IPRBProxyRegistry.sol/IPRBProxyRegistry.json $interfaces
 
 # Format the artifacts with Prettier
-pnpm prettier --write ./artifacts
+bun prettier --write ./artifacts
