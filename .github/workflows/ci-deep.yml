@@ -47,6 +47,12 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
+      - name: "Install Bun"
+        uses: "oven-sh/setup-bun@v1"
+
+      - name: "Install the Node.js dependencies"
+        run: "bun install"
+
       - name: "Produce an optimized build with --via-ir"
         run: "FOUNDRY_PROFILE=optimized forge build"
 
