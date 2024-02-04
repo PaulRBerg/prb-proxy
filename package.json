@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@prb/test": "0.6.4",
-    "forge-std": "github:foundry-rs/forge-std#e8a047e3f40f13fa37af6fe14e6e06283d9a060e",
+    "forge-std": "github:foundry-rs/forge-std#v1",
     "prettier": "^2.8.8",
     "solhint-community": "^3.5.2"
   },
