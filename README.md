@@ -185,7 +185,7 @@ Please do contribute! Issues and pull requests are welcome.
 
 ### Code Contributors
 
-This project exists thanks to all the people who contribute. [Contribute](docs/CONTRIBUTING.md).
+This project exists thanks to all the people who [Contribute](docs/CONTRIBUTING.md).
 <a href="https://github.com/PaulRBerg/prb-proxy/graphs/contributors"><img src="https://opencollective.com/url" /></a>
 
 ### Contact
