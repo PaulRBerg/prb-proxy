@@ -3,6 +3,8 @@
 Feel free to dive in! [Open](https://github.com/PaulRBerg/prb-proxy/issues/new) an issue,
 [start](https://github.com/PaulRBerg/prb-proxy/discussions/new) a discussion, or submit a PR.
 
+Please note that this project is released with a [Contributor Code of Conduct](docs/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
 ## Pre Requisites
 
 You will need the following software on your machine:
