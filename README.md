@@ -168,8 +168,7 @@ also help you understand how to use PRBProxy. Just be sure to keep in mind the d
 
 ## Security
 
-While I have strict standards for code quality and test coverage, and the code has been audited by third-party security researchers, using PRBProxy
-may not be entirely risk-free.
+While I have strict standards for code quality and test coverage, and the code has been audited by third-party security researchers, using PRBProxy may not be entirely risk-free. You can find more information in our [Security Guide](docs/SECURITY.md).
 
 ### Caveat Emptor
 
