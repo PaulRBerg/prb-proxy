@@ -178,15 +178,14 @@ be held responsible for any direct or indirect loss resulting from the continued
 ## Contributing
 When contributing to this repository, please first discuss the change you wish to make via issue, or any other method with the owners of this repository before making a change.
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated** ❤️.
-You can learn more about how you can contribute to this project in the [Contribution Guide](contributigurl).
+You can learn more about how you can contribute to this project in the [Contribution Guide](docs/CONTRIBUTING.md).
 
 ## Contributors
 Please do contribute! Issues and pull requests are welcome.
 
 ### Code Contributors
 
-This project exists thanks to all the people who [Contribute](docs/CONTRIBUTING.md).
-<a href="https://github.com/PaulRBerg/prb-proxy/graphs/contributors"><img src="https://opencollective.com/url" /></a>
+This project exists thanks to all the people who [contribute](https://github.com/PaulRBerg/prb-proxy/graphs/contributors).
 
 ### Contact
 
