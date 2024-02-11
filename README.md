@@ -81,10 +81,18 @@ Alternatively, you can:
 
 This is the recommended approach.
 
-Install PRBProxy using your favorite package manager, e.g., with Bun:
+Install PRBProxy using your favorite package manager, e.g.
+
+- Bun:
 
 ```shell
 bun add @prb/proxy
+```
+
+- npm:
+
+```shell
+npm i @prb/proxy
 ```
 
 Then, if you are using Foundry, you need to add this to your `remappings.txt` file:
