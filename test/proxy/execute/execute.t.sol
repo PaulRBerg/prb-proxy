@@ -210,9 +210,7 @@ contract Execute_Test is Proxy_Test {
         _;
     }
 
-    function testFuzz_Execute_ReturnAddress(
-        address input
-    )
+    function testFuzz_Execute_ReturnAddress(address input)
         external
         whenCallerAuthorized
         whenTargetContract
@@ -227,9 +225,7 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoAddress response mismatch");
     }
 
-    function testFuzz_Execute_ReturnBytesArray(
-        bytes memory input
-    )
+    function testFuzz_Execute_ReturnBytesArray(bytes memory input)
         external
         whenCallerAuthorized
         whenTargetContract
@@ -244,9 +240,7 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoBytesArray response mismatch");
     }
 
-    function testFuzz_Execute_ReturnBytes32(
-        bytes32 input
-    )
+    function testFuzz_Execute_ReturnBytes32(bytes32 input)
         external
         whenCallerAuthorized
         whenTargetContract
@@ -261,9 +255,7 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoBytes32 response mismatch");
     }
 
-    function testFuzz_Execute_ReturnString(
-        string memory input
-    )
+    function testFuzz_Execute_ReturnString(string memory input)
         external
         whenCallerAuthorized
         whenTargetContract
@@ -278,9 +270,7 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoString response mismatch");
     }
 
-    function testFuzz_Execute_ReturnStruct(
-        TargetEcho.SomeStruct memory input
-    )
+    function testFuzz_Execute_ReturnStruct(TargetEcho.SomeStruct memory input)
         external
         whenCallerAuthorized
         whenTargetContract
@@ -295,9 +285,7 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoStruct response mismatch");
     }
 
-    function testFuzz_Execute_ReturnUint8(
-        uint8 input
-    )
+    function testFuzz_Execute_ReturnUint8(uint8 input)
         external
         whenCallerAuthorized
         whenTargetContract
@@ -312,9 +300,7 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint8 response mismatch");
     }
 
-    function testFuzz_Execute_ReturnUint256(
-        uint256 input
-    )
+    function testFuzz_Execute_ReturnUint256(uint256 input)
         external
         whenCallerAuthorized
         whenTargetContract
@@ -329,9 +315,7 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint256 response mismatch");
     }
 
-    function testFuzz_Execute_ReturnUint256Array(
-        uint256[] memory input
-    )
+    function testFuzz_Execute_ReturnUint256Array(uint256[] memory input)
         external
         whenCallerAuthorized
         whenTargetContract
@@ -346,9 +330,7 @@ contract Execute_Test is Proxy_Test {
         assertEq(actualResponse, expectedResponse, "echo.echoUint256Array response mismatch");
     }
 
-    function testFuzz_Execute_Event(
-        uint256 input
-    )
+    function testFuzz_Execute_Event(uint256 input)
         external
         whenCallerAuthorized
         whenTargetContract

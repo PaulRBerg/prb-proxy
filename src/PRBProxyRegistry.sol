@@ -179,9 +179,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function deployAndInstallPlugin(
-        IPRBProxyPlugin plugin
-    )
+    function deployAndInstallPlugin(IPRBProxyPlugin plugin)
         external
         onlyNonProxyOwner(msg.sender)
         returns (IPRBProxy proxy)

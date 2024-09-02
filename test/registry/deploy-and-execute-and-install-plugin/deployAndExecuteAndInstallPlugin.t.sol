@@ -46,9 +46,7 @@ contract DeployAndExecuteAndInstallPlugin_Test is Registry_Test {
         assertEq(actualOwner, expectedOwner, "proxy owner mismatch");
     }
 
-    function testFuzz_DeployAndExecuteAndInstallPlugin_UpdateProxies(
-        address owner
-    )
+    function testFuzz_DeployAndExecuteAndInstallPlugin_UpdateProxies(address owner)
         external
         whenOwnerDoesNotHaveProxy
     {
@@ -72,9 +70,7 @@ contract DeployAndExecuteAndInstallPlugin_Test is Registry_Test {
         }
     }
 
-    function testFuzz_DeployAndExecuteAndInstallPlugin_PluginReverseMapping(
-        address owner
-    )
+    function testFuzz_DeployAndExecuteAndInstallPlugin_PluginReverseMapping(address owner)
         external
         whenOwnerDoesNotHaveProxy
     {
@@ -86,9 +82,7 @@ contract DeployAndExecuteAndInstallPlugin_Test is Registry_Test {
         assertEq(actualMethods, expectedMethods, "methods not saved in reverse mapping");
     }
 
-    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_DeployProxy(
-        address owner
-    )
+    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_DeployProxy(address owner)
         external
         whenOwnerDoesNotHaveProxy
     {
@@ -99,9 +93,7 @@ contract DeployAndExecuteAndInstallPlugin_Test is Registry_Test {
         registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
     }
 
-    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_Execute(
-        address owner
-    )
+    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_Execute(address owner)
         external
         whenOwnerDoesNotHaveProxy
     {
@@ -112,9 +104,7 @@ contract DeployAndExecuteAndInstallPlugin_Test is Registry_Test {
         registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
     }
 
-    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_InstallPlugin(
-        address owner
-    )
+    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_InstallPlugin(address owner)
         external
         whenOwnerDoesNotHaveProxy
     {
