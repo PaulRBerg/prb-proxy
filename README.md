@@ -56,19 +56,13 @@ However, PRBProxy eliminates this risk entirely, making it possible to safely se
 
 ## Deployments
 
-PRBProxyRegistry is deployed on 10+ chains at 0x584009E9eDe26e212182c9745F5c000191296a78. A sortable, searchable list of all available chains can be
-found at https://prbproxy.com/deployments. To request a deployment to a new chain, please open a GitHub issue. You can speed up the process by sending
-funds to cover the deploy cost to the deployer account: 0x3Afb8fEDaC6429E2165E84CC43EeA7e42e6440fF.
+PRBProxyRegistry is deployed on 10+ chains at 0x584009E9eDe26e212182c9745F5c000191296a78. To request a deployment to a new chain, please open a
+GitHub issue. You can speed up the process by sending funds to cover the deploy cost to the deployer account:
+0x3Afb8fEDaC6429E2165E84CC43EeA7e42e6440fF.
 
 ### ABIs
 
-The ABIs can be found on https://prbproxy.com/abi, where they can be downloaded or copied to the clipboard in various formats, including:
-
-- Solidity interfaces
-- JSON ABIs, prettified
-- viem human readable ABIs
-
-Alternatively, you can:
+The ABIs are available in various formats, including Solidity interfaces, prettified JSON ABIs, and viem human readable ABIs. You can:
 
 - Download the ABIs from the [releases](https://github.com/PaulRBerg/prb-proxy/releases) page
 - Copy the ABIs from [Etherscan](https://etherscan.io/address/0x584009E9eDe26e212182c9745F5c000191296a78)
