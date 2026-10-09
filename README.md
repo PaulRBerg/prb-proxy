@@ -56,9 +56,8 @@ However, PRBProxy eliminates this risk entirely, making it possible to safely se
 
 ## Deployments
 
-PRBProxyRegistry is deployed on 10+ chains at 0x584009E9eDe26e212182c9745F5c000191296a78. To request a deployment to a new chain, please open a
-GitHub issue. You can speed up the process by sending funds to cover the deploy cost to the deployer account:
-0x3Afb8fEDaC6429E2165E84CC43EeA7e42e6440fF.
+PRBProxyRegistry is deployed on 10+ chains at 0x584009E9eDe26e212182c9745F5c000191296a78. To request a deployment to a new chain, please open a GitHub
+issue. You can speed up the process by sending funds to cover the deploy cost to the deployer account: 0x3Afb8fEDaC6429E2165E84CC43EeA7e42e6440fF.
 
 ### ABIs
 
