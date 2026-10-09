@@ -12,7 +12,7 @@ on:
 
 jobs:
   lint:
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-24.04"
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"
@@ -37,7 +37,7 @@ jobs:
     env:
       FOUNDRY_FUZZ_RUNS: ${{ inputs.fuzzRuns || '100000' }}
     needs: "lint"
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-24.04"
     steps:
       - name: "Check out the repo"
         uses: "actions/checkout@v3"

@@ -7,7 +7,7 @@ on:
 
 jobs:
   sync-release-branch:
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-24.04"
     if: "startsWith(github.ref, 'refs/tags/v4.')"
     steps:
       - name: "Check out the repo"
