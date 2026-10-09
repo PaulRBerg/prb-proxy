@@ -93,12 +93,7 @@ contract Execute_Test is Proxy_Test {
         proxy.execute(address(targets.panic), data);
     }
 
-    function test_RevertWhen_Panic_IndexOOB()
-        external
-        whenCallerAuthorized
-        whenTargetContract
-        whenDelegateCallReverts
-    {
+    function test_RevertWhen_Panic_IndexOOB() external whenCallerAuthorized whenTargetContract whenDelegateCallReverts {
         bytes memory data = bytes.concat(targets.panic.indexOOB.selector);
         vm.expectRevert(stdError.indexOOBError);
         proxy.execute(address(targets.panic), data);

@@ -46,10 +46,7 @@ contract DeployAndExecuteAndInstallPlugin_Test is Registry_Test {
         assertEq(actualOwner, expectedOwner, "proxy owner mismatch");
     }
 
-    function testFuzz_DeployAndExecuteAndInstallPlugin_UpdateProxies(address owner)
-        external
-        whenOwnerDoesNotHaveProxy
-    {
+    function testFuzz_DeployAndExecuteAndInstallPlugin_UpdateProxies(address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ msgSender: owner });
         registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
 
@@ -93,10 +90,7 @@ contract DeployAndExecuteAndInstallPlugin_Test is Registry_Test {
         registry.deployAndExecuteAndInstallPlugin(target, data, plugins.basic);
     }
 
-    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_Execute(address owner)
-        external
-        whenOwnerDoesNotHaveProxy
-    {
+    function testFuzz_DeployAndExecuteAndInstallPlugin_Event_Execute(address owner) external whenOwnerDoesNotHaveProxy {
         changePrank({ msgSender: owner });
 
         vm.expectEmit({ emitter: computeProxyAddress(owner) });

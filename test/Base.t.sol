@@ -80,10 +80,7 @@ abstract contract Base_Test is Assertions, DeployOptimized, Events, StdUtils {
     function setUp() public virtual {
         // Create users for testing.
         users = Users({
-            alice: createUser("Alice"),
-            bob: createUser("Bob"),
-            envoy: createUser("Envoy"),
-            eve: createUser("Eve")
+            alice: createUser("Alice"), bob: createUser("Bob"), envoy: createUser("Envoy"), eve: createUser("Eve")
         });
 
         // Create the plugins.

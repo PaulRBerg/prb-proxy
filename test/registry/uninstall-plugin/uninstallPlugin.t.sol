@@ -54,10 +54,7 @@ contract UninstallPlugin_Test is Registry_Test {
     function test_UninstallPlugin_Event() external whenCallerHasProxy whenPluginKnown {
         vm.expectEmit({ emitter: address(registry) });
         emit UninstallPlugin({
-            owner: users.alice,
-            proxy: proxy,
-            plugin: plugins.basic,
-            methods: plugins.basic.getMethods()
+            owner: users.alice, proxy: proxy, plugin: plugins.basic, methods: plugins.basic.getMethods()
         });
         registry.uninstallPlugin(plugins.basic);
     }

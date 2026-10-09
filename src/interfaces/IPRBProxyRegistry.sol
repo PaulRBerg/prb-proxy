@@ -89,27 +89,14 @@ interface IPRBProxyRegistry {
     /// @dev An empty array is returned if the plugin is unknown.
     /// @param proxy The proxy for the query.
     /// @param plugin The plugin for the query.
-    function getMethodsByProxy(
-        IPRBProxy proxy,
-        IPRBProxyPlugin plugin
-    )
-        external
-        view
-        returns (bytes4[] memory methods);
+    function getMethodsByProxy(IPRBProxy proxy, IPRBProxyPlugin plugin) external view returns (bytes4[] memory methods);
 
     /// @notice Retrieves a boolean flag that indicates whether the provided envoy has permission to call the provided
     /// target.
     /// @param owner The proxy owner for the query.
     /// @param envoy The address checked for permission to call the target.
     /// @param target The address of the target.
-    function getPermissionByOwner(
-        address owner,
-        address envoy,
-        address target
-    )
-        external
-        view
-        returns (bool permission);
+    function getPermissionByOwner(address owner, address envoy, address target) external view returns (bool permission);
 
     /// @notice Retrieves a boolean flag that indicates whether the provided envoy has permission to call the provided
     /// target.

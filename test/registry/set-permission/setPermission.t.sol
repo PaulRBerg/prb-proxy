@@ -40,11 +40,7 @@ contract SetPermission_Test is Registry_Test {
     function test_SetPermission_ResetPermission_Event() external whenCallerHasProxy whenPermissionSetPreviously {
         vm.expectEmit({ emitter: address(registry) });
         emit SetPermission({
-            owner: users.alice,
-            proxy: proxy,
-            envoy: users.envoy,
-            target: address(targets.basic),
-            permission: true
+            owner: users.alice, proxy: proxy, envoy: users.envoy, target: address(targets.basic), permission: true
         });
         registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: true });
     }
@@ -59,11 +55,7 @@ contract SetPermission_Test is Registry_Test {
     function test_SetPermission_UnsetPermission_Event() external whenCallerHasProxy whenPermissionSetPreviously {
         vm.expectEmit({ emitter: address(registry) });
         emit SetPermission({
-            owner: users.alice,
-            proxy: proxy,
-            envoy: users.envoy,
-            target: address(targets.basic),
-            permission: false
+            owner: users.alice, proxy: proxy, envoy: users.envoy, target: address(targets.basic), permission: false
         });
         registry.setPermission({ envoy: users.envoy, target: address(targets.basic), permission: false });
     }

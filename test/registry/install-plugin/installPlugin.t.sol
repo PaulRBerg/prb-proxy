@@ -112,10 +112,7 @@ contract InstallPlugin_Test is Registry_Test {
     {
         vm.expectEmit({ emitter: address(registry) });
         emit InstallPlugin({
-            owner: users.alice,
-            proxy: proxy,
-            plugin: plugins.basic,
-            methods: plugins.basic.getMethods()
+            owner: users.alice, proxy: proxy, plugin: plugins.basic, methods: plugins.basic.getMethods()
         });
         registry.installPlugin(plugins.basic);
     }

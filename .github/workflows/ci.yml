@@ -61,13 +61,13 @@ jobs:
         run: "./shell/prepare-artifacts.sh"
 
       - name: "Cache the build so that it can be re-used by the other jobs"
-        uses: "actions/cache/save@v3"
+        uses: "actions/cache/save@v6"
         with:
           path: "out-optimized"
           key: "foundry-build-${{ github.sha }}"
 
       - name: "Store the contract artifacts in CI"
-        uses: "actions/upload-artifact@v3"
+        uses: "actions/upload-artifact@v7"
         with:
           name: "contract-artifacts"
           path: "artifacts"
@@ -90,7 +90,7 @@ jobs:
         uses: "foundry-rs/foundry-toolchain@v1"
 
       - name: "Restore the cached build"
-        uses: "actions/cache/restore@v3"
+        uses: "actions/cache/restore@v6"
         with:
           fail-on-cache-miss: true
           key: "foundry-build-${{ github.sha }}"

@@ -47,7 +47,8 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
 
     mapping(address owner => mapping(IPRBProxyPlugin plugin => bytes4[] methods)) internal _methods;
 
-    mapping(address owner => mapping(address envoy => mapping(address target => bool permission))) internal _permissions;
+    mapping(address owner => mapping(address envoy => mapping(address target => bool permission))) internal
+        _permissions;
 
     mapping(address owner => mapping(bytes4 method => IPRBProxyPlugin plugin)) internal _plugins;
 
@@ -84,10 +85,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function getMethodsByProxy(
-        IPRBProxy proxy,
-        IPRBProxyPlugin plugin
-    )
+    function getMethodsByProxy(IPRBProxy proxy, IPRBProxyPlugin plugin)
         external
         view
         returns (bytes4[] memory methods)
@@ -96,11 +94,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
     }
 
     /// @inheritdoc IPRBProxyRegistry
-    function getPermissionByOwner(
-        address owner,
-        address envoy,
-        address target
-    )
+    function getPermissionByOwner(address owner, address envoy, address target)
         external
         view
         returns (bool permission)
@@ -268,9 +262,7 @@ contract PRBProxyRegistry is IPRBProxyRegistry {
             bytes4 method = methods[i];
             if (address(_plugins[owner][method]) != address(0)) {
                 revert PRBProxyRegistry_PluginMethodCollision({
-                    currentPlugin: _plugins[owner][method],
-                    newPlugin: plugin,
-                    method: method
+                    currentPlugin: _plugins[owner][method], newPlugin: plugin, method: method
                 });
             }
             _plugins[owner][method] = plugin;
